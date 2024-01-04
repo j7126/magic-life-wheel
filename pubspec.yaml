@@ -1,0 +1,50 @@
+name: magic_life_wheel
+description: "A simple life counter app."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  wakelock_plus: ^1.1.3
+  gap: ^3.0.1
+
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+  flutter_launcher_icons: "^0.13.1"
+
+flutter:
+
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icon/logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  adaptive_icon_background: "#5fb356"
+  adaptive_icon_foreground: "assets/icon/logo_fg.png"
+  web:
+    generate: true
+    image_path: "assets/icon/logo.png"
+    background_color: "#5fb356"
+    theme_color: "#5fb356"
+  windows:
+    generate: true
+    image_path: "assets/icon/logo.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/icon/logo.png"

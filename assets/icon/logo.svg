@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256"
+   height="256"
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1">
+    <rect
+       style="fill:#5fb356;fill-opacity:1;stroke:none;stroke-width:10"
+       id="rect1"
+       width="256"
+       height="256"
+       x="0"
+       y="0"
+       ry="0" />
+  </g>
+  <path
+     style="fill:#274625;fill-opacity:1;stroke:none;stroke-width:2"
+     id="path2"
+     d="M 217.57812,185.9375 129.51574,224.40353 52.17199,167.37228 62.890627,71.875001 150.95301,33.408975 228.29676,90.440224 Z"
+     transform="rotate(-36.4,132.73901,147.05865)" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:101.309px;font-family:Carlito;-inkscape-font-specification:Carlito;fill:#76c1ba;fill-opacity:1;stroke:none;stroke-width:1.51964"
+     x="75.688263"
+     y="160.5248"
+     id="text1"><tspan
+       x="75.688263"
+       y="160.5248"
+       id="tspan2"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Carlito;-inkscape-font-specification:'Carlito Bold';fill:#76c1ba;fill-opacity:1;stroke-width:1.51964">20</tspan></text>
+</svg>
