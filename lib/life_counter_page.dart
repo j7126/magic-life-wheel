@@ -17,7 +17,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   List<Player> players = [];
   int numPlayers = 0;
   int layoutId = 0;
-  bool isDragging = false;
+  bool rearrangeMode = false;
   List<Player>? oldPlayers;
 
   final FocusNode _playersMenuButtonFocusNode = FocusNode();
@@ -150,7 +150,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     return Scaffold(
       body: Column(
         children: [
-          // counters
+          // ----- counters -----
           Expanded(
             child: layout?.build(
                   context,
@@ -160,12 +160,12 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                     return Stack(
                       children: [
                         AnimatedPadding(
-                          padding: EdgeInsets.all(isDragging ? padding : 0),
+                          padding: EdgeInsets.all(rearrangeMode ? padding : 0),
                           duration: const Duration(milliseconds: 200),
                           curve: Curves.ease,
                           child: child,
                         ),
-                        if (isDragging)
+                        if (rearrangeMode)
                           DragTarget<int>(
                             builder: (
                               BuildContext context,
@@ -237,58 +237,75 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                 ) ??
                 Container(),
           ),
-          // toolbar
+          // ----- toolbar -----
           const Padding(
             padding: EdgeInsets.only(top: 8.0),
             child: Divider(
               height: 2,
             ),
           ),
-          isDragging
+          rearrangeMode
+              // rearrange toolbar
               ? Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Expanded(
                       child: TextButton(
-                        key: const ValueKey("DraggingMenuButton1"),
+                        key: const ValueKey("rearrangeCancelButton"),
                         onPressed: () {
                           players = oldPlayers ?? [];
                           oldPlayers = null;
                           setState(() {
-                            isDragging = false;
+                            rearrangeMode = false;
                           });
                         },
                         style: barButtonStyle,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12.0),
                           child: Icon(
                             Icons.close,
-                            color: Theme.of(context).colorScheme.onBackground,
                           ),
                         ),
                       ),
                     ),
                     Expanded(
                       child: TextButton(
-                        key: const ValueKey("DraggingMenuButton2"),
+                        key: const ValueKey("rearrangeShuffleButton"),
                         onPressed: () {
                           setState(() {
-                            isDragging = false;
+                            players.shuffle();
                           });
                         },
                         style: barButtonStyle,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12.0),
+                          child: Icon(
+                            Icons.shuffle_outlined,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextButton(
+                        key: const ValueKey("rearrangeDoneButton"),
+                        onPressed: () {
+                          setState(() {
+                            rearrangeMode = false;
+                          });
+                        },
+                        style: barButtonStyle,
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12.0),
                           child: Icon(
                             Icons.done,
-                            color: Theme.of(context).colorScheme.onBackground,
                           ),
                         ),
                       ),
                     ),
                   ],
                 )
+              // standard toolbar
               : Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -328,7 +345,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                         onPressed: () {
                           oldPlayers = List.from(players);
                           setState(() {
-                            isDragging = true;
+                            rearrangeMode = true;
                           });
                         },
                         style: barButtonStyle,
