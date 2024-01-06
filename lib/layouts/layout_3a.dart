@@ -16,6 +16,7 @@ class Layout3a extends Layout {
       return counterParentBuilder(
         Counter(
           player: players[x],
+          i: x,
         ),
         x,
       );

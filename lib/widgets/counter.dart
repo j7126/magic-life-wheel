@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:magic_life_wheel/player.dart';
 
 class Counter extends StatefulWidget {
-  const Counter({super.key, required this.player});
+  const Counter({super.key, required this.player, required this.i});
 
+  final int i;
   final Player player;
 
   @override
@@ -39,7 +40,7 @@ class _CounterState extends State<Counter> {
           ),
           onChanged: (text) {
             setState(() {
-              widget.player.name = text.isEmpty ? "Player ${widget.player.id + 1}" : text;
+              widget.player.name = text;
             });
           },
         ),
@@ -56,7 +57,7 @@ class _CounterState extends State<Counter> {
         child: Card(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: Text(widget.player.name),
+            child: Text(widget.player.name.isEmpty ? "Player ${widget.i + 1}" : widget.player.name),
           ),
         ),
       ),

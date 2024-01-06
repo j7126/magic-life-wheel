@@ -1,9 +1,8 @@
 class Player {
   Player({
-    required this.id,
+    required this.name,
     life,
   }) {
-    name = "Player ${id + 1}";
     if (life == null) {
       this.life = 40;
     } else {
@@ -11,7 +10,6 @@ class Player {
     }
   }
 
-  final int id;
   late int life;
   late String name;
 

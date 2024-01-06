@@ -58,7 +58,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
         for (var i = players.length; i < numPlayers; i++) {
           players.add(
             Player(
-              id: i,
+              name: "",
             ),
           );
         }
