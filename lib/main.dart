@@ -16,7 +16,11 @@ class App extends StatelessWidget {
         return MaterialApp(
           title: 'Magic Life Wheel',
           theme: ThemeData(
-            colorScheme: darkDynamic,
+            colorScheme: darkDynamic ??
+                ColorScheme.fromSeed(
+                  seedColor: Colors.green,
+                  brightness: Brightness.dark,
+                ),
             useMaterial3: true,
           ),
           home: const LifeCounterPage(),
