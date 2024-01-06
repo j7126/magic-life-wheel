@@ -20,6 +20,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   bool isDragging = false;
   List<Player>? oldPlayers;
 
+  final FocusNode _playersMenuButtonFocusNode = FocusNode();
+
   bool get isGameReset => !players.any((x) => !x.isGameReset);
 
   void switchLayout() {
@@ -104,7 +106,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   }
 
   void _showResetGameDialog() async {
-    var result = isGameReset ? true : await _showResetWarning();
+    var result = isGameReset ? false : await _showResetWarning();
 
     if (result ?? false) resetGame();
   }
@@ -121,7 +123,30 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   }
 
   @override
+  void dispose() {
+    _playersMenuButtonFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var barButtonStyle = ButtonStyle(
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      ),
+      foregroundColor: MaterialStateProperty.resolveWith<Color?>(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.disabled)) {
+            return null;
+          }
+          return Theme.of(context).colorScheme.onBackground;
+        },
+      ),
+      overlayColor: MaterialStateProperty.all<Color>(
+        Theme.of(context).colorScheme.onBackground.withAlpha(20),
+      ),
+    );
+
     return Scaffold(
       body: Column(
         children: [
@@ -213,15 +238,19 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                 Container(),
           ),
           // toolbar
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: isDragging
-                ? Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      IconButton(
+          const Padding(
+            padding: EdgeInsets.only(top: 8.0),
+            child: Divider(
+              height: 2,
+            ),
+          ),
+          isDragging
+              ? Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      child: TextButton(
                         key: const ValueKey("DraggingMenuButton1"),
                         onPressed: () {
                           players = oldPlayers ?? [];
@@ -230,97 +259,133 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                             isDragging = false;
                           });
                         },
-                        icon: const Icon(Icons.close),
-                        color: Theme.of(context).colorScheme.onBackground,
+                        style: barButtonStyle,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: Icon(
+                            Icons.close,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
+                        ),
                       ),
-                      IconButton(
+                    ),
+                    Expanded(
+                      child: TextButton(
                         key: const ValueKey("DraggingMenuButton2"),
                         onPressed: () {
                           setState(() {
                             isDragging = false;
                           });
                         },
-                        icon: const Icon(Icons.done),
-                        color: Theme.of(context).colorScheme.onBackground,
+                        style: barButtonStyle,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: Icon(
+                            Icons.done,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
+                        ),
                       ),
-                    ],
-                  )
-                : Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      IconButton(
-                        color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      child: TextButton(
                         onPressed: _showResetGameDialog,
-                        icon: const Icon(Icons.restart_alt),
+                        style: barButtonStyle,
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12.0),
+                          child: Icon(
+                            Icons.restart_alt,
+                          ),
+                        ),
                       ),
-                      IconButton(
+                    ),
+                    Expanded(
+                      child: TextButton(
                         onPressed: (Layouts.layoutsBySize[numPlayers]?.length ?? 0) > 1 ? switchLayout : null,
-                        icon: layout != null
-                            ? SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: layout?.buildPreview(context),
-                              )
-                            : const Icon(Icons.grid_view),
-                        color: Theme.of(context).colorScheme.onBackground,
+                        style: barButtonStyle,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: layout != null
+                              ? SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: layout?.buildPreview(context),
+                                )
+                              : const Icon(
+                                  Icons.grid_view,
+                                ),
+                        ),
                       ),
-                      IconButton(
+                    ),
+                    Expanded(
+                      child: TextButton(
                         onPressed: () {
                           oldPlayers = List.from(players);
                           setState(() {
                             isDragging = true;
                           });
                         },
-                        icon: const Icon(Icons.swap_horiz_outlined),
-                        color: Theme.of(context).colorScheme.onBackground,
-                      ),
-                      PopupMenuButton<int>(
-                        iconColor: Theme.of(context).colorScheme.onBackground,
-                        tooltip: "Number of players",
-                        child: Container(
-                          width: 24,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Theme.of(context).iconTheme.color ?? Colors.black,
-                              width: 1.5,
-                            ),
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Center(
-                            child: Text(numPlayers.toString()),
+                        style: barButtonStyle,
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12.0),
+                          child: Icon(
+                            Icons.swap_horiz_outlined,
                           ),
                         ),
-                        onSelected: (int players) {
-                          _showSwitchPlayersDialog(players);
-                        },
-                        itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-                          const PopupMenuItem<int>(
-                            value: 2,
-                            child: Text('2 Players'),
-                          ),
-                          const PopupMenuItem<int>(
-                            value: 3,
-                            child: Text('3 Players'),
-                          ),
-                          const PopupMenuItem<int>(
-                            value: 4,
-                            child: Text('4 Players'),
-                          ),
-                          const PopupMenuItem<int>(
-                            value: 5,
-                            child: Text('5 Players'),
-                          ),
-                          const PopupMenuItem<int>(
-                            value: 6,
-                            child: Text('6 Players'),
-                          ),
-                        ],
                       ),
-                    ],
-                  ),
-          ),
+                    ),
+                    Expanded(
+                      child: MenuAnchor(
+                        childFocusNode: _playersMenuButtonFocusNode,
+                        menuChildren: <Widget>[
+                          for (int i = 2; i <= 6; i++)
+                            MenuItemButton(
+                              child: Text('$i Players'),
+                              onPressed: () => _showSwitchPlayersDialog(i),
+                            ),
+                        ],
+                        builder: (BuildContext context, MenuController controller, Widget? child) {
+                          return TextButton(
+                            focusNode: _playersMenuButtonFocusNode,
+                            onPressed: () {
+                              if (controller.isOpen) {
+                                controller.close();
+                              } else {
+                                controller.open();
+                              }
+                            },
+                            style: barButtonStyle,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12.0),
+                              child: Center(
+                                child: Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Theme.of(context).iconTheme.color ?? Colors.black,
+                                      width: 1.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Center(
+                                    child: Text(numPlayers.toString()),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
         ],
       ),
     );
