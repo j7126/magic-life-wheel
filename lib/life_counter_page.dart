@@ -99,7 +99,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     );
   }
 
-  void _showSwitchPlayersDialog(int players) async {
+  Future _showSwitchPlayersDialog(int players) async {
     var result = isGameReset ? true : await _showResetWarning();
 
     if (result ?? false) setPlayers(players);
@@ -109,6 +109,83 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     var result = isGameReset ? false : await _showResetWarning();
 
     if (result ?? false) resetGame();
+  }
+
+  void _showLayoutSelector() {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 4.0),
+                  child: Text(
+                    "Players",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+                SegmentedButton<int>(
+                  segments: <ButtonSegment<int>>[
+                    for (int i = 2; i <= 6; i++)
+                      ButtonSegment<int>(
+                        value: i,
+                        label: Text(i.toString()),
+                      ),
+                  ],
+                  selected: {numPlayers},
+                  onSelectionChanged: (Set<int> newSelection) async {
+                    await _showSwitchPlayersDialog(newSelection.first);
+                    setState(() {});
+                  },
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 4.0, top: 16.0),
+                  child: Text(
+                    "Layout",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+                if (Layouts.layoutsBySize[numPlayers] != null)
+                  SegmentedButton<String>(
+                    segments: <ButtonSegment<String>>[
+                      for (Layout layout in Layouts.layoutsBySize[numPlayers] ?? [])
+                        ButtonSegment<String>(
+                          value: layout.runtimeType.toString(),
+                          label: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              height: 48,
+                              width: 48,
+                              child: layout.buildPreview(context),
+                            ),
+                          ),
+                        ),
+                    ],
+                    selected: {layout.runtimeType.toString()},
+                    onSelectionChanged: (Set<String> newSelection) async {
+                      setState(() {
+                        switchLayout();
+                      });
+                    },
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                  child: OutlinedButton(
+                    child: const Text('Done'),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+      },
+    );
   }
 
   @override
@@ -324,7 +401,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                     ),
                     Expanded(
                       child: TextButton(
-                        onPressed: (Layouts.layoutsBySize[numPlayers]?.length ?? 0) > 1 ? switchLayout : null,
+                        onPressed: _showLayoutSelector,
                         style: barButtonStyle,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -355,50 +432,6 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                             Icons.swap_horiz_outlined,
                           ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: MenuAnchor(
-                        childFocusNode: _playersMenuButtonFocusNode,
-                        menuChildren: <Widget>[
-                          for (int i = 2; i <= 6; i++)
-                            MenuItemButton(
-                              child: Text('$i Players'),
-                              onPressed: () => _showSwitchPlayersDialog(i),
-                            ),
-                        ],
-                        builder: (BuildContext context, MenuController controller, Widget? child) {
-                          return TextButton(
-                            focusNode: _playersMenuButtonFocusNode,
-                            onPressed: () {
-                              if (controller.isOpen) {
-                                controller.close();
-                              } else {
-                                controller.open();
-                              }
-                            },
-                            style: barButtonStyle,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12.0),
-                              child: Center(
-                                child: Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Theme.of(context).iconTheme.color ?? Colors.black,
-                                      width: 1.5,
-                                    ),
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                  child: Center(
-                                    child: Text(numPlayers.toString()),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
                       ),
                     ),
                   ],
