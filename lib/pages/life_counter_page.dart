@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/layouts/layouts.dart';
+import 'package:magic_life_wheel/pages/about_page.dart';
 import 'package:magic_life_wheel/player.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -20,7 +21,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   bool rearrangeMode = false;
   List<Player>? oldPlayers;
 
-  final FocusNode _playersMenuButtonFocusNode = FocusNode();
+  final FocusNode _menuButtonFocusNode = FocusNode();
 
   bool get isGameReset => !players.any((x) => !x.isGameReset);
 
@@ -201,7 +202,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
 
   @override
   void dispose() {
-    _playersMenuButtonFocusNode.dispose();
+    _menuButtonFocusNode.dispose();
     super.dispose();
   }
 
@@ -387,6 +388,51 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    Expanded(
+                      child: MenuAnchor(
+                        childFocusNode: _menuButtonFocusNode,
+                        style: const MenuStyle(
+                          visualDensity: VisualDensity.comfortable,
+                        ),
+                        menuChildren: <Widget>[
+                          MenuItemButton(
+                            onPressed: null,
+                            leadingIcon: const Icon(Icons.settings),
+                            child: const Text("Settings"),
+                          ),
+                          MenuItemButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const AboutPage(),
+                                ),
+                              );
+                            },
+                            leadingIcon: const Icon(Icons.info_outline),
+                            child: const Text("About"),
+                          ),
+                        ],
+                        builder: (BuildContext context, MenuController controller, Widget? child) {
+                          return TextButton(
+                            focusNode: _menuButtonFocusNode,
+                            onPressed: () {
+                              if (controller.isOpen) {
+                                controller.close();
+                              } else {
+                                controller.open();
+                              }
+                            },
+                            style: barButtonStyle,
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 12.0),
+                              child: Icon(
+                                Icons.more_vert,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                     Expanded(
                       child: TextButton(
                         onPressed: _showResetGameDialog,
