@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
-import 'package:magic_life_wheel/player.dart';
+import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/widgets/counter.dart';
 
 class Layout2a extends Layout {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:magic_life_wheel/player.dart';
+import 'package:magic_life_wheel/datamodel/player.dart';
 
 class Counter extends StatefulWidget {
   const Counter({super.key, required this.player, required this.i});
@@ -12,7 +12,9 @@ class Counter extends StatefulWidget {
 }
 
 class _CounterState extends State<Counter> {
-  void playerNameOnTap() {
+  void editPlayerBackground() {}
+
+  void editPlayer() {
     TextEditingController nameController = TextEditingController(text: widget.player.name);
     showDialog<String>(
       context: context,
@@ -31,18 +33,23 @@ class _CounterState extends State<Counter> {
             ),
           ],
         ),
-        content: TextField(
-          controller: nameController,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Player Name',
-            isDense: true,
-          ),
-          onChanged: (text) {
-            setState(() {
-              widget.player.name = text;
-            });
-          },
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Player Name',
+                isDense: true,
+              ),
+              onChanged: (text) {
+                setState(() {
+                  widget.player.name = text;
+                });
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -53,7 +60,7 @@ class _CounterState extends State<Counter> {
     var playerNameBtn = MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: playerNameOnTap,
+        onTap: editPlayer,
         child: Card(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),

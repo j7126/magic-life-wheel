@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:magic_life_wheel/player.dart';
+import 'package:magic_life_wheel/datamodel/player.dart';
 
 class Layout {
   int get players => 0;

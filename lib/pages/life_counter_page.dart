@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/layouts/layouts.dart';
 import 'package:magic_life_wheel/pages/about_page.dart';
-import 'package:magic_life_wheel/player.dart';
+import 'package:magic_life_wheel/datamodel/player.dart';
+import 'package:magic_life_wheel/pages/settings_page.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 class LifeCounterPage extends StatefulWidget {
@@ -396,7 +397,13 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                         ),
                         menuChildren: <Widget>[
                           MenuItemButton(
-                            onPressed: null,
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const SettingsPage(),
+                                ),
+                              );
+                            },
                             leadingIcon: const Icon(Icons.settings),
                             child: const Text("Settings"),
                           ),
