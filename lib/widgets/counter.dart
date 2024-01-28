@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 
 class Counter extends StatefulWidget {
@@ -16,11 +17,12 @@ class _CounterState extends State<Counter> {
 
   void editPlayer() {
     TextEditingController nameController = TextEditingController(text: widget.player.name);
+    TextEditingController lifeController = TextEditingController(text: widget.player.life.toString());
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        titlePadding: const EdgeInsets.only(top: 12.0, left: 16.0, right: 16.0),
-        contentPadding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 8.0),
+        titlePadding: const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0),
+        contentPadding: const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 32.0, top: 8.0),
         title: Row(
           children: [
             const Text("Edit Player"),
@@ -33,23 +35,45 @@ class _CounterState extends State<Counter> {
             ),
           ],
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Player Name',
-                isDense: true,
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Player Name',
+                  isDense: true,
+                ),
+                onChanged: (text) {
+                  setState(() {
+                    widget.player.name = text;
+                  });
+                },
               ),
-              onChanged: (text) {
-                setState(() {
-                  widget.player.name = text;
-                });
-              },
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: TextField(
+                  controller: lifeController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Life',
+                    isDense: true,
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  onChanged: (text) {
+                    setState(() {
+                      try {
+                        widget.player.life = int.parse(text);
+                      } catch (e) {}
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
