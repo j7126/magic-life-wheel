@@ -12,9 +12,9 @@ Currently builds are provided for android.
 
 ### Android
 
-Magic Deck manager is available on the [play store](https://play.google.com/store/apps/details?id=dev.j7126.magic_deck_manager)
+Magic Life Wheel is available on the [play store](https://play.google.com/store/apps/details?id=dev.j7126.magic_life_wheel)
 
-Magic Deck Manager is available in my [F-Droid](https://f-droid.org/) repo at [fdroid.j7126.dev](https://fdroid.j7126.dev). Simply add the repo to your f-droid client and search for the app to download it.
+Magic Life Wheel is available in my [F-Droid](https://f-droid.org/) repo at [fdroid.j7126.dev](https://fdroid.j7126.dev). Simply add the repo to your f-droid client and search for the app to download it.
 
 ## Building
 
