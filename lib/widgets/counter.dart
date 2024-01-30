@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
+import 'package:magic_life_wheel/widgets/card_image.dart';
+import 'package:magic_life_wheel/widgets/edit_player_dialog.dart';
 
 class Counter extends StatefulWidget {
   const Counter({super.key, required this.player, required this.i});
@@ -15,68 +16,21 @@ class Counter extends StatefulWidget {
 class _CounterState extends State<Counter> {
   void editPlayerBackground() {}
 
-  void editPlayer() {
-    TextEditingController nameController = TextEditingController(text: widget.player.name);
-    TextEditingController lifeController = TextEditingController(text: widget.player.life.toString());
-    showDialog<String>(
+  void editPlayer() async {
+    await showDialog(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        titlePadding: const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0),
-        contentPadding: const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 32.0, top: 8.0),
-        title: Row(
-          children: [
-            const Text("Edit Player"),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Player Name',
-                  isDense: true,
-                ),
-                onChanged: (text) {
-                  setState(() {
-                    widget.player.name = text;
-                  });
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: TextField(
-                  controller: lifeController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Life',
-                    isDense: true,
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  onChanged: (text) {
-                    setState(() {
-                      try {
-                        widget.player.life = int.parse(text);
-                      } catch (e) {}
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      builder: (BuildContext context) => EditPlayerDialog(player: widget.player),
     );
+    setState(() {});
+  }
+
+  void changeLife(int x) {
+    setState(() {
+      widget.player.life += x;
+      if (widget.player.life < 0) {
+        widget.player.life = 0;
+      }
+    });
   }
 
   @override
@@ -86,6 +40,7 @@ class _CounterState extends State<Counter> {
       child: GestureDetector(
         onTap: editPlayer,
         child: Card(
+          color: widget.player.card != null ? const Color.fromARGB(140, 0, 0, 0) : null,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: Text(widget.player.name.isEmpty ? "Player ${widget.i + 1}" : widget.player.name),
@@ -93,6 +48,26 @@ class _CounterState extends State<Counter> {
         ),
       ),
     );
+
+    var onBackgroundShadow = widget.player.card != null
+        ? const [
+            Shadow(
+              offset: Offset(0, 0),
+              blurRadius: 2.0,
+              color: Color.fromARGB(100, 0, 0, 0),
+            ),
+            Shadow(
+              offset: Offset(1, 1),
+              blurRadius: 1.0,
+              color: Colors.black,
+            ),
+            Shadow(
+              offset: Offset(2, 2),
+              blurRadius: 4.0,
+              color: Colors.black,
+            ),
+          ]
+        : null;
 
     return LayoutBuilder(
       builder: (context, constraints) => Container(
@@ -105,6 +80,11 @@ class _CounterState extends State<Counter> {
         height: constraints.maxHeight,
         child: Stack(
           children: [
+            if (widget.player.card != null)
+              CardImage(
+                key: Key(widget.player.card?.name ?? ''),
+                cardSet: widget.player.card,
+              ),
             Positioned(
               top: 0,
               bottom: 0,
@@ -124,6 +104,17 @@ class _CounterState extends State<Counter> {
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
                           widget.player.life.toString(),
+                          style: TextStyle(
+                            shadows: widget.player.card != null
+                                ? [
+                                    const Shadow(
+                                      offset: Offset(0.5, 0.5),
+                                      blurRadius: 10.0,
+                                      color: Colors.black,
+                                    ),
+                                  ]
+                                : null,
+                          ),
                         ),
                       ),
                     ),
@@ -145,41 +136,38 @@ class _CounterState extends State<Counter> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: TextButton(
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                        ),
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                          Theme.of(context).colorScheme.onBackground,
-                        ),
-                        overlayColor: MaterialStateProperty.all<Color>(
-                          Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          widget.player.life--;
-                        });
-                      },
-                      onLongPress: () {
-                        setState(() {
-                          widget.player.life -= 10;
-                        });
-                      },
-                      child: const SizedBox(
-                        height: double.infinity,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Icon(Icons.remove),
+                    child: widget.player.life > 0
+                        ? TextButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                              ),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).colorScheme.onBackground,
+                              ),
+                              overlayColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
+                            onPressed: () => changeLife(-1),
+                            onLongPress: () => changeLife(-10),
+                            child: SizedBox(
+                              height: double.infinity,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: Icon(
+                                      Icons.remove,
+                                      shadows: onBackgroundShadow,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : Container(),
                   ),
                   Expanded(
                     child: TextButton(
@@ -194,24 +182,19 @@ class _CounterState extends State<Counter> {
                           Theme.of(context).colorScheme.onBackground.withAlpha(30),
                         ),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          widget.player.life++;
-                        });
-                      },
-                      onLongPress: () {
-                        setState(() {
-                          widget.player.life += 10;
-                        });
-                      },
-                      child: const SizedBox(
+                      onPressed: () => changeLife(1),
+                      onLongPress: () => changeLife(10),
+                      child: SizedBox(
                         height: double.infinity,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Icon(Icons.add),
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Icon(
+                                Icons.add,
+                                shadows: onBackgroundShadow,
+                              ),
                             ),
                           ],
                         ),

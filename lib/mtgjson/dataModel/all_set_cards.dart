@@ -9,6 +9,5 @@ class AllSetCards {
 
   List<CardSet> data;
 
-  factory AllSetCards.fromJson(Map<String, dynamic> json) =>
-      _$AllSetCardsFromJson(json);
+  factory AllSetCards.fromJson(Map<String, dynamic> json) => _$AllSetCardsFromJson(json);
 }

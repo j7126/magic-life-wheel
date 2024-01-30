@@ -1,3 +1,5 @@
+import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
+
 class Player {
   Player({
     required this.name,
@@ -12,6 +14,7 @@ class Player {
 
   late int life;
   late String name;
+  CardSet? card;
 
   bool get isGameReset => life == 40;
 

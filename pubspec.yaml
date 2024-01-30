@@ -20,8 +20,9 @@ dependencies:
   flutter_svg: ^2.0.9
   url_launcher: ^6.2.3
   json_annotation: ^4.8.1
-  freezed_annotation: ^2.4.1
   shared_preferences: ^2.2.2
+  collection: ^1.18.0
+  string_normalizer: ^0.2.2
 
 dev_dependencies:
   flutter_test:
@@ -29,7 +30,6 @@ dev_dependencies:
 
   flutter_lints: ^2.0.0
   flutter_launcher_icons: "^0.13.1"
-  freezed: ^2.4.5
   build_runner: ^2.4.7
   json_serializable: ^6.7.1
 
@@ -39,6 +39,7 @@ flutter:
   assets:
     - assets/icon/logo.svg
     - data/all_cards.json
+    - data/set_list.json
 
   fonts:
     - family:  CustomIcons
