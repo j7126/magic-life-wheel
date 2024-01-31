@@ -25,7 +25,7 @@ class Layout3a extends Layout {
     return Column(
       children: [
         Expanded(
-          flex: 2,
+          flex: 3,
           child: Row(
             children: [
               Expanded(
@@ -46,7 +46,7 @@ class Layout3a extends Layout {
         ),
         const Gap(8),
         Expanded(
-          flex: 1,
+          flex: 2,
           child: RotatedBox(
             quarterTurns: 0,
             child: counter(0),
