@@ -69,151 +69,154 @@ class _CounterState extends State<Counter> {
           ]
         : null;
 
-    return LayoutBuilder(
-      builder: (context, constraints) => Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(35),
-          color: const Color.fromARGB(50, 255, 255, 255),
-        ),
-        clipBehavior: Clip.antiAlias,
-        width: constraints.maxWidth,
-        height: constraints.maxHeight,
-        child: Stack(
-          children: [
-            if (widget.player.card != null)
-              CardImage(
-                key: Key(widget.player.card?.name ?? ''),
-                cardSet: widget.player.card,
-              ),
-            Positioned(
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Opacity(
-                    opacity: 0,
-                    child: playerNameBtn,
-                  ),
-                  Expanded(
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Text(
-                          widget.player.life.toString(),
-                          style: TextStyle(
-                            shadows: widget.player.card != null
-                                ? [
-                                    const Shadow(
-                                      offset: Offset(0.5, 0.5),
-                                      blurRadius: 10.0,
-                                      color: Colors.black,
-                                    ),
-                                  ]
-                                : null,
+    return Opacity(
+      opacity: widget.player.life <= 0 ? 0.2 : 1,
+      child: LayoutBuilder(
+        builder: (context, constraints) => Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(35),
+            color: const Color.fromARGB(50, 255, 255, 255),
+          ),
+          clipBehavior: Clip.antiAlias,
+          width: constraints.maxWidth,
+          height: constraints.maxHeight,
+          child: Stack(
+            children: [
+              if (widget.player.card != null)
+                CardImage(
+                  key: Key(widget.player.card?.name ?? ''),
+                  cardSet: widget.player.card,
+                ),
+              Positioned(
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Opacity(
+                      opacity: 0,
+                      child: playerNameBtn,
+                    ),
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Text(
+                            widget.player.life.toString(),
+                            style: TextStyle(
+                              shadows: widget.player.card != null
+                                  ? [
+                                      const Shadow(
+                                        offset: Offset(0.5, 0.5),
+                                        blurRadius: 10.0,
+                                        color: Colors.black,
+                                      ),
+                                    ]
+                                  : null,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: widget.player.life > 0
-                        ? TextButton(
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                              ),
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                Theme.of(context).colorScheme.onBackground,
-                              ),
-                              overlayColor: MaterialStateProperty.all<Color>(
-                                Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                              ),
-                            ),
-                            onPressed: () => changeLife(-1),
-                            onLongPress: () => changeLife(-10),
-                            child: SizedBox(
-                              height: double.infinity,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                    child: Icon(
-                                      Icons.remove,
-                                      shadows: onBackgroundShadow,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        : Container(),
-                  ),
-                  Expanded(
-                    child: TextButton(
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                        ),
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                          Theme.of(context).colorScheme.onBackground,
-                        ),
-                        overlayColor: MaterialStateProperty.all<Color>(
-                          Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                        ),
-                      ),
-                      onPressed: () => changeLife(1),
-                      onLongPress: () => changeLife(10),
-                      child: SizedBox(
-                        height: double.infinity,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Icon(
-                                Icons.add,
-                                shadows: onBackgroundShadow,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              child: Center(
-                child: Column(
-                  children: [
-                    playerNameBtn,
                   ],
                 ),
               ),
-            ),
-          ],
+              Positioned(
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: widget.player.life > 0
+                          ? TextButton(
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                ),
+                                foregroundColor: MaterialStateProperty.all<Color>(
+                                  Theme.of(context).colorScheme.onBackground,
+                                ),
+                                overlayColor: MaterialStateProperty.all<Color>(
+                                  Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                ),
+                              ),
+                              onPressed: () => changeLife(-1),
+                              onLongPress: () => changeLife(-10),
+                              child: SizedBox(
+                                height: double.infinity,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                      child: Icon(
+                                        Icons.remove,
+                                        shadows: onBackgroundShadow,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Container(),
+                    ),
+                    Expanded(
+                      child: TextButton(
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                          ),
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).colorScheme.onBackground,
+                          ),
+                          overlayColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                          ),
+                        ),
+                        onPressed: () => changeLife(1),
+                        onLongPress: () => changeLife(10),
+                        child: SizedBox(
+                          height: double.infinity,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                child: Icon(
+                                  Icons.add,
+                                  shadows: onBackgroundShadow,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                child: Center(
+                  child: Column(
+                    children: [
+                      playerNameBtn,
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
