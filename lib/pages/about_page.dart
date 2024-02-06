@@ -325,7 +325,7 @@ class _AboutPageState extends State<AboutPage> {
                   child: Opacity(
                     opacity: 0.3,
                     child: Text(
-                      "Magic Life Wheel Copyright (C) 2024 Jefferey Neuffer.\nThis program is free software, licensed under GNU AGPL v3 or any later version.\n\nPortions of this app contains information and images related to Magic: The Gathering. Card metadata is bundled with the app, and card images may be fetched from Scryfall. Wizards of the Coast, Magic: The Gathering, and their logos, in addtion to the literal and graphical information presented about Magic: The Gathering, including card images, names, mana symbols and other associated metadata, is copyright Wizards of the Coast, LLC. All rights reserved. This app is not produced by or endorsed by Wizards of the Coast.",
+                      "Magic Life Wheel Copyright (C) 2024 Jefferey Neuffer.\nThis program is free software, licensed under GNU AGPL v3 or any later version.\n\nPortions of this app contains information and images related to Magic: The Gathering. Card metadata is bundled with the app, and card images may be fetched from Scryfall. Wizards of the Coast, Magic: The Gathering, and their logos, in addtion to the literal and graphical information presented about Magic: The Gathering, including card images, names, mana symbols and other associated metadata and images, is copyright Wizards of the Coast, LLC. All rights reserved. This app is not produced by or endorsed by Wizards of the Coast.",
                       style: TextStyle(
                         fontSize: 12.0,
                       ),
