@@ -193,7 +193,6 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   @override
   void initState() {
     WakelockPlus.enable();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
