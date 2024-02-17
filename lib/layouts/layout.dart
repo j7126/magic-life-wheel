@@ -5,7 +5,7 @@ import 'package:magic_life_wheel/datamodel/player.dart';
 class Layout {
   int get players => 0;
 
-  Widget build(BuildContext context, List<Player> players, Widget Function(Widget child, int i) counterParentBuilder) {
+  Widget build(BuildContext context, List<Player> players, Widget Function(int i) counterParentBuilder) {
     assert(players.length == this.players);
     throw UnimplementedError();
   }

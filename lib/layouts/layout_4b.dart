@@ -2,24 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
-import 'package:magic_life_wheel/widgets/counter.dart';
 
 class Layout4b extends Layout {
   @override
   int get players => 4;
 
   @override
-  Widget build(BuildContext context, List<Player> players, Widget Function(Widget child, int i) counterParentBuilder) {
+  Widget build(BuildContext context, List<Player> players, Widget Function(int i) counterParentBuilder) {
     assert(players.length == this.players);
 
     counter(int x) {
-      return counterParentBuilder(
-        Counter(
-          player: players[x],
-          i: x,
-        ),
-        x,
-      );
+      return counterParentBuilder(x);
     }
 
     return Column(

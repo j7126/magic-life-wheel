@@ -21,6 +21,11 @@ class SettingsService {
     if (getScryfallImages != null) {
       _pref_getScryfallImages = getScryfallImages;
     }
+
+    var enableCommanderDamage = prefs.getBool('enableCommanderDamage');
+    if (enableCommanderDamage != null) {
+      _pref_enableCommanderDamage = enableCommanderDamage;
+    }
   }
 
   bool _pref_getScryfallImages = true;
@@ -28,5 +33,12 @@ class SettingsService {
   set pref_getScryfallImages(bool val) {
     _pref_getScryfallImages = val;
     prefs.setBool('getScryfallImages', val);
+  }
+
+  bool _pref_enableCommanderDamage = true;
+  bool get pref_enableCommanderDamage => _pref_enableCommanderDamage;
+  set pref_enableCommanderDamage(bool val) {
+    _pref_enableCommanderDamage = val;
+    prefs.setBool('enableCommanderDamage', val);
   }
 }

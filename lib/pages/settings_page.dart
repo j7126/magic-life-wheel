@@ -75,6 +75,60 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    Service.settingsService.pref_enableCommanderDamage = !Service.settingsService.pref_enableCommanderDamage;
+                  });
+                },
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                    child: Row(
+                      children: [
+                        const Opacity(
+                          opacity: 0.5,
+                          child: Icon(
+                            Icons.image_outlined,
+                            size: 32,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Opacity(
+                            opacity: 0.9,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Commander",
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                Text(
+                                  "Commander damage tracking.",
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        Switch(
+                          value: Service.settingsService.pref_enableCommanderDamage,
+                          onChanged: (bool value) {
+                            setState(() {
+                              Service.settingsService.pref_enableCommanderDamage = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

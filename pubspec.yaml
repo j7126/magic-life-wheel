@@ -23,6 +23,8 @@ dependencies:
   shared_preferences: ^2.2.2
   collection: ^1.18.0
   string_normalizer: ^0.2.2
+  uuid: ^4.3.3
+  keyrune_icons_flutter: ^0.0.2
 
 dev_dependencies:
   flutter_test:

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
+import 'package:magic_life_wheel/layouts/layout_2a.dart';
 import 'package:magic_life_wheel/layouts/layouts.dart';
 import 'package:magic_life_wheel/pages/about_page.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/pages/settings_page.dart';
+import 'package:magic_life_wheel/widgets/counter.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 class LifeCounterPage extends StatefulWidget {
@@ -233,7 +235,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
             child: layout?.build(
                   context,
                   players,
-                  (Widget child, int i) {
+                  (int i) {
                     const padding = 16.0;
                     return Stack(
                       children: [
@@ -241,7 +243,11 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                           padding: EdgeInsets.all(rearrangeMode ? padding : 0),
                           duration: const Duration(milliseconds: 200),
                           curve: Curves.ease,
-                          child: child,
+                          child: Counter(
+                            i: i,
+                            layout: layout ?? Layout2a(),
+                            players: players,
+                          ),
                         ),
                         if (rearrangeMode)
                           DragTarget<int>(
@@ -396,12 +402,13 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                         ),
                         menuChildren: <Widget>[
                           MenuItemButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
+                            onPressed: () async {
+                              await Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => const SettingsPage(),
                                 ),
                               );
+                              setState(() {});
                             },
                             leadingIcon: const Icon(Icons.settings),
                             child: const Text("Settings"),
