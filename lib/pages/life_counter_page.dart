@@ -228,274 +228,276 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     );
 
     return Scaffold(
-      body: Column(
-        children: [
-          // ----- counters -----
-          Expanded(
-            child: layout?.build(
-                  context,
-                  players,
-                  (int i) {
-                    const padding = 16.0;
-                    return Stack(
-                      children: [
-                        AnimatedPadding(
-                          padding: EdgeInsets.all(rearrangeMode ? padding : 0),
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.ease,
-                          child: Counter(
-                            i: i,
-                            layout: layout ?? Layout2a(),
-                            players: players,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ----- counters -----
+            Expanded(
+              child: layout?.build(
+                    context,
+                    players,
+                    (int i) {
+                      const padding = 16.0;
+                      return Stack(
+                        children: [
+                          AnimatedPadding(
+                            padding: EdgeInsets.all(rearrangeMode ? padding : 0),
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.ease,
+                            child: Counter(
+                              i: i,
+                              layout: layout ?? Layout2a(),
+                              players: players,
+                            ),
                           ),
-                        ),
-                        if (rearrangeMode)
-                          DragTarget<int>(
-                            builder: (
-                              BuildContext context,
-                              List<dynamic> candidateData,
-                              List<dynamic> rejectedData,
-                            ) {
-                              return Stack(
-                                children: [
-                                  Draggable<int>(
-                                    data: i,
-                                    dragAnchorStrategy: pointerDragAnchorStrategy,
-                                    feedback: Card(
+                          if (rearrangeMode)
+                            DragTarget<int>(
+                              builder: (
+                                BuildContext context,
+                                List<dynamic> candidateData,
+                                List<dynamic> rejectedData,
+                              ) {
+                                return Stack(
+                                  children: [
+                                    Draggable<int>(
+                                      data: i,
+                                      dragAnchorStrategy: pointerDragAnchorStrategy,
+                                      feedback: Card(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Text(
+                                            players[i].name,
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      childWhenDragging: Padding(
+                                        padding: const EdgeInsets.all(padding),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(35),
+                                            color: const Color.fromARGB(100, 0, 0, 0),
+                                          ),
+                                        ),
+                                      ),
                                       child: Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Text(
-                                          players[i].name,
-                                          style: const TextStyle(
-                                            fontSize: 20,
+                                        padding: const EdgeInsets.all(padding),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(35),
+                                            color: const Color.fromARGB(0, 0, 0, 0),
                                           ),
                                         ),
                                       ),
                                     ),
-                                    childWhenDragging: Padding(
-                                      padding: const EdgeInsets.all(padding),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(35),
-                                          color: const Color.fromARGB(100, 0, 0, 0),
+                                    if (candidateData.isNotEmpty)
+                                      Padding(
+                                        padding: const EdgeInsets.all(padding),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(35),
+                                            color: const Color.fromARGB(45, 48, 150, 63),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(padding),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(35),
-                                          color: const Color.fromARGB(0, 0, 0, 0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  if (candidateData.isNotEmpty)
-                                    Padding(
-                                      padding: const EdgeInsets.all(padding),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(35),
-                                          color: const Color.fromARGB(45, 48, 150, 63),
-                                        ),
-                                      ),
-                                    )
-                                ],
-                              );
-                            },
-                            onAccept: (int data) {
-                              setState(() {
-                                if (i != data) {
-                                  var temp = players[data];
-                                  players[data] = players[i];
-                                  players[i] = temp;
-                                }
-                              });
-                            },
-                            onWillAccept: (int? data) => data != null && i != data,
-                          ),
-                      ],
-                    );
-                  },
-                ) ??
-                Container(),
-          ),
-          // ----- toolbar -----
-          const Padding(
-            padding: EdgeInsets.only(top: 8.0),
-            child: Divider(
-              height: 2,
-            ),
-          ),
-          rearrangeMode
-              // rearrange toolbar
-              ? Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        key: const ValueKey("rearrangeCancelButton"),
-                        onPressed: () {
-                          players = oldPlayers ?? [];
-                          oldPlayers = null;
-                          setState(() {
-                            rearrangeMode = false;
-                          });
-                        },
-                        style: barButtonStyle,
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12.0),
-                          child: Icon(
-                            Icons.close,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: TextButton(
-                        key: const ValueKey("rearrangeShuffleButton"),
-                        onPressed: () {
-                          setState(() {
-                            players.shuffle();
-                          });
-                        },
-                        style: barButtonStyle,
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12.0),
-                          child: Icon(
-                            Icons.shuffle_outlined,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: TextButton(
-                        key: const ValueKey("rearrangeDoneButton"),
-                        onPressed: () {
-                          setState(() {
-                            rearrangeMode = false;
-                          });
-                        },
-                        style: barButtonStyle,
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12.0),
-                          child: Icon(
-                            Icons.done,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              // standard toolbar
-              : Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: MenuAnchor(
-                        childFocusNode: _menuButtonFocusNode,
-                        style: const MenuStyle(
-                          visualDensity: VisualDensity.comfortable,
-                        ),
-                        menuChildren: <Widget>[
-                          MenuItemButton(
-                            onPressed: () async {
-                              await Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const SettingsPage(),
-                                ),
-                              );
-                              setState(() {});
-                            },
-                            leadingIcon: const Icon(Icons.settings),
-                            child: const Text("Settings"),
-                          ),
-                          MenuItemButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const AboutPage(),
-                                ),
-                              );
-                            },
-                            leadingIcon: const Icon(Icons.info_outline),
-                            child: const Text("About"),
-                          ),
-                        ],
-                        builder: (BuildContext context, MenuController controller, Widget? child) {
-                          return TextButton(
-                            focusNode: _menuButtonFocusNode,
-                            onPressed: () {
-                              if (controller.isOpen) {
-                                controller.close();
-                              } else {
-                                controller.open();
-                              }
-                            },
-                            style: barButtonStyle,
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 12.0),
-                              child: Icon(
-                                Icons.more_vert,
-                              ),
+                                      )
+                                  ],
+                                );
+                              },
+                              onAccept: (int data) {
+                                setState(() {
+                                  if (i != data) {
+                                    var temp = players[data];
+                                    players[data] = players[i];
+                                    players[i] = temp;
+                                  }
+                                });
+                              },
+                              onWillAccept: (int? data) => data != null && i != data,
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: TextButton(
-                        onPressed: _showResetGameDialog,
-                        style: barButtonStyle,
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12.0),
-                          child: Icon(
-                            Icons.restart_alt,
+                        ],
+                      );
+                    },
+                  ) ??
+                  Container(),
+            ),
+            // ----- toolbar -----
+            const Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: Divider(
+                height: 2,
+              ),
+            ),
+            rearrangeMode
+                // rearrange toolbar
+                ? Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          key: const ValueKey("rearrangeCancelButton"),
+                          onPressed: () {
+                            players = oldPlayers ?? [];
+                            oldPlayers = null;
+                            setState(() {
+                              rearrangeMode = false;
+                            });
+                          },
+                          style: barButtonStyle,
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12.0),
+                            child: Icon(
+                              Icons.close,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: TextButton(
-                        onPressed: _showLayoutSelector,
-                        style: barButtonStyle,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12.0),
-                          child: layout != null
-                              ? SizedBox(
-                                  height: 24,
-                                  width: 24,
-                                  child: layout?.buildPreview(context),
-                                )
-                              : const Icon(
-                                  Icons.grid_view,
+                      Expanded(
+                        child: TextButton(
+                          key: const ValueKey("rearrangeShuffleButton"),
+                          onPressed: () {
+                            setState(() {
+                              players.shuffle();
+                            });
+                          },
+                          style: barButtonStyle,
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12.0),
+                            child: Icon(
+                              Icons.shuffle_outlined,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: TextButton(
+                          key: const ValueKey("rearrangeDoneButton"),
+                          onPressed: () {
+                            setState(() {
+                              rearrangeMode = false;
+                            });
+                          },
+                          style: barButtonStyle,
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12.0),
+                            child: Icon(
+                              Icons.done,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                // standard toolbar
+                : Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Expanded(
+                        child: MenuAnchor(
+                          childFocusNode: _menuButtonFocusNode,
+                          style: const MenuStyle(
+                            visualDensity: VisualDensity.comfortable,
+                          ),
+                          menuChildren: <Widget>[
+                            MenuItemButton(
+                              onPressed: () async {
+                                await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const SettingsPage(),
+                                  ),
+                                );
+                                setState(() {});
+                              },
+                              leadingIcon: const Icon(Icons.settings),
+                              child: const Text("Settings"),
+                            ),
+                            MenuItemButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const AboutPage(),
+                                  ),
+                                );
+                              },
+                              leadingIcon: const Icon(Icons.info_outline),
+                              child: const Text("About"),
+                            ),
+                          ],
+                          builder: (BuildContext context, MenuController controller, Widget? child) {
+                            return TextButton(
+                              focusNode: _menuButtonFocusNode,
+                              onPressed: () {
+                                if (controller.isOpen) {
+                                  controller.close();
+                                } else {
+                                  controller.open();
+                                }
+                              },
+                              style: barButtonStyle,
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0),
+                                child: Icon(
+                                  Icons.more_vert,
                                 ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () {
-                          oldPlayers = List.from(players);
-                          setState(() {
-                            rearrangeMode = true;
-                          });
-                        },
-                        style: barButtonStyle,
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12.0),
-                          child: Icon(
-                            Icons.swap_horiz_outlined,
+                      Expanded(
+                        child: TextButton(
+                          onPressed: _showResetGameDialog,
+                          style: barButtonStyle,
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12.0),
+                            child: Icon(
+                              Icons.restart_alt,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-        ],
+                      Expanded(
+                        child: TextButton(
+                          onPressed: _showLayoutSelector,
+                          style: barButtonStyle,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12.0),
+                            child: layout != null
+                                ? SizedBox(
+                                    height: 24,
+                                    width: 24,
+                                    child: layout?.buildPreview(context),
+                                  )
+                                : const Icon(
+                                    Icons.grid_view,
+                                  ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            oldPlayers = List.from(players);
+                            setState(() {
+                              rearrangeMode = true;
+                            });
+                          },
+                          style: barButtonStyle,
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12.0),
+                            child: Icon(
+                              Icons.swap_horiz_outlined,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+          ],
+        ),
       ),
     );
   }
