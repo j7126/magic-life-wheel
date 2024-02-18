@@ -76,7 +76,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                   children: [
                     if (player.card != null)
                       CardImage(
-                        key: Key(player.card?.name ?? ''),
+                        key: Key(player.card?.uuid ?? ''),
                         cardSet: player.card,
                       ),
                     Positioned.fill(

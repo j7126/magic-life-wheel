@@ -112,7 +112,7 @@ class _CounterState extends State<Counter> {
             children: [
               if (widget.player.card != null)
                 CardImage(
-                  key: Key(widget.player.card?.name ?? ''),
+                  key: Key(widget.player.card?.uuid ?? ''),
                   cardSet: widget.player.card,
                 ),
               Positioned(
