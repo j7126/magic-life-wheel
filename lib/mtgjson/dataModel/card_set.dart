@@ -12,28 +12,17 @@ class CardSet {
     required this.setCode,
     required this.identifiers,
     required this.artist,
-  }) {
-    cardSearchString = filterStringForSearch(name);
-    cardSearchStringWords = cardSearchString.split(' ');
-  }
+    required this.cardSearchString,
+    required this.cardSearchStringWords,
+  });
 
   String name;
   String uuid;
   String setCode;
   String? artist;
   Identifiers identifiers;
-
-  @JsonKey(
-    includeFromJson: false,
-    includeToJson: false,
-  )
-  late String cardSearchString;
-
-  @JsonKey(
-    includeFromJson: false,
-    includeToJson: false,
-  )
-  late List<String> cardSearchStringWords;
+  String cardSearchString;
+  List<String> cardSearchStringWords;
 
   factory CardSet.fromJson(Map<String, dynamic> json) => _$CardSetFromJson(json);
 
