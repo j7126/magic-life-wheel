@@ -71,15 +71,22 @@ class _CounterState extends State<Counter> {
           ]
         : null;
 
-    var playerNameBtn = MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: editPlayer,
-        child: Card(
-          color: widget.player.card != null ? const Color.fromARGB(140, 0, 0, 0) : null,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: Text(widget.player.name.isEmpty ? "Player ${widget.i + 1}" : widget.player.name),
+    var playerNameBtn = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: editPlayer,
+          child: Card(
+            color: widget.player.card != null ? const Color.fromARGB(140, 0, 0, 0) : null,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Text(
+                widget.player.name.isEmpty ? widget.player.card?.name ?? "Player ${widget.i + 1}" : widget.player.name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
           ),
         ),
       ),
