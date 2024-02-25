@@ -82,7 +82,7 @@ class _CounterState extends State<Counter> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: Text(
-                widget.player.name.isEmpty ? widget.player.card?.name ?? "Player ${widget.i + 1}" : widget.player.name,
+                widget.player.getDisplayName(widget.i),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),

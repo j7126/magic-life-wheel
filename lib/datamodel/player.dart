@@ -57,4 +57,13 @@ class Player {
     _life = 40;
     commanderDamage.clear();
   }
+
+  String getDisplayName(int i) {
+    if (name.isEmpty) {
+      return card?.name ?? "Player ${i + 1}";
+    }
+    else {
+      return name;
+    }
+  }
 }
