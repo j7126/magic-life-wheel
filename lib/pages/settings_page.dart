@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:keyrune_icons_flutter/keyrune_icons_flutter.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -91,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         const Opacity(
                           opacity: 0.5,
                           child: Icon(
-                            Icons.image_outlined,
+                            KeyruneIcons.ss_cmd,
                             size: 32,
                           ),
                         ),
