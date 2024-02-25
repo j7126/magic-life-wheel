@@ -205,7 +205,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
-                    "Edit Background",
+                    "Background",
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
