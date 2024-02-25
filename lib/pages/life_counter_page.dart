@@ -405,6 +405,17 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                           ),
                           menuChildren: <Widget>[
                             MenuItemButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const AboutPage(),
+                                  ),
+                                );
+                              },
+                              leadingIcon: const Icon(Icons.info_outline),
+                              child: const Text("About"),
+                            ),
+                            MenuItemButton(
                               onPressed: () async {
                                 await Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -417,15 +428,9 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                               child: const Text("Settings"),
                             ),
                             MenuItemButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const AboutPage(),
-                                  ),
-                                );
-                              },
-                              leadingIcon: const Icon(Icons.info_outline),
-                              child: const Text("About"),
+                              onPressed: _showResetGameDialog,
+                              leadingIcon: const Icon(Icons.restart_alt),
+                              child: const Text("Reset Game"),
                             ),
                           ],
                           builder: (BuildContext context, MenuController controller, Widget? child) {
@@ -447,18 +452,6 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                               ),
                             );
                           },
-                        ),
-                      ),
-                      Expanded(
-                        child: TextButton(
-                          onPressed: _showResetGameDialog,
-                          style: barButtonStyle,
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 12.0),
-                            child: Icon(
-                              Icons.restart_alt,
-                            ),
-                          ),
                         ),
                       ),
                       Expanded(
