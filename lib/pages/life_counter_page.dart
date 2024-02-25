@@ -6,6 +6,7 @@ import 'package:magic_life_wheel/layouts/layouts.dart';
 import 'package:magic_life_wheel/pages/about_page.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/pages/settings_page.dart';
+import 'package:magic_life_wheel/widgets/card_image.dart';
 import 'package:magic_life_wheel/widgets/counter.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -261,15 +262,15 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                   children: [
                                     Draggable<int>(
                                       data: i,
-                                      dragAnchorStrategy: pointerDragAnchorStrategy,
+                                      dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
                                       feedback: Card(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Text(
-                                            players[i].name,
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                            ),
+                                        clipBehavior: Clip.antiAlias,
+                                        child: SizedBox(
+                                          width: 100,
+                                          height: 100,
+                                          child: CardImage(
+                                            key: Key(players[i].card?.uuid ?? ''),
+                                            cardSet: players[i].card,
                                           ),
                                         ),
                                       ),
