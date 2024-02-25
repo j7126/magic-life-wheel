@@ -43,11 +43,12 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
     var height = MediaQuery.of(context).size.height;
 
     return AlertDialog(
-      titlePadding: const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0),
-      contentPadding: const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 32.0, top: 8.0),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 132.0),
+      titlePadding: const EdgeInsets.only(top: 12.0, left: 18.0, right: 18.0),
+      contentPadding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 8.0),
       title: Row(
         children: [
-          const Text("Commander Damage"),
+          const Text("Commander"),
           const Spacer(),
           IconButton(
             icon: const Icon(Icons.close),
