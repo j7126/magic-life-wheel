@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:keyrune_icons_flutter/keyrune_icons_flutter.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
@@ -21,7 +23,11 @@ class Counter extends StatefulWidget {
 }
 
 class _CounterState extends State<Counter> {
-  void editPlayerBackground() {}
+  Timer? longPressTimer;
+  int? longPressDirection;
+
+  bool get showMinusButton => widget.player.life > 0;
+  bool get showPlusButton => true;
 
   void editPlayer() async {
     await showDialog(
@@ -46,6 +52,36 @@ class _CounterState extends State<Counter> {
   void changeLife(int x) {
     setState(() {
       widget.player.deal(x);
+    });
+  }
+
+  void handleLongPressInterval(int direction, {int i = 0}) {
+    if (direction != -1 && direction != 1) {
+      return;
+    }
+
+    if ((direction < 0 && !showMinusButton) || (direction > 0 && !showPlusButton)) {
+      handleLongPressEnd();
+      return;
+    }
+
+    HapticFeedback.vibrate();
+
+    setState(() {
+      changeLife(direction * 10);
+      longPressDirection = direction;
+      longPressTimer = Timer(
+        Duration(milliseconds: i == 0 ? 650 : 500),
+        () => handleLongPressInterval(direction, i: i + 1),
+      );
+    });
+  }
+
+  void handleLongPressEnd() {
+    setState(() {
+      longPressTimer?.cancel();
+      longPressTimer = null;
+      longPressDirection = null;
     });
   }
 
@@ -172,68 +208,88 @@ class _CounterState extends State<Counter> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: widget.player.life > 0
-                          ? TextButton(
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      child: showMinusButton
+                          ? GestureDetector(
+                              onLongPressStart: (e) => handleLongPressInterval(-1),
+                              onLongPressEnd: (e) => handleLongPressEnd(),
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                  ),
+                                  foregroundColor: MaterialStateProperty.all<Color>(
+                                    Theme.of(context).colorScheme.onBackground,
+                                  ),
+                                  overlayColor: MaterialStateProperty.all<Color>(
+                                    longPressDirection == -1
+                                        ? Colors.transparent
+                                        : Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                  ),
+                                  backgroundColor: MaterialStateProperty.all<Color>(
+                                    longPressDirection == -1
+                                        ? Theme.of(context).colorScheme.onBackground.withAlpha(30)
+                                        : Colors.transparent,
+                                  ),
                                 ),
-                                foregroundColor: MaterialStateProperty.all<Color>(
-                                  Theme.of(context).colorScheme.onBackground,
-                                ),
-                                overlayColor: MaterialStateProperty.all<Color>(
-                                  Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                                ),
-                              ),
-                              onPressed: () => changeLife(-1),
-                              onLongPress: () => changeLife(-10),
-                              child: SizedBox(
-                                height: double.infinity,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                      child: Icon(
-                                        Icons.remove,
-                                        shadows: onBackgroundShadow,
+                                onPressed: () => changeLife(-1),
+                                child: SizedBox(
+                                  height: double.infinity,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                        child: Icon(
+                                          Icons.remove,
+                                          shadows: onBackgroundShadow,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             )
                           : Container(),
                     ),
                     Expanded(
-                      child: !widget.player.deadByCommander
-                          ? TextButton(
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      child: showPlusButton
+                          ? GestureDetector(
+                              onLongPressStart: (e) => handleLongPressInterval(1),
+                              onLongPressEnd: (e) => handleLongPressEnd(),
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                  ),
+                                  foregroundColor: MaterialStateProperty.all<Color>(
+                                    Theme.of(context).colorScheme.onBackground,
+                                  ),
+                                  overlayColor: MaterialStateProperty.all<Color>(
+                                    longPressDirection == 1
+                                        ? Colors.transparent
+                                        : Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                  ),
+                                  backgroundColor: MaterialStateProperty.all<Color>(
+                                    longPressDirection == 1
+                                        ? Theme.of(context).colorScheme.onBackground.withAlpha(30)
+                                        : Colors.transparent,
+                                  ),
                                 ),
-                                foregroundColor: MaterialStateProperty.all<Color>(
-                                  Theme.of(context).colorScheme.onBackground,
-                                ),
-                                overlayColor: MaterialStateProperty.all<Color>(
-                                  Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                                ),
-                              ),
-                              onPressed: () => changeLife(1),
-                              onLongPress: () => changeLife(10),
-                              child: SizedBox(
-                                height: double.infinity,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                      child: Icon(
-                                        Icons.add,
-                                        shadows: onBackgroundShadow,
+                                onPressed: () => changeLife(1),
+                                child: SizedBox(
+                                  height: double.infinity,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                        child: Icon(
+                                          Icons.add,
+                                          shadows: onBackgroundShadow,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             )
