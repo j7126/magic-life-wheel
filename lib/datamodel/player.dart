@@ -1,6 +1,10 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:uuid/uuid.dart';
 
+part 'player.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class Player {
   Player({
     required this.name,
@@ -15,13 +19,31 @@ class Player {
   }
 
   late String uuid;
-  late int _life;
   String name;
   CardSet? card;
+
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
+  )
+  late int _life;
+  
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
+  )
   Map<String, int> commanderDamage = {};
 
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
+  )
   bool get deadByCommander => commanderDamage.values.any((element) => element >= 21);
 
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
+  )
   int get life {
     if (deadByCommander) {
       return 0;
@@ -33,6 +55,10 @@ class Player {
     _life = value;
   }
 
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
+  )
   bool get isGameReset => life == 40;
 
   void dealCommander(String player, int life) {
@@ -61,9 +87,12 @@ class Player {
   String getDisplayName(int i) {
     if (name.isEmpty) {
       return card?.name ?? "Player ${i + 1}";
-    }
-    else {
+    } else {
       return name;
     }
   }
+
+  factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PlayerToJson(this);
 }

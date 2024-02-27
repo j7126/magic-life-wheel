@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
@@ -6,6 +7,7 @@ import 'package:magic_life_wheel/layouts/layouts.dart';
 import 'package:magic_life_wheel/pages/about_page.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/pages/settings_page.dart';
+import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
 import 'package:magic_life_wheel/widgets/counter.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -29,6 +31,11 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
 
   bool get isGameReset => !players.any((x) => !x.isGameReset);
 
+  void save() {
+    Service.settingsService.conf_layout = layoutId;
+    Service.settingsService.conf_players = players.map((e) => jsonEncode(e)).toList();
+  }
+
   void switchLayout() {
     setState(() {
       var layouts = Layouts.layoutsBySize[numPlayers];
@@ -36,15 +43,22 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
       layoutId++;
       if (layoutId >= layouts.length) layoutId = 0;
       layout = layouts[layoutId];
+      save();
     });
   }
 
-  void setPlayers(int players) {
+  void setPlayers(int players, {int layoutId = 0}) {
     setState(() {
       numPlayers = players;
       layout = null;
-      layoutId = 0;
-      layout = Layouts.layoutsBySize[numPlayers]?.first;
+      this.layoutId = layoutId;
+      var layouts = Layouts.layoutsBySize[numPlayers];
+      if (layouts != null) {
+        if (layouts.length <= this.layoutId) {
+          this.layoutId = 0;
+        }
+        layout = layouts[this.layoutId];
+      }
       setupPlayers();
     });
   }
@@ -75,6 +89,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
       }
 
       resetGame();
+
+      save();
     });
   }
 
@@ -200,7 +216,15 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    setPlayers(3);
+    if (Service.settingsService.conf_players.length < 2 || Service.settingsService.conf_players.length > 6) {
+      setPlayers(3);
+    } else {
+      for (var playerString in Service.settingsService.conf_players) {
+        var player = Player.fromJson(jsonDecode(playerString));
+        players.add(player);
+      }
+      setPlayers(players.length, layoutId: Service.settingsService.conf_layout);
+    }
     super.initState();
   }
 
@@ -250,6 +274,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                               i: i,
                               layout: layout ?? Layout2a(),
                               players: players,
+                              stateChanged: () => save(),
                             ),
                           ),
                           if (rearrangeMode)
@@ -379,6 +404,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                           onPressed: () {
                             setState(() {
                               rearrangeMode = false;
+                              save();
                             });
                           },
                           style: barButtonStyle,

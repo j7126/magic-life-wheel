@@ -130,6 +130,60 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    Service.settingsService.pref_enableSaveState = !Service.settingsService.pref_enableSaveState;
+                  });
+                },
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                    child: Row(
+                      children: [
+                        const Opacity(
+                          opacity: 0.5,
+                          child: Icon(
+                            Icons.save_outlined,
+                            size: 32,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Opacity(
+                            opacity: 0.9,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Persistence",
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                Text(
+                                  "Save the state of players.",
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        Switch(
+                          value: Service.settingsService.pref_enableSaveState,
+                          onChanged: (bool value) {
+                            setState(() {
+                              Service.settingsService.pref_enableSaveState = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

@@ -13,10 +13,10 @@ class SettingsService {
 
   Future _setup() async {
     prefs = await SharedPreferences.getInstance();
-    await _readData();
+    _readData();
   }
 
-  Future _readData() async {
+  void _readData() {
     var getScryfallImages = prefs.getBool('getScryfallImages');
     if (getScryfallImages != null) {
       _pref_getScryfallImages = getScryfallImages;
@@ -25,6 +25,21 @@ class SettingsService {
     var enableCommanderDamage = prefs.getBool('enableCommanderDamage');
     if (enableCommanderDamage != null) {
       _pref_enableCommanderDamage = enableCommanderDamage;
+    }
+
+    var enableSaveState = prefs.getBool('enableSaveState');
+    if (enableSaveState != null) {
+      _pref_enableSaveState = enableSaveState;
+    }
+
+    var players = prefs.getStringList('players');
+    if (players != null) {
+      _conf_players = players;
+    }
+
+    var layout = prefs.getInt('layout');
+    if (layout != null) {
+      _conf_layout = layout;
     }
   }
 
@@ -40,5 +55,34 @@ class SettingsService {
   set pref_enableCommanderDamage(bool val) {
     _pref_enableCommanderDamage = val;
     prefs.setBool('enableCommanderDamage', val);
+  }
+
+  bool _pref_enableSaveState = true;
+  bool get pref_enableSaveState => _pref_enableSaveState;
+  set pref_enableSaveState(bool val) {
+    if (!val) {
+      conf_players = [];
+      conf_layout = 0;
+    }
+    _pref_enableSaveState = val;
+    prefs.setBool('enableSaveState', val);
+  }
+
+  List<String> _conf_players = [];
+  List<String> get conf_players => _conf_players;
+  set conf_players(List<String> val) {
+    if (pref_enableSaveState) {
+      _conf_players = val;
+      prefs.setStringList('players', val);
+    }
+  }
+
+  int _conf_layout = 0;
+  int get conf_layout => _conf_layout;
+  set conf_layout(int val) {
+    if (pref_enableSaveState) {
+      _conf_layout = val;
+      prefs.setInt('layout', val);
+    }
   }
 }

@@ -10,11 +10,18 @@ import 'package:magic_life_wheel/widgets/commander_damage_dialog.dart';
 import 'package:magic_life_wheel/widgets/edit_player_dialog.dart';
 
 class Counter extends StatefulWidget {
-  const Counter({super.key, required this.i, required this.layout, required this.players});
+  const Counter({
+    super.key,
+    required this.i,
+    required this.layout,
+    required this.players,
+    this.stateChanged,
+  });
 
   final int i;
   final Layout layout;
   final List<Player> players;
+  final VoidCallback? stateChanged;
 
   Player get player => players[i];
 
@@ -35,6 +42,7 @@ class _CounterState extends State<Counter> {
       builder: (BuildContext context) => EditPlayerDialog(player: widget.player),
     );
     setState(() {});
+    widget.stateChanged?.call();
   }
 
   void commanderDamage() async {
@@ -265,14 +273,10 @@ class _CounterState extends State<Counter> {
                                     Theme.of(context).colorScheme.onBackground,
                                   ),
                                   overlayColor: MaterialStateProperty.all<Color>(
-                                    longPressDirection == 1
-                                        ? Colors.transparent
-                                        : Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                    longPressDirection == 1 ? Colors.transparent : Theme.of(context).colorScheme.onBackground.withAlpha(30),
                                   ),
                                   backgroundColor: MaterialStateProperty.all<Color>(
-                                    longPressDirection == 1
-                                        ? Theme.of(context).colorScheme.onBackground.withAlpha(30)
-                                        : Colors.transparent,
+                                    longPressDirection == 1 ? Theme.of(context).colorScheme.onBackground.withAlpha(30) : Colors.transparent,
                                   ),
                                 ),
                                 onPressed: () => changeLife(1),
