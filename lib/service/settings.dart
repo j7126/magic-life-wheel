@@ -27,6 +27,11 @@ class SettingsService {
       _pref_enableCommanderDamage = enableCommanderDamage;
     }
 
+    var startingLife = prefs.getInt('startingLife');
+    if (startingLife != null) {
+      _pref_startingLife = startingLife;
+    }
+
     var enableSaveState = prefs.getBool('enableSaveState');
     if (enableSaveState != null) {
       _pref_enableSaveState = enableSaveState;
@@ -55,6 +60,13 @@ class SettingsService {
   set pref_enableCommanderDamage(bool val) {
     _pref_enableCommanderDamage = val;
     prefs.setBool('enableCommanderDamage', val);
+  }
+
+  int _pref_startingLife = 40;
+  int get pref_startingLife => _pref_startingLife;
+  set pref_startingLife(int val) {
+    _pref_startingLife = val;
+    prefs.setInt('startingLife', val);
   }
 
   bool _pref_enableSaveState = true;

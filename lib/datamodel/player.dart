@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
+import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:uuid/uuid.dart';
 
 part 'player.g.dart';
@@ -8,14 +9,9 @@ part 'player.g.dart';
 class Player {
   Player({
     required this.name,
-    life,
   }) {
     uuid = (const Uuid()).v4();
-    if (life == null) {
-      this.life = 40;
-    } else {
-      this.life = life;
-    }
+    life = Service.settingsService.pref_startingLife;
   }
 
   late String uuid;
@@ -59,7 +55,7 @@ class Player {
     includeFromJson: false,
     includeToJson: false,
   )
-  bool get isGameReset => life == 40;
+  bool get isGameReset => life == Service.settingsService.pref_startingLife;
 
   void dealCommander(String player, int life) {
     commanderDamage[player] = (commanderDamage[player] ?? 0) - life;
@@ -80,7 +76,7 @@ class Player {
   }
 
   void resetGame() {
-    _life = 40;
+    _life = Service.settingsService.pref_startingLife;
     commanderDamage.clear();
   }
 

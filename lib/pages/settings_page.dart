@@ -10,6 +10,29 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final TextEditingController startingLifeController = TextEditingController(text: Service.settingsService.pref_startingLife.toString());
+
+  void onStartingLifeTextChanged() {
+    var val = int.tryParse(startingLifeController.text);
+    if (val != null) {
+      Service.settingsService.pref_startingLife = val;
+    }
+  }
+
+  @override
+  void initState() {
+    startingLifeController.addListener(onStartingLifeTextChanged);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    onStartingLifeTextChanged();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,18 +41,13 @@ class _SettingsPageState extends State<SettingsPage> {
         shadowColor: Theme.of(context).colorScheme.shadow,
         title: const Text("Settings"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    Service.settingsService.pref_getScryfallImages = !Service.settingsService.pref_getScryfallImages;
-                  });
-                },
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Card(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
@@ -38,153 +56,240 @@ class _SettingsPageState extends State<SettingsPage> {
                         const Opacity(
                           opacity: 0.5,
                           child: Icon(
-                            Icons.image_outlined,
+                            Icons.favorite_outline,
                             size: 32,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Opacity(
-                            opacity: 0.9,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Card images",
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
-                                Text(
-                                  "Fetch card images from scryfall.",
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                              ],
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Opacity(
+                              opacity: 0.9,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Starting Life",
+                                    style: Theme.of(context).textTheme.titleLarge,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                  Text(
+                                    "The starting life total for players.",
+                                    style: Theme.of(context).textTheme.titleSmall,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                        const Spacer(),
-                        Switch(
-                          value: Service.settingsService.pref_getScryfallImages,
-                          onChanged: (bool value) {
+                        DropdownMenu<int>(
+                          controller: startingLifeController,
+                          enableFilter: false,
+                          requestFocusOnTap: true,
+                          inputDecorationTheme: const InputDecorationTheme(
+                            filled: false,
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 2.0),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 24,
+                          ),
+                          width: 94,
+                          onSelected: (int? val) {
                             setState(() {
-                              Service.settingsService.pref_getScryfallImages = value;
+                              if (val != null) {
+                                Service.settingsService.pref_startingLife = val;
+                              }
                             });
                           },
+                          dropdownMenuEntries: [20, 30, 40, 60]
+                              .map(
+                                (e) => DropdownMenuEntry<int>(
+                                  value: e,
+                                  label: e.toString(),
+                                ),
+                              )
+                              .toList(),
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    Service.settingsService.pref_enableCommanderDamage = !Service.settingsService.pref_enableCommanderDamage;
-                  });
-                },
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-                    child: Row(
-                      children: [
-                        const Opacity(
-                          opacity: 0.5,
-                          child: Icon(
-                            KeyruneIcons.ss_cmd,
-                            size: 32,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Opacity(
-                            opacity: 0.9,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Commander",
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
-                                Text(
-                                  "Commander damage tracking.",
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                              ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      Service.settingsService.pref_getScryfallImages = !Service.settingsService.pref_getScryfallImages;
+                    });
+                  },
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                      child: Row(
+                        children: [
+                          const Opacity(
+                            opacity: 0.5,
+                            child: Icon(
+                              Icons.image_outlined,
+                              size: 32,
                             ),
                           ),
-                        ),
-                        const Spacer(),
-                        Switch(
-                          value: Service.settingsService.pref_enableCommanderDamage,
-                          onChanged: (bool value) {
-                            setState(() {
-                              Service.settingsService.pref_enableCommanderDamage = value;
-                            });
-                          },
-                        ),
-                      ],
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Opacity(
+                                opacity: 0.9,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Card images",
+                                      style: Theme.of(context).textTheme.titleLarge,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                    Text(
+                                      "Fetch card images from scryfall.",
+                                      style: Theme.of(context).textTheme.titleSmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Switch(
+                            value: Service.settingsService.pref_getScryfallImages,
+                            onChanged: (bool value) {
+                              setState(() {
+                                Service.settingsService.pref_getScryfallImages = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    Service.settingsService.pref_enableSaveState = !Service.settingsService.pref_enableSaveState;
-                  });
-                },
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-                    child: Row(
-                      children: [
-                        const Opacity(
-                          opacity: 0.5,
-                          child: Icon(
-                            Icons.save_outlined,
-                            size: 32,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Opacity(
-                            opacity: 0.9,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Persistence",
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
-                                Text(
-                                  "Save the state of players.",
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                              ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      Service.settingsService.pref_enableCommanderDamage = !Service.settingsService.pref_enableCommanderDamage;
+                    });
+                  },
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                      child: Row(
+                        children: [
+                          const Opacity(
+                            opacity: 0.5,
+                            child: Icon(
+                              KeyruneIcons.ss_cmd,
+                              size: 32,
                             ),
                           ),
-                        ),
-                        const Spacer(),
-                        Switch(
-                          value: Service.settingsService.pref_enableSaveState,
-                          onChanged: (bool value) {
-                            setState(() {
-                              Service.settingsService.pref_enableSaveState = value;
-                            });
-                          },
-                        ),
-                      ],
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Opacity(
+                                opacity: 0.9,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Commander",
+                                      style: Theme.of(context).textTheme.titleLarge,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                    Text(
+                                      "Commander damage tracking.",
+                                      style: Theme.of(context).textTheme.titleSmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Switch(
+                            value: Service.settingsService.pref_enableCommanderDamage,
+                            onChanged: (bool value) {
+                              setState(() {
+                                Service.settingsService.pref_enableCommanderDamage = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      Service.settingsService.pref_enableSaveState = !Service.settingsService.pref_enableSaveState;
+                    });
+                  },
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                      child: Row(
+                        children: [
+                          const Opacity(
+                            opacity: 0.5,
+                            child: Icon(
+                              Icons.save_outlined,
+                              size: 32,
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Opacity(
+                                opacity: 0.9,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Persistence",
+                                      style: Theme.of(context).textTheme.titleLarge,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                    Text(
+                                      "Save the state of players.",
+                                      style: Theme.of(context).textTheme.titleSmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Switch(
+                            value: Service.settingsService.pref_enableSaveState,
+                            onChanged: (bool value) {
+                              setState(() {
+                                Service.settingsService.pref_enableSaveState = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
