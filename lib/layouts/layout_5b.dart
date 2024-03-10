@@ -8,6 +8,9 @@ class Layout5b extends Layout {
   int get players => 5;
 
   @override
+  bool get symetrical => false;
+
+  @override
   Widget build(BuildContext context, List<Player> players, Widget Function(int i) counterParentBuilder) {
     assert(players.length == this.players);
 

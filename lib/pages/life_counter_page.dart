@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/layouts/layout_2a.dart';
 import 'package:magic_life_wheel/layouts/layouts.dart';
@@ -26,6 +27,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   int layoutId = 0;
   bool rearrangeMode = false;
   List<Player>? oldPlayers;
+  bool rotated = false;
+  double rotatedAnimate = 0.0;
 
   final FocusNode _menuButtonFocusNode = FocusNode();
 
@@ -38,12 +41,20 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
 
   void switchLayout() {
     setState(() {
+      rotated = false;
       var layouts = Layouts.layoutsBySize[numPlayers];
       if (layouts == null) return;
       layoutId++;
       if (layoutId >= layouts.length) layoutId = 0;
       layout = layouts[layoutId];
       save();
+    });
+  }
+
+  void switchRotated() {
+    setState(() {
+      rotated = !rotated;
+      rotatedAnimate += rotated ? 0.5 : -0.5;
     });
   }
 
@@ -174,15 +185,18 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                 if (Layouts.layoutsBySize[numPlayers] != null)
                   SegmentedButton<String>(
                     segments: <ButtonSegment<String>>[
-                      for (Layout layout in Layouts.layoutsBySize[numPlayers] ?? [])
+                      for (Layout l in Layouts.layoutsBySize[numPlayers] ?? [])
                         ButtonSegment<String>(
-                          value: layout.runtimeType.toString(),
+                          value: l.runtimeType.toString(),
                           label: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: SizedBox(
                               height: 48,
                               width: 48,
-                              child: layout.buildPreview(context),
+                              child: RotatedBox(
+                                quarterTurns: rotated && l.runtimeType == layout.runtimeType ? 2 : 0,
+                                child: l.buildPreview(context),
+                              ),
                             ),
                           ),
                         ),
@@ -194,6 +208,30 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                       });
                     },
                   ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: FilledButton(
+                    onPressed: !(layout?.symetrical ?? true)
+                        ? () {
+                            setState(() {
+                              switchRotated();
+                            });
+                          }
+                        : null,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AnimatedRotation(
+                          turns: rotatedAnimate,
+                          duration: const Duration(milliseconds: 250),
+                          child: const Icon(Icons.screen_rotation_alt_outlined),
+                        ),
+                        const Gap(8),
+                        const Text("Rotate"),
+                      ],
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
                   child: OutlinedButton(
@@ -259,95 +297,98 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
           children: [
             // ----- counters -----
             Expanded(
-              child: layout?.build(
-                    context,
-                    players,
-                    (int i) {
-                      const padding = 16.0;
-                      return Stack(
-                        children: [
-                          AnimatedPadding(
-                            padding: EdgeInsets.all(rearrangeMode ? padding : 0),
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.ease,
-                            child: Counter(
-                              i: i,
-                              layout: layout ?? Layout2a(),
-                              players: players,
-                              stateChanged: () => save(),
+              child: RotatedBox(
+                quarterTurns: rotated ? 2 : 0,
+                child: layout?.build(
+                      context,
+                      players,
+                      (int i) {
+                        const padding = 16.0;
+                        return Stack(
+                          children: [
+                            AnimatedPadding(
+                              padding: EdgeInsets.all(rearrangeMode ? padding : 0),
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.ease,
+                              child: Counter(
+                                i: i,
+                                layout: layout ?? Layout2a(),
+                                players: players,
+                                stateChanged: () => save(),
+                              ),
                             ),
-                          ),
-                          if (rearrangeMode)
-                            DragTarget<int>(
-                              builder: (
-                                BuildContext context,
-                                List<dynamic> candidateData,
-                                List<dynamic> rejectedData,
-                              ) {
-                                return Stack(
-                                  children: [
-                                    Draggable<int>(
-                                      data: i,
-                                      dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
-                                      feedback: Card(
-                                        clipBehavior: Clip.antiAlias,
-                                        child: SizedBox(
-                                          width: 100,
-                                          height: 100,
-                                          child: CardImage(
-                                            key: Key(players[i].card?.uuid ?? ''),
-                                            cardSet: players[i].card,
+                            if (rearrangeMode)
+                              DragTarget<int>(
+                                builder: (
+                                  BuildContext context,
+                                  List<dynamic> candidateData,
+                                  List<dynamic> rejectedData,
+                                ) {
+                                  return Stack(
+                                    children: [
+                                      Draggable<int>(
+                                        data: i,
+                                        dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
+                                        feedback: Card(
+                                          clipBehavior: Clip.antiAlias,
+                                          child: SizedBox(
+                                            width: 100,
+                                            height: 100,
+                                            child: CardImage(
+                                              key: Key(players[i].card?.uuid ?? ''),
+                                              cardSet: players[i].card,
+                                            ),
+                                          ),
+                                        ),
+                                        childWhenDragging: Padding(
+                                          padding: const EdgeInsets.all(padding),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(35),
+                                              color: const Color.fromARGB(100, 0, 0, 0),
+                                            ),
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(padding),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(35),
+                                              color: const Color.fromARGB(0, 0, 0, 0),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                      childWhenDragging: Padding(
-                                        padding: const EdgeInsets.all(padding),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(35),
-                                            color: const Color.fromARGB(100, 0, 0, 0),
+                                      if (candidateData.isNotEmpty)
+                                        Padding(
+                                          padding: const EdgeInsets.all(padding),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(35),
+                                              color: const Color.fromARGB(45, 48, 150, 63),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(padding),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(35),
-                                            color: const Color.fromARGB(0, 0, 0, 0),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    if (candidateData.isNotEmpty)
-                                      Padding(
-                                        padding: const EdgeInsets.all(padding),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(35),
-                                            color: const Color.fromARGB(45, 48, 150, 63),
-                                          ),
-                                        ),
-                                      )
-                                  ],
-                                );
-                              },
-                              onAccept: (int data) {
-                                setState(() {
-                                  if (i != data) {
-                                    var temp = players[data];
-                                    players[data] = players[i];
-                                    players[i] = temp;
-                                  }
-                                });
-                              },
-                              onWillAccept: (int? data) => data != null && i != data,
-                            ),
-                        ],
-                      );
-                    },
-                  ) ??
-                  Container(),
+                                        )
+                                    ],
+                                  );
+                                },
+                                onAccept: (int data) {
+                                  setState(() {
+                                    if (i != data) {
+                                      var temp = players[data];
+                                      players[data] = players[i];
+                                      players[i] = temp;
+                                    }
+                                  });
+                                },
+                                onWillAccept: (int? data) => data != null && i != data,
+                              ),
+                          ],
+                        );
+                      },
+                    ) ??
+                    Container(),
+              ),
             ),
             // ----- toolbar -----
             const Padding(
@@ -490,7 +531,10 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                 ? SizedBox(
                                     height: 24,
                                     width: 24,
-                                    child: layout?.buildPreview(context),
+                                    child: RotatedBox(
+                                      quarterTurns: rotated ? 2 : 0,
+                                      child: layout?.buildPreview(context),
+                                    ),
                                   )
                                 : const Icon(
                                     Icons.grid_view,
