@@ -5,6 +5,7 @@ import 'package:magic_life_wheel/layouts/layout_3b.dart';
 import 'package:magic_life_wheel/layouts/layout_4a.dart';
 import 'package:magic_life_wheel/layouts/layout_4b.dart';
 import 'package:magic_life_wheel/layouts/layout_5a.dart';
+import 'package:magic_life_wheel/layouts/layout_5b.dart';
 import 'package:magic_life_wheel/layouts/layout_6a.dart';
 import 'package:magic_life_wheel/layouts/layout_6b.dart';
 
@@ -29,6 +30,7 @@ class Layouts {
         ],
         5: [
           Layout5a(),
+          Layout5b(),
         ],
         6: [
           Layout6a(),
