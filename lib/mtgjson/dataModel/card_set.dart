@@ -29,7 +29,7 @@ class CardSet {
   Map<String, dynamic> toJson() => _$CardSetToJson(this);
 
   static RegExp cardSearchStringFilterEmptyRegex = RegExp('[\']');
-  static RegExp cardSearchStringFilterSpaceRegex = RegExp('[-, ]+');
+  static RegExp cardSearchStringFilterSpaceRegex = RegExp('[-,. ]+');
 
   static String filterStringForSearch(String str) {
     str = str.toLowerCase().normalize();
