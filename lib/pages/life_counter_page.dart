@@ -143,7 +143,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     if (result ?? false) resetGame();
   }
 
-  void _showLayoutSelector() {
+  void _showLayoutSelector(int layoutRotationOffset) {
     showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) {
@@ -194,7 +194,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                               height: 48,
                               width: 48,
                               child: RotatedBox(
-                                quarterTurns: rotated && l.runtimeType == layout.runtimeType ? 2 : 0,
+                                quarterTurns: (rotated && l.runtimeType == layout.runtimeType ? 2 : 0) + layoutRotationOffset,
                                 child: l.buildPreview(context),
                               ),
                             ),
@@ -291,6 +291,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
       ),
     );
 
+    var layoutRotationOffset = (MediaQuery.of(context).orientation == Orientation.landscape ? 1 : 0);
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -298,7 +300,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
             // ----- counters -----
             Expanded(
               child: RotatedBox(
-                quarterTurns: rotated ? 2 : 0,
+                quarterTurns: (rotated ? 2 : 0) + layoutRotationOffset,
                 child: layout?.build(
                       context,
                       players,
@@ -524,7 +526,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                       ),
                       Expanded(
                         child: TextButton(
-                          onPressed: _showLayoutSelector,
+                          onPressed: () => _showLayoutSelector(layoutRotationOffset),
                           style: barButtonStyle,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -533,7 +535,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                     height: 24,
                                     width: 24,
                                     child: RotatedBox(
-                                      quarterTurns: rotated ? 2 : 0,
+                                      quarterTurns: (rotated ? 2 : 0) + layoutRotationOffset,
                                       child: layout?.buildPreview(context),
                                     ),
                                   )
