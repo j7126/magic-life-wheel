@@ -372,7 +372,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                     ],
                                   );
                                 },
-                                onAccept: (int data) {
+                                onAcceptWithDetails: (DragTargetDetails<int> details) {
+                                  var data = details.data;
                                   setState(() {
                                     if (i != data) {
                                       var temp = players[data];
@@ -381,7 +382,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                     }
                                   });
                                 },
-                                onWillAccept: (int? data) => data != null && i != data,
+                                onWillAcceptWithDetails: (DragTargetDetails<int?> details) => details.data != null && i != details.data,
                               ),
                           ],
                         );
