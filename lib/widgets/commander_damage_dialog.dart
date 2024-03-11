@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
