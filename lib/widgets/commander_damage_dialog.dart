@@ -58,147 +58,150 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
           ),
         ],
       ),
-      content: SizedBox(
-        width: min(width - 100, 260),
-        height: min(height - 100, height / width * 260),
-        child: widget.layout.build(
-          context,
-          widget.players,
-          (i) {
-            var player = widget.players[i];
-            var dmg = (widget.player.commanderDamage[player.uuid] ?? 0);
-            return SizedBox(
-              width: double.infinity,
-              height: double.infinity,
-              child: Card(
-                clipBehavior: Clip.antiAlias,
-                margin: const EdgeInsets.all(2.0),
-                child: Stack(
-                  children: [
-                    if (player.card != null)
-                      CardImage(
-                        key: Key(player.card?.uuid ?? ''),
-                        cardSet: player.card,
-                      ),
-                    Positioned.fill(
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                child: Text(
-                                  widget.player.uuid == player.uuid && dmg <= 0 ? "me" : dmg.toString(),
-                                  style: TextStyle(
-                                    shadows: player.card != null
-                                        ? [
-                                            const Shadow(
-                                              offset: Offset(0.5, 0.5),
-                                              blurRadius: 10.0,
-                                              color: Colors.black,
-                                            ),
-                                          ]
-                                        : null,
+      content: RotatedBox(
+        quarterTurns: (widget.layout.rotated ? 2 : 0) + (MediaQuery.of(context).orientation == Orientation.landscape ? 1 : 0),
+        child: SizedBox(
+          width: min(width - 100, 260),
+          height: min(height - 100, height / width * 260),
+          child: widget.layout.build(
+            context,
+            widget.players,
+            (i) {
+              var player = widget.players[i];
+              var dmg = (widget.player.commanderDamage[player.uuid] ?? 0);
+              return SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: Card(
+                  clipBehavior: Clip.antiAlias,
+                  margin: const EdgeInsets.all(2.0),
+                  child: Stack(
+                    children: [
+                      if (player.card != null)
+                        CardImage(
+                          key: Key(player.card?.uuid ?? ''),
+                          cardSet: player.card,
+                        ),
+                      Positioned.fill(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                  child: Text(
+                                    widget.player.uuid == player.uuid && dmg <= 0 ? "me" : dmg.toString(),
+                                    style: TextStyle(
+                                      shadows: player.card != null
+                                          ? [
+                                              const Shadow(
+                                                offset: Offset(0.5, 0.5),
+                                                blurRadius: 10.0,
+                                                color: Colors.black,
+                                              ),
+                                            ]
+                                          : null,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Positioned.fill(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: !widget.player.deadByCommander || (widget.player.commanderDamage[player.uuid] ?? 0) >= 21
-                                ? TextButton(
-                                    style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      Positioned.fill(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: !widget.player.deadByCommander || (widget.player.commanderDamage[player.uuid] ?? 0) >= 21
+                                  ? TextButton(
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                          const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                        ),
+                                        foregroundColor: MaterialStateProperty.all<Color>(
+                                          Theme.of(context).colorScheme.onBackground,
+                                        ),
+                                        overlayColor: MaterialStateProperty.all<Color>(
+                                          Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                        ),
                                       ),
-                                      foregroundColor: MaterialStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onBackground,
+                                      onPressed: () {
+                                        setState(() {
+                                          widget.player.dealCommander(player.uuid, 1);
+                                        });
+                                      },
+                                      onLongPress: () {
+                                        setState(() {
+                                          widget.player.dealCommander(player.uuid, 10);
+                                        });
+                                      },
+                                      child: SizedBox(
+                                        height: double.infinity,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.remove,
+                                              shadows: onBackgroundShadow,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      overlayColor: MaterialStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                    )
+                                  : Container(),
+                            ),
+                            Expanded(
+                              child: widget.player.life > 0
+                                  ? TextButton(
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                          const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                        ),
+                                        foregroundColor: MaterialStateProperty.all<Color>(
+                                          Theme.of(context).colorScheme.onBackground,
+                                        ),
+                                        overlayColor: MaterialStateProperty.all<Color>(
+                                          Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                        ),
                                       ),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        widget.player.dealCommander(player.uuid, 1);
-                                      });
-                                    },
-                                    onLongPress: () {
-                                      setState(() {
-                                        widget.player.dealCommander(player.uuid, 10);
-                                      });
-                                    },
-                                    child: SizedBox(
-                                      height: double.infinity,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.remove,
-                                            shadows: onBackgroundShadow,
-                                          ),
-                                        ],
+                                      onPressed: () {
+                                        setState(() {
+                                          widget.player.dealCommander(player.uuid, -1);
+                                        });
+                                      },
+                                      onLongPress: () {
+                                        setState(() {
+                                          widget.player.dealCommander(player.uuid, -10);
+                                        });
+                                      },
+                                      child: SizedBox(
+                                        height: double.infinity,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Icon(
+                                              Icons.add,
+                                              shadows: onBackgroundShadow,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                : Container(),
-                          ),
-                          Expanded(
-                            child: widget.player.life > 0
-                                ? TextButton(
-                                    style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                                      ),
-                                      foregroundColor: MaterialStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onBackground,
-                                      ),
-                                      overlayColor: MaterialStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        widget.player.dealCommander(player.uuid, -1);
-                                      });
-                                    },
-                                    onLongPress: () {
-                                      setState(() {
-                                        widget.player.dealCommander(player.uuid, -10);
-                                      });
-                                    },
-                                    child: SizedBox(
-                                      height: double.infinity,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          Icon(
-                                            Icons.add,
-                                            shadows: onBackgroundShadow,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : Container(),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                                    )
+                                  : Container(),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

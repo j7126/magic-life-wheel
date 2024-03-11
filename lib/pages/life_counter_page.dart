@@ -27,8 +27,10 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   int layoutId = 0;
   bool rearrangeMode = false;
   List<Player>? oldPlayers;
-  bool rotated = false;
   double rotatedAnimate = 0.0;
+
+  bool get rotated => layout?.rotated ?? false;
+  set rotated(bool val) => layout?.rotated = val;
 
   final FocusNode _menuButtonFocusNode = FocusNode();
 

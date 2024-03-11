@@ -6,6 +6,8 @@ class Layout {
   int get players => 0;
   bool get symetrical => true;
 
+  bool rotated = false;
+
   Widget build(BuildContext context, List<Player> players, Widget Function(int i) counterParentBuilder) {
     assert(players.length == this.players);
     throw UnimplementedError();
