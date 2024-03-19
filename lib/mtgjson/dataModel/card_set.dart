@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:magic_life_wheel/mtgjson/dataModel/leadership_skills.dart';
 import 'package:string_normalizer/string_normalizer.dart';
 import 'identifiers.dart';
 
@@ -12,6 +13,10 @@ class CardSet {
     required this.setCode,
     required this.identifiers,
     required this.artist,
+    required this.subtypes,
+    required this.supertypes,
+    this.leadershipSkills,
+    this.keywords,
     required this.cardSearchString,
     required this.cardSearchStringWords,
   });
@@ -21,6 +26,11 @@ class CardSet {
   String setCode;
   String? artist;
   Identifiers identifiers;
+  List<String> subtypes;
+  List<String> supertypes;
+  LeadershipSkills? leadershipSkills;
+  List<String>? keywords;
+
   String cardSearchString;
   List<String> cardSearchStringWords;
 
