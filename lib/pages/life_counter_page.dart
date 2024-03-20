@@ -260,7 +260,14 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
       setPlayers(3);
     } else {
       for (var playerString in Service.settingsService.conf_players) {
-        var player = Player.fromJson(jsonDecode(playerString));
+        Player player;
+        try {
+          player = Player.fromJson(jsonDecode(playerString));
+        } catch (_) {
+          player = Player(
+            name: "",
+          );
+        }
         players.add(player);
       }
       setPlayers(players.length, layoutId: Service.settingsService.conf_layout);
