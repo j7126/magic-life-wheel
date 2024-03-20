@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/icons/custom_icons.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
@@ -22,7 +23,8 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
   late ScrollController _scrollController;
 
   List<MapEntry<String, List<CardSet>>>? cards;
-  bool searching = false;
+
+  bool commanderOnly = true;
 
   final FocusNode _menuButtonFocusNode = FocusNode();
 
@@ -30,13 +32,13 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
     if (Service.dataLoader.allSetCards == null) {
       return;
     }
-    setState(() {
-      searching = true;
-    });
     var finalSearchStr = CardSet.filterStringForSearch(searchStr.trim());
     var searchStrWords = finalSearchStr.split(' ');
     var cards = Service.dataLoader.allSetCards?.data.where(
       (card) {
+        if (commanderOnly && !(card.leadershipSkills?.commander ?? false)) {
+          return false;
+        }
         return card.cardSearchString.contains(finalSearchStr);
       },
     );
@@ -53,7 +55,6 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
     if (searchStr == _searchFieldController.text) {
       setState(() {
         this.cards = cardGroups;
-        searching = false;
         if (_scrollController.hasClients) {
           _scrollController.jumpTo(0);
         }
@@ -227,6 +228,29 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                       leadingIcon: const Icon(Icons.deselect),
                       child: const Text("Remove Background"),
                     ),
+                    MenuItemButton(
+                      onPressed: () {
+                        setState(() {
+                          commanderOnly = !commanderOnly;
+                        });
+                        searchCards(_searchFieldController.text);
+                      },
+                      closeOnActivate: false,
+                      leadingIcon: SizedBox(
+                        width: IconTheme.of(context).size,
+                        height: IconTheme.of(context).size,
+                        child: Checkbox(
+                          value: commanderOnly,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              commanderOnly = value ?? false;
+                            });
+                            searchCards(_searchFieldController.text);
+                          },
+                        ),
+                      ),
+                      child: const Text("Commander Only"),
+                    ),
                   ],
                   builder: (BuildContext context, MenuController controller, Widget? child) {
                     return IconButton(
@@ -272,15 +296,48 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
           if (_searchFieldController.text.isEmpty || (cards?.isEmpty ?? true))
             widget.player.card != null && Service.dataLoader.allSetCards != null
                 ? Expanded(
-                    child: GridView.extent(
-                      maxCrossAxisExtent: 500,
-                      childAspectRatio: 1.1,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
-                      padding: const EdgeInsets.all(16),
+                    child: Column(
                       children: [
-                        cardSelector(
-                            Service.dataLoader.allSetCards?.data.where((element) => element.name == widget.player.card?.name).toList())
+                        if (cards?.isEmpty ?? false)
+                          Opacity(
+                            opacity: 0.3,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
+                              child: Row(
+                                children: [
+                                  const Spacer(),
+                                  const Icon(
+                                    CustomIcons.cards_outlined,
+                                    size: 34,
+                                  ),
+                                  const Gap(8.0),
+                                  Text(
+                                    "No results found",
+                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 24,
+                                        ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const Spacer(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Container(
+                            constraints: const BoxConstraints(
+                              maxWidth: 500,
+                            ),
+                            child: AspectRatio(
+                              aspectRatio: 1.1,
+                              child: cardSelector(Service.dataLoader.allSetCards?.data
+                                  .where((element) => element.name == widget.player.card?.name)
+                                  .toList()),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   )
@@ -321,7 +378,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
                 ),
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16.0),
                 controller: _scrollController,
                 itemCount: cards?.length ?? 0,
                 itemBuilder: (BuildContext context, int index) {
