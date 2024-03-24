@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
@@ -81,6 +82,55 @@ class _EditPlayerDialogState extends State<EditPlayerDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if ((widget.player.dead && !widget.player.deadByCommander) || !widget.player.enableDead)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      widget.player.enableDead = !widget.player.enableDead;
+                    });
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: Card(
+                    elevation: 0,
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Loose on life",
+                                  style: Theme.of(context).textTheme.titleMedium,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                                Text(
+                                  "Loose the game on 0 or less life",
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Gap(4.0),
+                          Switch(
+                            value: widget.player.enableDead,
+                            onChanged: (bool value) {
+                              setState(() {
+                                widget.player.enableDead = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(
@@ -94,69 +144,65 @@ class _EditPlayerDialogState extends State<EditPlayerDialog> {
                 });
               },
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: TextField(
-                controller: _lifeController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Life',
-                  isDense: true,
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                onChanged: (text) {
-                  setState(() {
-                    try {
-                      widget.player.life = int.parse(text);
-                    } catch (e) {}
-                  });
-                },
+            const Gap(16),
+            TextField(
+              controller: _lifeController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Life',
+                isDense: true,
               ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              onChanged: (text) {
+                setState(() {
+                  try {
+                    widget.player.life = int.parse(text);
+                  } catch (e) {}
+                });
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: GestureDetector(
-                onTap: Service.dataLoader.loaded && Service.dataLoader.allSetCards != null ? editBackground : null,
-                child: Card(
-                  margin: EdgeInsets.zero,
-                  clipBehavior: Clip.antiAlias,
-                  child: SizedBox(
-                    width: 250,
-                    height: 190,
-                    child: !Service.dataLoader.loaded || Service.dataLoader.allSetCards == null
-                        ? const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : Stack(
-                            children: [
-                              CardImage(
-                                key: Key(widget.player.card?.uuid ?? ""),
-                                cardSet: widget.player.card,
-                                iconPadding: const EdgeInsets.only(top: 22.0),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Background",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        shadows: onBackgroundShadow,
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Icon(
-                                      Icons.edit_outlined,
+            const Gap(16),
+            GestureDetector(
+              onTap: Service.dataLoader.loaded && Service.dataLoader.allSetCards != null ? editBackground : null,
+              child: Card(
+                margin: EdgeInsets.zero,
+                clipBehavior: Clip.antiAlias,
+                child: SizedBox(
+                  width: 250,
+                  height: 190,
+                  child: !Service.dataLoader.loaded || Service.dataLoader.allSetCards == null
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Stack(
+                          children: [
+                            CardImage(
+                              key: Key(widget.player.card?.uuid ?? ""),
+                              cardSet: widget.player.card,
+                              iconPadding: const EdgeInsets.only(top: 22.0),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Background",
+                                    style: TextStyle(
+                                      fontSize: 18,
                                       shadows: onBackgroundShadow,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  const Spacer(),
+                                  Icon(
+                                    Icons.edit_outlined,
+                                    shadows: onBackgroundShadow,
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                  ),
+                            ),
+                          ],
+                        ),
                 ),
               ),
             ),

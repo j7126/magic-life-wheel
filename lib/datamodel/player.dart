@@ -22,12 +22,6 @@ class Player {
     includeFromJson: false,
     includeToJson: false,
   )
-  late int _life;
-  
-  @JsonKey(
-    includeFromJson: false,
-    includeToJson: false,
-  )
   Map<String, int> commanderDamage = {};
 
   @JsonKey(
@@ -40,16 +34,19 @@ class Player {
     includeFromJson: false,
     includeToJson: false,
   )
-  int get life {
-    if (deadByCommander) {
-      return 0;
-    }
-    return _life;
-  }
+  bool get dead => (enableDead && life <= 0) || deadByCommander;
 
-  set life(int value) {
-    _life = value;
-  }
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
+  )
+  bool enableDead = true;
+
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
+  )
+  late int life;
 
   @JsonKey(
     includeFromJson: false,
@@ -63,20 +60,19 @@ class Player {
       life += (commanderDamage[player] ?? 0);
       commanderDamage[player] = 0;
     }
-    _life += life;
+    this.life += life;
   }
 
   void deal(int life) {
-    if (!deadByCommander) {
-      _life += life;
-      if (_life < 0) {
-        _life = 0;
-      }
+    if (dead && life > 0 && !deadByCommander) {
+      this.life = life;
+    } else {
+      this.life += life;
     }
   }
 
   void resetGame() {
-    _life = Service.settingsService.pref_startingLife;
+    life = Service.settingsService.pref_startingLife;
     commanderDamage.clear();
   }
 

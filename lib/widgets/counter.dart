@@ -33,8 +33,8 @@ class _CounterState extends State<Counter> {
   Timer? longPressTimer;
   int? longPressDirection;
 
-  bool get showMinusButton => widget.player.life > 0;
-  bool get showPlusButton => true;
+  bool get showMinusButton => !widget.player.dead;
+  bool get showPlusButton => !widget.player.deadByCommander;
 
   void editPlayer() async {
     await showDialog(
@@ -149,7 +149,7 @@ class _CounterState extends State<Counter> {
     );
 
     return Opacity(
-      opacity: widget.player.life <= 0 ? 0.2 : 1,
+      opacity: widget.player.dead ? 0.2 : 1,
       child: LayoutBuilder(
         builder: (context, constraints) => Container(
           decoration: BoxDecoration(
@@ -184,7 +184,7 @@ class _CounterState extends State<Counter> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: Text(
-                            widget.player.life.toString(),
+                            widget.player.dead ? "" : widget.player.life.toString(),
                             style: TextStyle(
                               shadows: widget.player.card != null
                                   ? [
@@ -216,31 +216,27 @@ class _CounterState extends State<Counter> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: showMinusButton
-                          ? GestureDetector(
-                              onLongPressStart: (e) => handleLongPressInterval(-1),
-                              onLongPressEnd: (e) => handleLongPressEnd(),
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                                  ),
-                                  foregroundColor: MaterialStateProperty.all<Color>(
-                                    Theme.of(context).colorScheme.onBackground,
-                                  ),
-                                  overlayColor: MaterialStateProperty.all<Color>(
-                                    longPressDirection == -1
-                                        ? Colors.transparent
-                                        : Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                                  ),
-                                  backgroundColor: MaterialStateProperty.all<Color>(
-                                    longPressDirection == -1
-                                        ? Theme.of(context).colorScheme.onBackground.withAlpha(30)
-                                        : Colors.transparent,
-                                  ),
-                                ),
-                                onPressed: () => changeLife(-1),
-                                child: SizedBox(
+                      child: GestureDetector(
+                        onLongPressStart: (e) => handleLongPressInterval(-1),
+                        onLongPressEnd: (e) => handleLongPressEnd(),
+                        child: TextButton(
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                            ),
+                            foregroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).colorScheme.onBackground,
+                            ),
+                            overlayColor: MaterialStateProperty.all<Color>(
+                              longPressDirection == -1 ? Colors.transparent : Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                            ),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              longPressDirection == -1 ? Theme.of(context).colorScheme.onBackground.withAlpha(30) : Colors.transparent,
+                            ),
+                          ),
+                          onPressed: !showMinusButton ? null : () => changeLife(-1),
+                          child: showMinusButton
+                              ? SizedBox(
                                   height: double.infinity,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -254,33 +250,33 @@ class _CounterState extends State<Counter> {
                                       ),
                                     ],
                                   ),
-                                ),
-                              ),
-                            )
-                          : Container(),
+                                )
+                              : Container(),
+                        ),
+                      ),
                     ),
                     Expanded(
-                      child: showPlusButton
-                          ? GestureDetector(
-                              onLongPressStart: (e) => handleLongPressInterval(1),
-                              onLongPressEnd: (e) => handleLongPressEnd(),
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                                  ),
-                                  foregroundColor: MaterialStateProperty.all<Color>(
-                                    Theme.of(context).colorScheme.onBackground,
-                                  ),
-                                  overlayColor: MaterialStateProperty.all<Color>(
-                                    longPressDirection == 1 ? Colors.transparent : Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                                  ),
-                                  backgroundColor: MaterialStateProperty.all<Color>(
-                                    longPressDirection == 1 ? Theme.of(context).colorScheme.onBackground.withAlpha(30) : Colors.transparent,
-                                  ),
-                                ),
-                                onPressed: () => changeLife(1),
-                                child: SizedBox(
+                      child: GestureDetector(
+                        onLongPressStart: (e) => handleLongPressInterval(1),
+                        onLongPressEnd: (e) => handleLongPressEnd(),
+                        child: TextButton(
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                            ),
+                            foregroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).colorScheme.onBackground,
+                            ),
+                            overlayColor: MaterialStateProperty.all<Color>(
+                              longPressDirection == 1 ? Colors.transparent : Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                            ),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              longPressDirection == 1 ? Theme.of(context).colorScheme.onBackground.withAlpha(30) : Colors.transparent,
+                            ),
+                          ),
+                          onPressed: !showPlusButton ? null : () => changeLife(1),
+                          child: showPlusButton
+                              ? SizedBox(
                                   height: double.infinity,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -294,10 +290,10 @@ class _CounterState extends State<Counter> {
                                       ),
                                     ],
                                   ),
-                                ),
-                              ),
-                            )
-                          : Container(),
+                                )
+                              : Container(),
+                        ),
+                      ),
                     ),
                   ],
                 ),

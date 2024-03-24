@@ -57,7 +57,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
         ],
       ),
       content: AspectRatio(
-        aspectRatio: isLandscape ? 2 : 1/2,
+        aspectRatio: isLandscape ? 2 : 1 / 2,
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
@@ -116,83 +116,79 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Expanded(
-                                child: !widget.player.deadByCommander || (widget.player.commanderDamage[player.uuid] ?? 0) >= 21
-                                    ? TextButton(
-                                        style: ButtonStyle(
-                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                            const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                                          ),
-                                          foregroundColor: MaterialStateProperty.all<Color>(
-                                            Theme.of(context).colorScheme.onBackground,
-                                          ),
-                                          overlayColor: MaterialStateProperty.all<Color>(
-                                            Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                                          ),
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                    ),
+                                    foregroundColor: MaterialStateProperty.all<Color>(
+                                      Theme.of(context).colorScheme.onBackground,
+                                    ),
+                                    overlayColor: MaterialStateProperty.all<Color>(
+                                      Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      widget.player.dealCommander(player.uuid, 1);
+                                    });
+                                  },
+                                  onLongPress: () {
+                                    setState(() {
+                                      widget.player.dealCommander(player.uuid, 10);
+                                    });
+                                  },
+                                  child: SizedBox(
+                                    height: double.infinity,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.remove,
+                                          shadows: onBackgroundShadow,
                                         ),
-                                        onPressed: () {
-                                          setState(() {
-                                            widget.player.dealCommander(player.uuid, 1);
-                                          });
-                                        },
-                                        onLongPress: () {
-                                          setState(() {
-                                            widget.player.dealCommander(player.uuid, 10);
-                                          });
-                                        },
-                                        child: SizedBox(
-                                          height: double.infinity,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Icon(
-                                                Icons.remove,
-                                                shadows: onBackgroundShadow,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    : Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
                               Expanded(
                                 flex: Service.settingsService.pref_asymmetricalCommanderDamageButtons ? 2 : 1,
-                                child: widget.player.life > 0
-                                    ? TextButton(
-                                        style: ButtonStyle(
-                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                            const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                                          ),
-                                          foregroundColor: MaterialStateProperty.all<Color>(
-                                            Theme.of(context).colorScheme.onBackground,
-                                          ),
-                                          overlayColor: MaterialStateProperty.all<Color>(
-                                            Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                                          ),
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                    ),
+                                    foregroundColor: MaterialStateProperty.all<Color>(
+                                      Theme.of(context).colorScheme.onBackground,
+                                    ),
+                                    overlayColor: MaterialStateProperty.all<Color>(
+                                      Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      widget.player.dealCommander(player.uuid, -1);
+                                    });
+                                  },
+                                  onLongPress: () {
+                                    setState(() {
+                                      widget.player.dealCommander(player.uuid, -10);
+                                    });
+                                  },
+                                  child: SizedBox(
+                                    height: double.infinity,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Icon(
+                                          Icons.add,
+                                          shadows: onBackgroundShadow,
                                         ),
-                                        onPressed: () {
-                                          setState(() {
-                                            widget.player.dealCommander(player.uuid, -1);
-                                          });
-                                        },
-                                        onLongPress: () {
-                                          setState(() {
-                                            widget.player.dealCommander(player.uuid, -10);
-                                          });
-                                        },
-                                        child: SizedBox(
-                                          height: double.infinity,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              Icon(
-                                                Icons.add,
-                                                shadows: onBackgroundShadow,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    : Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
