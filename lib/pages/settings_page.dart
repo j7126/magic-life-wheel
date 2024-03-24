@@ -371,6 +371,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 ),
                               ),
                             ),
+                            const Divider(),
                             GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -417,6 +418,60 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                       onChanged: (bool value) {
                                         setState(() {
                                           Service.settingsService.pref_asymmetricalCommanderDamageButtons = value;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const Divider(),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  Service.settingsService.pref_showChangingLife = !Service.settingsService.pref_showChangingLife;
+                                });
+                              },
+                              behavior: HitTestBehavior.opaque,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                                child: Row(
+                                  children: [
+                                    const Opacity(
+                                      opacity: 0.5,
+                                      child: Icon(
+                                        Icons.history_outlined,
+                                        size: 32,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                        child: Opacity(
+                                          opacity: 0.9,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Show Changed Life",
+                                                style: Theme.of(context).textTheme.titleLarge,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                              Text(
+                                                "Show the changed life for a short time.",
+                                                style: Theme.of(context).textTheme.titleSmall,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: Service.settingsService.pref_showChangingLife,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          Service.settingsService.pref_showChangingLife = value;
                                         });
                                       },
                                     ),

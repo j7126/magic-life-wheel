@@ -33,6 +33,9 @@ class _CounterState extends State<Counter> {
   Timer? longPressTimer;
   int? longPressDirection;
 
+  int changedLife = 0;
+  Timer? lifeChangedTimer;
+
   bool get showMinusButton => !widget.player.dead;
   bool get showPlusButton => !widget.player.deadByCommander;
 
@@ -61,6 +64,18 @@ class _CounterState extends State<Counter> {
     setState(() {
       widget.player.deal(x);
     });
+    changedLife += x;
+    lifeChangedTimer?.cancel();
+    lifeChangedTimer = Timer(
+      const Duration(seconds: 5),
+      () {
+        setState(() {
+          changedLife = 0;
+        });
+        lifeChangedTimer?.cancel();
+        lifeChangedTimer = null;
+      },
+    );
   }
 
   void handleLongPressInterval(int direction, {int i = 0}) {
@@ -165,6 +180,19 @@ class _CounterState extends State<Counter> {
                 CardImage(
                   key: Key(widget.player.card?.uuid ?? ''),
                   cardSet: widget.player.card,
+                ),
+              if (Service.settingsService.pref_showChangingLife && changedLife != 0)
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 42.0),
+                    child: Text(
+                      (changedLife > 0 ? "+" : "") + changedLife.toString(),
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
                 ),
               Positioned(
                 top: 0,

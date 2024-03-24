@@ -32,6 +32,11 @@ class SettingsService {
       _pref_asymmetricalCommanderDamageButtons = symmetricalCommanderDamageButtons;
     }
 
+    var showChangingLife = prefs.getBool('showChangingLife');
+    if (showChangingLife != null) {
+      _pref_showChangingLife = showChangingLife;
+    }
+
     var startingLife = prefs.getInt('startingLife');
     if (startingLife != null) {
       _pref_startingLife = startingLife;
@@ -72,6 +77,13 @@ class SettingsService {
   set pref_asymmetricalCommanderDamageButtons(bool val) {
     _pref_asymmetricalCommanderDamageButtons = val;
     prefs.setBool('symmetricalCommanderDamageButtons', val);
+  }
+
+  bool _pref_showChangingLife = true;
+  bool get pref_showChangingLife => _pref_showChangingLife;
+  set pref_showChangingLife(bool val) {
+    _pref_showChangingLife = val;
+    prefs.setBool('showChangingLife', val);
   }
 
   int _pref_startingLife = 40;
