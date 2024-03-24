@@ -371,6 +371,59 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 ),
                               ),
                             ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  Service.settingsService.pref_asymmetricalCommanderDamageButtons = !Service.settingsService.pref_asymmetricalCommanderDamageButtons;
+                                });
+                              },
+                              behavior: HitTestBehavior.opaque,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                                child: Row(
+                                  children: [
+                                    const Opacity(
+                                      opacity: 0.5,
+                                      child: Icon(
+                                        Icons.space_dashboard_outlined,
+                                        size: 32,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                        child: Opacity(
+                                          opacity: 0.9,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Asymmetrical Buttons",
+                                                style: Theme.of(context).textTheme.titleLarge,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                              Text(
+                                                "Commander damage larger + button.",
+                                                style: Theme.of(context).textTheme.titleSmall,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: Service.settingsService.pref_asymmetricalCommanderDamageButtons,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          Service.settingsService.pref_asymmetricalCommanderDamageButtons = value;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),

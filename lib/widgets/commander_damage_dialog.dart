@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
+import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
 
 class CommanderDamageDialog extends StatefulWidget {
@@ -154,6 +155,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                     : Container(),
                               ),
                               Expanded(
+                                flex: Service.settingsService.pref_asymmetricalCommanderDamageButtons ? 2 : 1,
                                 child: widget.player.life > 0
                                     ? TextButton(
                                         style: ButtonStyle(

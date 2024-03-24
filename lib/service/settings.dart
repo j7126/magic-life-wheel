@@ -27,6 +27,11 @@ class SettingsService {
       _pref_enableCommanderDamage = enableCommanderDamage;
     }
 
+    var symmetricalCommanderDamageButtons = prefs.getBool('symmetricalCommanderDamageButtons');
+    if (symmetricalCommanderDamageButtons != null) {
+      _pref_asymmetricalCommanderDamageButtons = symmetricalCommanderDamageButtons;
+    }
+
     var startingLife = prefs.getInt('startingLife');
     if (startingLife != null) {
       _pref_startingLife = startingLife;
@@ -60,6 +65,13 @@ class SettingsService {
   set pref_enableCommanderDamage(bool val) {
     _pref_enableCommanderDamage = val;
     prefs.setBool('enableCommanderDamage', val);
+  }
+
+  bool _pref_asymmetricalCommanderDamageButtons = true;
+  bool get pref_asymmetricalCommanderDamageButtons => _pref_asymmetricalCommanderDamageButtons;
+  set pref_asymmetricalCommanderDamageButtons(bool val) {
+    _pref_asymmetricalCommanderDamageButtons = val;
+    prefs.setBool('symmetricalCommanderDamageButtons', val);
   }
 
   int _pref_startingLife = 40;
