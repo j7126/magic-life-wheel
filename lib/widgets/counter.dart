@@ -151,16 +151,16 @@ class _CounterState extends State<Counter> {
       ),
     );
 
-    var commanderButton = Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: IconButton(
-        icon: Icon(
+    var commanderButton = IconButton(
+      icon: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Icon(
           KeyruneIcons.ss_cmd,
           size: 28.0,
           shadows: onBackgroundShadow,
         ),
-        onPressed: commanderDamage,
       ),
+      onPressed: commanderDamage,
     );
 
     return Opacity(
