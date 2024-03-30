@@ -27,6 +27,11 @@ class SettingsService {
       _pref_enableCommanderDamage = enableCommanderDamage;
     }
 
+    var enablePlanechase = prefs.getBool('enablePlanechase');
+    if (enablePlanechase != null) {
+      _pref_enablePlanechase = enablePlanechase;
+    }
+
     var symmetricalCommanderDamageButtons = prefs.getBool('symmetricalCommanderDamageButtons');
     if (symmetricalCommanderDamageButtons != null) {
       _pref_asymmetricalCommanderDamageButtons = symmetricalCommanderDamageButtons;
@@ -70,6 +75,13 @@ class SettingsService {
   set pref_enableCommanderDamage(bool val) {
     _pref_enableCommanderDamage = val;
     prefs.setBool('enableCommanderDamage', val);
+  }
+
+  bool _pref_enablePlanechase = false;
+  bool get pref_enablePlanechase => _pref_enablePlanechase;
+  set pref_enablePlanechase(bool val) {
+    _pref_enablePlanechase = val;
+    prefs.setBool('enablePlanechase', val);
   }
 
   bool _pref_asymmetricalCommanderDamageButtons = true;

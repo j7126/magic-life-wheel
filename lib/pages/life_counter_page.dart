@@ -11,6 +11,8 @@ import 'package:magic_life_wheel/pages/settings_page.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
 import 'package:magic_life_wheel/widgets/counter.dart';
+import 'package:magic_life_wheel/widgets/planechase_dialog.dart';
+import 'package:mana_icons_flutter/mana_icons_flutter.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 class LifeCounterPage extends StatefulWidget {
@@ -145,6 +147,14 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     if (result ?? false) resetGame();
   }
 
+  void _showPlanechase() {
+    showDialog(
+      context: context,
+      // ignore: prefer_const_constructors
+      builder: (BuildContext context) => PlanechaseDialog(),
+    );
+  }
+
   void _showLayoutSelector(int layoutRotationOffset) {
     showModalBottomSheet<void>(
       context: context,
@@ -196,7 +206,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                               height: 48,
                               width: 48,
                               child: RotatedBox(
-                                quarterTurns: (rotated && l.runtimeType == layout.runtimeType ? 2 : 0) + layoutRotationOffset,
+                                quarterTurns:
+                                    (rotated && l.runtimeType == layout.runtimeType ? 2 : 0) + layoutRotationOffset,
                                 child: l.buildPreview(context),
                               ),
                             ),
@@ -393,7 +404,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                     }
                                   });
                                 },
-                                onWillAcceptWithDetails: (DragTargetDetails<int?> details) => details.data != null && i != details.data,
+                                onWillAcceptWithDetails: (DragTargetDetails<int?> details) =>
+                                    details.data != null && i != details.data,
                               ),
                           ],
                         );
@@ -511,6 +523,27 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                               leadingIcon: const Icon(Icons.restart_alt),
                               child: const Text("Reset Game"),
                             ),
+                            MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  Service.settingsService.pref_enablePlanechase =
+                                      !Service.settingsService.pref_enablePlanechase;
+                                });
+                              },
+                              leadingIcon: SizedBox(
+                                width: IconTheme.of(context).size,
+                                height: IconTheme.of(context).size,
+                                child: Checkbox(
+                                  value: Service.settingsService.pref_enablePlanechase,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      Service.settingsService.pref_enablePlanechase = value ?? false;
+                                    });
+                                  },
+                                ),
+                              ),
+                              child: const Text("Planechase"),
+                            ),
                           ],
                           builder: (BuildContext context, MenuController controller, Widget? child) {
                             return TextButton(
@@ -554,6 +587,24 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                           ),
                         ),
                       ),
+                      if (Service.settingsService.pref_enablePlanechase)
+                        Expanded(
+                          child: TextButton(
+                            onPressed: _showPlanechase,
+                            style: barButtonStyle,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12.0),
+                              child: Transform.scale(
+                                scale: 1.2,
+                                alignment: Alignment.bottomCenter,
+                                child: const Icon(
+                                  ManaIcons.ms_planeswalker,
+                                  size: 24,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       Expanded(
                         child: TextButton(
                           onPressed: () {

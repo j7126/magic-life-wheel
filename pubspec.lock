@@ -41,6 +41,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  auto_size_text:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "v3.0.x"
+      resolved-ref: bc66fe0035d0eedcac2234998ae55a02ad80b392
+      url: "https://github.com/j7126/auto_size_text.git"
+    source: git
+    version: "3.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -424,6 +433,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  mana_icons_flutter:
+    dependency: "direct main"
+    description:
+      name: mana_icons_flutter
+      sha256: "216659c406345eab7446154f7551910a527d43c07d11d558a83fcce7a72f34e4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   matcher:
     dependency: transitive
     description:

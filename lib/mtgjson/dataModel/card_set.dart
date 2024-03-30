@@ -13,10 +13,12 @@ class CardSet {
     required this.setCode,
     required this.identifiers,
     required this.artist,
+    required this.types,
     required this.subtypes,
     required this.supertypes,
     this.leadershipSkills,
     this.keywords,
+    this.text,
     required this.cardSearchString,
     required this.cardSearchStringWords,
   });
@@ -26,10 +28,12 @@ class CardSet {
   String setCode;
   String? artist;
   Identifiers identifiers;
+  List<String> types;
   List<String> subtypes;
   List<String> supertypes;
   LeadershipSkills? leadershipSkills;
   List<String>? keywords;
+  String? text;
 
   String cardSearchString;
   List<String> cardSearchStringWords;

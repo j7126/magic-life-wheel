@@ -5,10 +5,16 @@ import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 
 class CardImage extends StatefulWidget {
-  const CardImage({super.key, required this.cardSet, this.iconPadding = EdgeInsets.zero});
+  const CardImage({
+    super.key,
+    required this.cardSet,
+    this.iconPadding = EdgeInsets.zero,
+    this.fullCard = false,
+  });
 
   final CardSet? cardSet;
   final EdgeInsets iconPadding;
+  final bool fullCard;
 
   @override
   State<CardImage> createState() => _CardImageState();
@@ -29,7 +35,11 @@ class _CardImageState extends State<CardImage> {
     String fileFace = 'front';
     String dir1 = id[0];
     String dir2 = id[1];
-    _imageUrl = 'https://cards.scryfall.io/art_crop/$fileFace/$dir1/$dir2/$id.jpg';
+    if (widget.fullCard) {
+      _imageUrl = 'https://cards.scryfall.io/large/$fileFace/$dir1/$dir2/$id.jpg';
+    } else {
+      _imageUrl = 'https://cards.scryfall.io/art_crop/$fileFace/$dir1/$dir2/$id.jpg';
+    }
     setState(() {
       _ready = true;
     });

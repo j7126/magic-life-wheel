@@ -26,6 +26,11 @@ dependencies:
   string_normalizer: ^0.2.2
   uuid: ^4.3.3
   keyrune_icons_flutter: ^0.0.2
+  auto_size_text:
+    git:
+      url: https://github.com/j7126/auto_size_text.git
+      ref: v3.0.x
+  mana_icons_flutter: ^0.0.1
 
 dev_dependencies:
   flutter_test:
