@@ -219,11 +219,14 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
                                   ? Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text(
-                                          card.name,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: min(constraints.maxHeight, constraints.maxWidth) * 0.12,
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 8.0),
+                                          child: Text(
+                                            card.name,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: min(constraints.maxHeight, constraints.maxWidth) * 0.12,
+                                            ),
                                           ),
                                         ),
                                         Expanded(
