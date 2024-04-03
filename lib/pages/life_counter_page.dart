@@ -86,6 +86,13 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     });
   }
 
+  void resetPlayers() {
+    setState(() {
+      players.clear();
+      setupPlayers();
+    });
+  }
+
   void setupPlayers() {
     setState(() {
       if (numPlayers > players.length) {
@@ -115,7 +122,58 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('The life counters will be reset.'),
+          title: Column(
+            children: [
+              const Text('The life counters will be reset'),
+              const Gap(16.0),
+              Row(
+                children: [
+                  TextButton(
+                    child: const Text('Reset Players'),
+                    onPressed: () async {
+                      Navigator.of(context).pop(false);
+                      _showResetPlayersDialog();
+                    },
+                  ),
+                  const Spacer(),
+                  TextButton(
+                    child: const Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: FilledButton(
+                      style: const ButtonStyle(
+                        padding: MaterialStatePropertyAll(
+                          EdgeInsets.symmetric(horizontal: 16.0),
+                        ),
+                        backgroundColor: MaterialStatePropertyAll(Colors.red),
+                        foregroundColor: MaterialStatePropertyAll(Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: const Text('Reset'),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<bool?> _showResetPlayersWarning() {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('The player configuration will be reset!'),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
@@ -123,11 +181,21 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                 Navigator.of(context).pop(false);
               },
             ),
-            TextButton(
-              child: const Text('Continue'),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: FilledButton(
+                style: const ButtonStyle(
+                  padding: MaterialStatePropertyAll(
+                    EdgeInsets.symmetric(horizontal: 16.0),
+                  ),
+                  backgroundColor: MaterialStatePropertyAll(Colors.red),
+                  foregroundColor: MaterialStatePropertyAll(Colors.white),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text('Reset'),
+              ),
             ),
           ],
         );
@@ -142,9 +210,15 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   }
 
   void _showResetGameDialog() async {
-    var result = isGameReset ? false : await _showResetWarning();
+    var result = await _showResetWarning();
 
     if (result ?? false) resetGame();
+  }
+
+  void _showResetPlayersDialog() async {
+    var result = await _showResetPlayersWarning();
+
+    if (result ?? false) resetPlayers();
   }
 
   void _showPlanechase() {
