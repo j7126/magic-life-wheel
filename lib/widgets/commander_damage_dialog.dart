@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
@@ -62,25 +63,28 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: RotatedBox(
-            quarterTurns: (widget.layout.rotated ? 2 : 0) + (MediaQuery.of(context).orientation == Orientation.landscape ? 1 : 0),
+            quarterTurns:
+                (widget.layout.rotated ? 2 : 0) + (MediaQuery.of(context).orientation == Orientation.landscape ? 1 : 0),
             child: widget.layout.build(
               context,
               widget.players,
               (i) {
                 var player = widget.players[i];
-                var dmg = (widget.player.commanderDamage[player.uuid] ?? 0);
-                return SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: Card(
+
+                Widget counter({bool partner = false}) {
+                  var card = partner ? player.cardPartner : player.card;
+                  var cmdid = partner ? (card?.uuid ?? player.uuid) : player.uuid;
+                  var dmg = (widget.player.commanderDamage[cmdid] ?? 0);
+
+                  return Card(
                     clipBehavior: Clip.antiAlias,
                     margin: const EdgeInsets.all(2.0),
                     child: Stack(
                       children: [
-                        if (player.card != null)
+                        if (card != null)
                           CardImage(
-                            key: Key(player.card?.uuid ?? ''),
-                            cardSet: player.card,
+                            key: Key(card.uuid),
+                            cardSet: card,
                           ),
                         Positioned.fill(
                           child: Column(
@@ -93,7 +97,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                     child: Text(
                                       widget.player.uuid == player.uuid && dmg <= 0 ? "me" : dmg.toString(),
                                       style: TextStyle(
-                                        shadows: player.card != null
+                                        shadows: card != null
                                             ? [
                                                 const Shadow(
                                                   offset: Offset(0.5, 0.5),
@@ -130,12 +134,12 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      widget.player.dealCommander(player.uuid, 1);
+                                      widget.player.dealCommander(cmdid, 1);
                                     });
                                   },
                                   onLongPress: () {
                                     setState(() {
-                                      widget.player.dealCommander(player.uuid, 10);
+                                      widget.player.dealCommander(cmdid, 10);
                                     });
                                   },
                                   child: SizedBox(
@@ -168,12 +172,12 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      widget.player.dealCommander(player.uuid, -1);
+                                      widget.player.dealCommander(cmdid, -1);
                                     });
                                   },
                                   onLongPress: () {
                                     setState(() {
-                                      widget.player.dealCommander(player.uuid, -10);
+                                      widget.player.dealCommander(cmdid, -10);
                                     });
                                   },
                                   child: SizedBox(
@@ -195,6 +199,24 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                         )
                       ],
                     ),
+                  );
+                }
+
+                return SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: counter(),
+                      ),
+                      if (player.cardPartner != null)
+                        Expanded(
+                          child: counter(
+                            partner: true,
+                          ),
+                        ),
+                    ],
                   ),
                 );
               },

@@ -69,4 +69,6 @@ class CardSet {
     }
     return i;
   }
+
+  bool get isPartner => keywords?.contains("Partner") ?? false;
 }

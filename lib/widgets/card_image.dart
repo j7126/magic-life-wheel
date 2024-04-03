@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 
@@ -8,11 +9,13 @@ class CardImage extends StatefulWidget {
   const CardImage({
     super.key,
     required this.cardSet,
+    this.partnerCard,
     this.iconPadding = EdgeInsets.zero,
     this.fullCard = false,
   });
 
   final CardSet? cardSet;
+  final CardSet? partnerCard;
   final EdgeInsets iconPadding;
   final bool fullCard;
 
@@ -24,22 +27,34 @@ class _CardImageState extends State<CardImage> {
   bool _ready = false;
   bool _valid = true;
   late String _imageUrl;
+  String? _partnerImageUrl;
 
-  void setup() async {
-    String? id = widget.cardSet?.identifiers.scryfallId;
+  String? getImage(CardSet? card) {
+    String? id = card?.identifiers.scryfallId;
     if (id == null) {
-      _ready = false;
-      _valid = false;
-      return;
+      return null;
     }
     String fileFace = 'front';
     String dir1 = id[0];
     String dir2 = id[1];
     if (widget.fullCard) {
-      _imageUrl = 'https://cards.scryfall.io/large/$fileFace/$dir1/$dir2/$id.jpg';
+      return 'https://cards.scryfall.io/large/$fileFace/$dir1/$dir2/$id.jpg';
     } else {
-      _imageUrl = 'https://cards.scryfall.io/art_crop/$fileFace/$dir1/$dir2/$id.jpg';
+      return 'https://cards.scryfall.io/art_crop/$fileFace/$dir1/$dir2/$id.jpg';
     }
+  }
+
+  void setup() async {
+    var url = getImage(widget.cardSet);
+    if (url == null) {
+      _ready = false;
+      _valid = false;
+    } else {
+      _imageUrl = url;
+    }
+
+    _partnerImageUrl = getImage(widget.partnerCard);
+
     setState(() {
       _ready = true;
     });
@@ -94,12 +109,26 @@ class _CardImageState extends State<CardImage> {
                   child: const CircularProgressIndicator(),
                 ),
               ),
-              Image.network(
-                _imageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-                errorBuilder: (context, error, stackTrace) => brokenImage,
+              Row(
+                children: [
+                  Expanded(
+                    child: Image.network(
+                      _imageUrl,
+                      fit: BoxFit.cover,
+                      height: double.infinity,
+                      errorBuilder: (context, error, stackTrace) => brokenImage,
+                    ),
+                  ),
+                  if (_partnerImageUrl != null)
+                    Expanded(
+                      child: Image.network(
+                        _partnerImageUrl!,
+                        fit: BoxFit.cover,
+                        height: double.infinity,
+                        errorBuilder: (context, error, stackTrace) => brokenImage,
+                      ),
+                    ),
+                ],
               ),
             ],
           );

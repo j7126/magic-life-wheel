@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
 
 class CardsVariantDialog extends StatefulWidget {
-  const CardsVariantDialog({super.key, required this.cards, required this.player});
+  const CardsVariantDialog({
+    super.key,
+    required this.cards,
+    required this.player,
+  });
 
   final List<CardSet> cards;
   final Player player;
@@ -67,17 +72,70 @@ class _CardsVariantDialogState extends State<CardsVariantDialog> {
             Align(
               alignment: Alignment.bottomLeft,
               child: Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: FilledButton(
-                  onPressed: () {
-                    setState(() {
-                      Navigator.of(context).pop(card);
-                    });
-                  },
-                  style: const ButtonStyle(
-                    padding: MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
-                  ),
-                  child: widget.player.card?.uuid == card.uuid ? const Text("Selected") : const Text("Select"),
+                padding: const EdgeInsets.only(bottom: 6.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    if (widget.player.cardPartner?.name != card.name || widget.player.cardPartner?.uuid == card.uuid)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: FilledButton(
+                          onPressed: () {
+                            setState(() {
+                              Navigator.of(context).pop((card, false));
+                            });
+                          },
+                          style: ButtonStyle(
+                            padding:
+                                const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                            backgroundColor: widget.player.cardPartner?.uuid == card.uuid
+                                ? MaterialStatePropertyAll(Theme.of(context).colorScheme.inversePrimary)
+                                : null,
+                            foregroundColor: widget.player.cardPartner?.uuid == card.uuid
+                                ? MaterialStatePropertyAll(Theme.of(context).colorScheme.inverseSurface)
+                                : null,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (widget.player.card?.uuid == card.uuid || widget.player.cardPartner?.uuid == card.uuid)
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 6.0),
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 18.0,
+                                  ),
+                                ),
+                              Text(widget.player.card?.uuid == card.uuid
+                                  ? "Selected"
+                                  : widget.player.cardPartner?.uuid == card.uuid
+                                      ? "Partnered"
+                                      : "Select"),
+                            ],
+                          ),
+                        ),
+                      ),
+                    const Gap(8.0),
+                    if (widget.player.card?.name != card.name &&
+                        widget.player.cardPartner?.uuid != card.uuid &&
+                        (widget.player.forcePartner ||
+                            (widget.player.card != null && widget.player.card!.isPartner && card.isPartner)))
+                      FilledButton(
+                        onPressed: () {
+                          setState(() {
+                            Navigator.of(context).pop((card, true));
+                          });
+                        },
+                        style: ButtonStyle(
+                          padding: const MaterialStatePropertyAll(
+                            EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                          ),
+                          backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.inversePrimary),
+                          foregroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.inverseSurface),
+                        ),
+                        child: const Text("Partner"),
+                      ),
+                  ],
                 ),
               ),
             ),

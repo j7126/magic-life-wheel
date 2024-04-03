@@ -357,8 +357,10 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                             width: 100,
                                             height: 100,
                                             child: CardImage(
-                                              key: Key(players[i].card?.uuid ?? ''),
+                                              key: Key(
+                                                  (players[i].card?.uuid ?? '') + (players[i].cardPartner?.uuid ?? '')),
                                               cardSet: players[i].card,
+                                              partnerCard: players[i].cardPartner,
                                             ),
                                           ),
                                         ),

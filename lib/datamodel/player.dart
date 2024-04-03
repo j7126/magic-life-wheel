@@ -17,6 +17,13 @@ class Player {
   late String uuid;
   String name;
   CardSet? card;
+  CardSet? cardPartner;
+
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
+  )
+  bool forcePartner = false;
 
   @JsonKey(
     includeFromJson: false,

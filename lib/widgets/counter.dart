@@ -178,8 +178,9 @@ class _CounterState extends State<Counter> {
             children: [
               if (widget.player.card != null)
                 CardImage(
-                  key: Key(widget.player.card?.uuid ?? ''),
+                  key: Key((widget.player.card?.uuid ?? '') + (widget.player.cardPartner?.uuid ?? '')),
                   cardSet: widget.player.card,
+                  partnerCard: widget.player.cardPartner,
                 ),
               if (Service.settingsService.pref_showChangingLife && changedLife != 0)
                 Align(
@@ -256,10 +257,14 @@ class _CounterState extends State<Counter> {
                               Theme.of(context).colorScheme.onBackground,
                             ),
                             overlayColor: MaterialStateProperty.all<Color>(
-                              longPressDirection == -1 ? Colors.transparent : Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                              longPressDirection == -1
+                                  ? Colors.transparent
+                                  : Theme.of(context).colorScheme.onBackground.withAlpha(30),
                             ),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              longPressDirection == -1 ? Theme.of(context).colorScheme.onBackground.withAlpha(30) : Colors.transparent,
+                              longPressDirection == -1
+                                  ? Theme.of(context).colorScheme.onBackground.withAlpha(30)
+                                  : Colors.transparent,
                             ),
                           ),
                           onPressed: !showMinusButton ? null : () => changeLife(-1),
@@ -296,10 +301,14 @@ class _CounterState extends State<Counter> {
                               Theme.of(context).colorScheme.onBackground,
                             ),
                             overlayColor: MaterialStateProperty.all<Color>(
-                              longPressDirection == 1 ? Colors.transparent : Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                              longPressDirection == 1
+                                  ? Colors.transparent
+                                  : Theme.of(context).colorScheme.onBackground.withAlpha(30),
                             ),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              longPressDirection == 1 ? Theme.of(context).colorScheme.onBackground.withAlpha(30) : Colors.transparent,
+                              longPressDirection == 1
+                                  ? Theme.of(context).colorScheme.onBackground.withAlpha(30)
+                                  : Colors.transparent,
                             ),
                           ),
                           onPressed: !showPlusButton ? null : () => changeLife(1),

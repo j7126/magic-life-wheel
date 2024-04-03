@@ -178,8 +178,9 @@ class _EditPlayerDialogState extends State<EditPlayerDialog> {
                       : Stack(
                           children: [
                             CardImage(
-                              key: Key(widget.player.card?.uuid ?? ""),
+                              key: Key((widget.player.card?.uuid ?? '') + (widget.player.cardPartner?.uuid ?? '')),
                               cardSet: widget.player.card,
+                              partnerCard: widget.player.cardPartner,
                               iconPadding: const EdgeInsets.only(top: 22.0),
                             ),
                             Padding(

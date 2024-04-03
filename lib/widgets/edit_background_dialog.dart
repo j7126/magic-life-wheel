@@ -63,7 +63,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
   }
 
   void selectVariant(List<CardSet> cards) async {
-    var card = await showDialog<CardSet?>(
+    var card = await showDialog<(CardSet, bool)?>(
       context: context,
       builder: (BuildContext context) => CardsVariantDialog(
         cards: cards,
@@ -72,7 +72,21 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
     );
     setState(() {
       if (card != null) {
-        widget.player.card = card;
+        if (card.$2) {
+          widget.player.cardPartner = card.$1;
+        } else {
+          if (widget.player.card?.uuid == card.$1.uuid) {
+            widget.player.card = widget.player.cardPartner;
+            widget.player.cardPartner = null;
+          } else if (widget.player.cardPartner?.uuid == card.$1.uuid) {
+            widget.player.cardPartner = null;
+          } else {
+            widget.player.card = card.$1;
+            if (widget.player.cardPartner?.name == card.$1.name) {
+              widget.player.cardPartner = null;
+            }
+          }
+        }
         Navigator.of(context).pop();
       }
     });
@@ -158,15 +172,70 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                     FilledButton(
                       onPressed: () {
                         setState(() {
-                          widget.player.card = selectedCard ?? card.first;
+                          if (widget.player.card?.name == selectedCard!.name) {
+                            widget.player.card = widget.player.cardPartner;
+                            widget.player.cardPartner = null;
+                          } else if (widget.player.cardPartner?.name == selectedCard.name) {
+                            widget.player.cardPartner = null;
+                          } else {
+                            widget.player.card = selectedCard;
+                            if (widget.player.cardPartner?.name == selectedCard.name) {
+                              widget.player.cardPartner = null;
+                            }
+                          }
                           Navigator.of(context).pop();
                         });
                       },
-                      style: const ButtonStyle(
-                        padding: MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                      style: ButtonStyle(
+                        padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                        backgroundColor: widget.player.cardPartner?.name == selectedCard.name
+                            ? MaterialStatePropertyAll(Theme.of(context).colorScheme.inversePrimary)
+                            : null,
+                        foregroundColor: widget.player.cardPartner?.name == selectedCard.name
+                            ? MaterialStatePropertyAll(Theme.of(context).colorScheme.inverseSurface)
+                            : null,
                       ),
-                      child: widget.player.card?.uuid == selectedCard.uuid ? const Text("Selected") : const Text("Select"),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (widget.player.card?.name == selectedCard.name || widget.player.cardPartner?.name == selectedCard.name)
+                            const Padding(
+                              padding: EdgeInsets.only(right: 6.0),
+                              child: Icon(
+                                Icons.check,
+                                size: 18.0,
+                              ),
+                            ),
+                          Text(widget.player.card?.name == selectedCard.name
+                              ? "Selected"
+                              : widget.player.cardPartner?.name == selectedCard.name
+                                  ? "Partnered"
+                                  : "Select"),
+                        ],
+                      ),
                     ),
+                    if (widget.player.card?.name != selectedCard.name &&
+                        widget.player.cardPartner?.name != selectedCard.name &&
+                        (widget.player.forcePartner ||
+                            (widget.player.card != null && widget.player.card!.isPartner && selectedCard.isPartner)))
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: FilledButton(
+                          onPressed: () {
+                            setState(() {
+                              widget.player.cardPartner = selectedCard;
+                              Navigator.of(context).pop();
+                            });
+                          },
+                          style: ButtonStyle(
+                            padding:
+                                const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                            backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.inversePrimary),
+                            foregroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.inverseSurface),
+                          ),
+                          child: const Text("Partner"),
+                        ),
+                      ),
                     const Spacer(),
                     if (card.length > 1)
                       Padding(
@@ -222,6 +291,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                           ? () {
                               setState(() {
                                 widget.player.card = null;
+                                widget.player.cardPartner = null;
                               });
                             }
                           : null,
@@ -250,6 +320,27 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                         ),
                       ),
                       child: const Text("Commander Only"),
+                    ),
+                    MenuItemButton(
+                      onPressed: () {
+                        setState(() {
+                          widget.player.forcePartner = !widget.player.forcePartner;
+                        });
+                      },
+                      closeOnActivate: false,
+                      leadingIcon: SizedBox(
+                        width: IconTheme.of(context).size,
+                        height: IconTheme.of(context).size,
+                        child: Checkbox(
+                          value: widget.player.forcePartner,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              widget.player.forcePartner = value ?? false;
+                            });
+                          },
+                        ),
+                      ),
+                      child: const Text("Force Partner"),
                     ),
                   ],
                   builder: (BuildContext context, MenuController controller, Widget? child) {
@@ -324,8 +415,9 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                               ),
                             ),
                           ),
+                        const Gap(16.0),
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Container(
                             constraints: const BoxConstraints(
                               maxWidth: 500,
@@ -338,6 +430,22 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             ),
                           ),
                         ),
+                        const Gap(8.0),
+                        if (widget.player.cardPartner != null)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Container(
+                              constraints: const BoxConstraints(
+                                maxWidth: 500,
+                              ),
+                              child: AspectRatio(
+                                aspectRatio: 1.1,
+                                child: cardSelector(Service.dataLoader.allSetCards?.data
+                                    .where((element) => element.name == widget.player.cardPartner?.name)
+                                    .toList()),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   )
