@@ -109,6 +109,12 @@ class _CounterState extends State<Counter> {
   }
 
   @override
+  void dispose() {
+    lifeChangedTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var onBackgroundShadow = widget.player.card != null
         ? const [
