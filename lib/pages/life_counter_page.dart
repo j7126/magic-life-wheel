@@ -599,27 +599,6 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                               leadingIcon: const Icon(Icons.restart_alt),
                               child: const Text("Reset Game"),
                             ),
-                            MenuItemButton(
-                              onPressed: () {
-                                setState(() {
-                                  Service.settingsService.pref_enablePlanechase =
-                                      !Service.settingsService.pref_enablePlanechase;
-                                });
-                              },
-                              leadingIcon: SizedBox(
-                                width: IconTheme.of(context).size,
-                                height: IconTheme.of(context).size,
-                                child: Checkbox(
-                                  value: Service.settingsService.pref_enablePlanechase,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      Service.settingsService.pref_enablePlanechase = value ?? false;
-                                    });
-                                  },
-                                ),
-                              ),
-                              child: const Text("Planechase"),
-                            ),
                           ],
                           builder: (BuildContext context, MenuController controller, Widget? child) {
                             return TextButton(

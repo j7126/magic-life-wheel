@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:keyrune_icons_flutter/keyrune_icons_flutter.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
+import 'package:mana_icons_flutter/mana_icons_flutter.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -11,25 +12,26 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMixin {
-  final TextEditingController startingLifeController = TextEditingController(text: Service.settingsService.pref_startingLife.toString());
+  final TextEditingController startingLifeController =
+      TextEditingController(text: Service.settingsService.pref_startingLife.toString());
 
-  late final AnimationController _sizeAnimationController = AnimationController(
+  late final AnimationController _advancedAnimationController = AnimationController(
     duration: const Duration(milliseconds: 200),
     vsync: this,
   );
-  late final Animation<double> _sizeAnimation = CurvedAnimation(
-    parent: _sizeAnimationController,
+  late final Animation<double> _advancedAnimation = CurvedAnimation(
+    parent: _advancedAnimationController,
     curve: Curves.fastOutSlowIn,
   );
 
-  bool _showExtra = false;
-  bool get showExtra => _showExtra;
-  set showExtra(bool value) {
-    _showExtra = value;
+  bool _showAdvanced = false;
+  bool get showAdvanced => _showAdvanced;
+  set showAdvanced(bool value) {
+    _showAdvanced = value;
     if (value) {
-      _sizeAnimationController.forward();
+      _advancedAnimationController.forward();
     } else {
-      _sizeAnimationController.reverse();
+      _advancedAnimationController.reverse();
     }
   }
 
@@ -50,7 +52,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
   @override
   void dispose() {
     onStartingLifeTextChanged();
-    _sizeAnimationController.dispose();
+    _advancedAnimationController.dispose();
     super.dispose();
   }
 
@@ -73,6 +75,61 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Column(
                     children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            Service.settingsService.pref_enablePlanechase =
+                                !Service.settingsService.pref_enablePlanechase;
+                          });
+                        },
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                          child: Row(
+                            children: [
+                              const Opacity(
+                                opacity: 0.5,
+                                child: Icon(
+                                  ManaIcons.ms_planeswalker,
+                                  size: 32,
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Opacity(
+                                    opacity: 0.9,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Planechase",
+                                          style: Theme.of(context).textTheme.titleLarge,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                        Text(
+                                          "Enable Planechase",
+                                          style: Theme.of(context).textTheme.titleSmall,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Switch(
+                                value: Service.settingsService.pref_enablePlanechase,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    Service.settingsService.pref_enablePlanechase = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                         child: Row(
@@ -143,7 +200,8 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            Service.settingsService.pref_enableCommanderDamage = !Service.settingsService.pref_enableCommanderDamage;
+                            Service.settingsService.pref_enableCommanderDamage =
+                                !Service.settingsService.pref_enableCommanderDamage;
                           });
                         },
                         behavior: HitTestBehavior.opaque,
@@ -197,7 +255,8 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            Service.settingsService.pref_getScryfallImages = !Service.settingsService.pref_getScryfallImages;
+                            Service.settingsService.pref_getScryfallImages =
+                                !Service.settingsService.pref_getScryfallImages;
                           });
                         },
                         behavior: HitTestBehavior.opaque,
@@ -256,13 +315,13 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                 margin: EdgeInsets.zero,
                 child: AnimatedPadding(
                   duration: const Duration(milliseconds: 200),
-                  padding: showExtra ? const EdgeInsets.symmetric(vertical: 8.0) : EdgeInsets.zero,
+                  padding: showAdvanced ? const EdgeInsets.symmetric(vertical: 8.0) : EdgeInsets.zero,
                   child: Column(
                     children: [
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            showExtra = !showExtra;
+                            showAdvanced = !showAdvanced;
                           });
                         },
                         behavior: HitTestBehavior.opaque,
@@ -274,7 +333,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 opacity: 0.7,
                                 child: AnimatedRotation(
                                   duration: const Duration(milliseconds: 200),
-                                  turns: showExtra ? 0.5 : 0,
+                                  turns: showAdvanced ? 0.5 : 0,
                                   child: Transform.scale(
                                     scale: 1.2,
                                     child: const Icon(
@@ -299,7 +358,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                           maxLines: 1,
                                         ),
                                         Text(
-                                          showExtra ? "Hide" : "Show More",
+                                          showAdvanced ? "Hide" : "Show More",
                                           style: Theme.of(context).textTheme.titleSmall,
                                         ),
                                       ],
@@ -312,7 +371,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                         ),
                       ),
                       SizeTransition(
-                        sizeFactor: _sizeAnimation,
+                        sizeFactor: _advancedAnimation,
                         axis: Axis.vertical,
                         axisAlignment: -1,
                         child: Column(
@@ -321,7 +380,8 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                             GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  Service.settingsService.pref_enableSaveState = !Service.settingsService.pref_enableSaveState;
+                                  Service.settingsService.pref_enableSaveState =
+                                      !Service.settingsService.pref_enableSaveState;
                                 });
                               },
                               behavior: HitTestBehavior.opaque,
@@ -375,7 +435,8 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                             GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  Service.settingsService.pref_asymmetricalCommanderDamageButtons = !Service.settingsService.pref_asymmetricalCommanderDamageButtons;
+                                  Service.settingsService.pref_asymmetricalCommanderDamageButtons =
+                                      !Service.settingsService.pref_asymmetricalCommanderDamageButtons;
                                 });
                               },
                               behavior: HitTestBehavior.opaque,
@@ -429,7 +490,8 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                             GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  Service.settingsService.pref_showChangingLife = !Service.settingsService.pref_showChangingLife;
+                                  Service.settingsService.pref_showChangingLife =
+                                      !Service.settingsService.pref_showChangingLife;
                                 });
                               },
                               behavior: HitTestBehavior.opaque,
