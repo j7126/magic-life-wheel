@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
