@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:uuid/uuid.dart';
+import 'package:image_picker/image_picker.dart';
 
 part 'player.g.dart';
 
@@ -18,6 +19,12 @@ class Player {
   String name;
   CardSet? card;
   CardSet? cardPartner;
+
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
+  )
+  XFile? customImage;
 
   @JsonKey(
     includeFromJson: false,

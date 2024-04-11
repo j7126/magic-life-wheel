@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
+import 'package:magic_life_wheel/widgets/custom_image.dart';
 import 'package:magic_life_wheel/widgets/edit_background_dialog.dart';
 
 class EditPlayerDialog extends StatefulWidget {
@@ -43,7 +44,7 @@ class _EditPlayerDialogState extends State<EditPlayerDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var onBackgroundShadow = widget.player.card != null
+    var onBackgroundShadow = widget.player.card != null || widget.player.customImage != null
         ? const [
             Shadow(
               offset: Offset(0, 0),
@@ -177,12 +178,15 @@ class _EditPlayerDialogState extends State<EditPlayerDialog> {
                         )
                       : Stack(
                           children: [
-                            CardImage(
-                              key: Key((widget.player.card?.uuid ?? '') + (widget.player.cardPartner?.uuid ?? '')),
-                              cardSet: widget.player.card,
-                              partnerCard: widget.player.cardPartner,
-                              iconPadding: const EdgeInsets.only(top: 22.0),
-                            ),
+                            widget.player.customImage != null
+                                ? CustomImage(file: widget.player.customImage!)
+                                : CardImage(
+                                    key:
+                                        Key((widget.player.card?.uuid ?? '') + (widget.player.cardPartner?.uuid ?? '')),
+                                    cardSet: widget.player.card,
+                                    partnerCard: widget.player.cardPartner,
+                                    iconPadding: const EdgeInsets.only(top: 22.0),
+                                  ),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                               child: Row(

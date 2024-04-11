@@ -31,6 +31,7 @@ dependencies:
       url: https://github.com/j7126/auto_size_text.git
       ref: v3.0.x
   mana_icons_flutter: ^0.0.1
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:

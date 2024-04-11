@@ -2,12 +2,14 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/icons/custom_icons.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
 import 'package:magic_life_wheel/widgets/cards_variant_dialog.dart';
+import 'package:magic_life_wheel/widgets/custom_image.dart';
 
 class EditBackgroundDialog extends StatefulWidget {
   const EditBackgroundDialog({super.key, required this.player});
@@ -22,11 +24,17 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
   late TextEditingController _searchFieldController;
   late ScrollController _scrollController;
 
+  final ImagePicker picker = ImagePicker();
+
   List<MapEntry<String, List<CardSet>>>? cards;
 
   bool commanderOnly = true;
 
   final FocusNode _menuButtonFocusNode = FocusNode();
+
+  void pop() {
+    Navigator.of(context).pop();
+  }
 
   void searchCards(String searchStr) async {
     if (Service.dataLoader.allSetCards == null) {
@@ -87,9 +95,19 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
             }
           }
         }
+        widget.player.customImage = null;
         Navigator.of(context).pop();
       }
     });
+  }
+
+  void setCustomImage() async {
+    widget.player.customImage = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      widget.player.card = null;
+      widget.player.cardPartner = null;
+    });
+    pop();
   }
 
   @override
@@ -183,6 +201,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                               widget.player.cardPartner = null;
                             }
                           }
+                          widget.player.customImage = null;
                           Navigator.of(context).pop();
                         });
                       },
@@ -198,7 +217,8 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (widget.player.card?.name == selectedCard.name || widget.player.cardPartner?.name == selectedCard.name)
+                          if (widget.player.card?.name == selectedCard.name ||
+                              widget.player.cardPartner?.name == selectedCard.name)
                             const Padding(
                               padding: EdgeInsets.only(right: 6.0),
                               child: Icon(
@@ -287,9 +307,15 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                   ),
                   menuChildren: <Widget>[
                     MenuItemButton(
-                      onPressed: widget.player.card != null
+                      onPressed: setCustomImage,
+                      leadingIcon: const Icon(Icons.image_outlined),
+                      child: const Text("Custom Image"),
+                    ),
+                    MenuItemButton(
+                      onPressed: widget.player.card != null || widget.player.customImage != null
                           ? () {
                               setState(() {
+                                widget.player.customImage = null;
                                 widget.player.card = null;
                                 widget.player.cardPartner = null;
                               });
@@ -385,7 +411,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
             onChanged: (value) => searchCards(value),
           ),
           if (_searchFieldController.text.isEmpty || (cards?.isEmpty ?? true))
-            widget.player.card != null && Service.dataLoader.allSetCards != null
+            (widget.player.card != null && Service.dataLoader.allSetCards != null) || widget.player.customImage != null
                 ? Expanded(
                     child: Column(
                       children: [
@@ -416,22 +442,97 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             ),
                           ),
                         const Gap(16.0),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Container(
-                            constraints: const BoxConstraints(
-                              maxWidth: 500,
-                            ),
-                            child: AspectRatio(
-                              aspectRatio: 1.1,
-                              child: cardSelector(Service.dataLoader.allSetCards?.data
-                                  .where((element) => element.name == widget.player.card?.name)
-                                  .toList()),
+                        if (widget.player.card != null && Service.dataLoader.allSetCards != null)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Container(
+                              constraints: const BoxConstraints(
+                                maxWidth: 500,
+                              ),
+                              child: AspectRatio(
+                                aspectRatio: 1.1,
+                                child: cardSelector(Service.dataLoader.allSetCards?.data
+                                    .where((element) => element.name == widget.player.card?.name)
+                                    .toList()),
+                              ),
                             ),
                           ),
-                        ),
+                        if (widget.player.customImage != null)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Container(
+                              constraints: const BoxConstraints(
+                                maxWidth: 500,
+                              ),
+                              child: AspectRatio(
+                                aspectRatio: 1.1,
+                                child: Card(
+                                  clipBehavior: Clip.antiAlias,
+                                  child: Stack(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
+                                            child: Text(
+                                              "Custom Image",
+                                              style: TextStyle(
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 8.0),
+                                              child: CustomImage(
+                                                file: widget.player.customImage!,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(6.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              FilledButton(
+                                                onPressed: setCustomImage,
+                                                style: const ButtonStyle(
+                                                  padding: MaterialStatePropertyAll(
+                                                      EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                                                ),
+                                                child: const Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Padding(
+                                                      padding: EdgeInsets.only(right: 6.0),
+                                                      child: Icon(
+                                                        Icons.image_outlined,
+                                                        size: 18.0,
+                                                      ),
+                                                    ),
+                                                    Text("Change Image"),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         const Gap(8.0),
-                        if (widget.player.cardPartner != null)
+                        if ((widget.player.card != null && Service.dataLoader.allSetCards != null) &&
+                            widget.player.cardPartner != null)
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Container(
