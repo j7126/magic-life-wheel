@@ -11,7 +11,7 @@ import 'package:magic_life_wheel/icons/custom_icons.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
-import 'package:magic_life_wheel/widgets/cards_variant_dialog.dart';
+import 'package:magic_life_wheel/dialogs/cards_variant_dialog.dart';
 import 'package:magic_life_wheel/widgets/custom_image.dart';
 
 class EditBackgroundDialog extends StatefulWidget {

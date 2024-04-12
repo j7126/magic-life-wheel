@@ -6,9 +6,9 @@ import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
-import 'package:magic_life_wheel/widgets/commander_damage_dialog.dart';
+import 'package:magic_life_wheel/dialogs/commander_damage_dialog.dart';
 import 'package:magic_life_wheel/widgets/custom_image.dart';
-import 'package:magic_life_wheel/widgets/edit_player_dialog.dart';
+import 'package:magic_life_wheel/dialogs/edit_player_dialog.dart';
 
 class Counter extends StatefulWidget {
   const Counter({

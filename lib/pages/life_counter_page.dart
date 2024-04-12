@@ -12,7 +12,7 @@ import 'package:magic_life_wheel/pages/settings_page.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
 import 'package:magic_life_wheel/widgets/counter.dart';
-import 'package:magic_life_wheel/widgets/planechase_dialog.dart';
+import 'package:magic_life_wheel/dialogs/planechase_dialog.dart';
 import 'package:mana_icons_flutter/mana_icons_flutter.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 

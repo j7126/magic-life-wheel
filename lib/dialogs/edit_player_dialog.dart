@@ -5,7 +5,7 @@ import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
 import 'package:magic_life_wheel/widgets/custom_image.dart';
-import 'package:magic_life_wheel/widgets/edit_background_dialog.dart';
+import 'package:magic_life_wheel/dialogs/edit_background_dialog.dart';
 
 class EditPlayerDialog extends StatefulWidget {
   const EditPlayerDialog({super.key, required this.player});
