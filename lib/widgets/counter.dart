@@ -5,6 +5,7 @@ import 'package:keyrune_icons_flutter/keyrune_icons_flutter.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
+import 'package:magic_life_wheel/widgets/animated_fade.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
 import 'package:magic_life_wheel/dialogs/commander_damage_dialog.dart';
 import 'package:magic_life_wheel/widgets/custom_image.dart';
@@ -17,12 +18,16 @@ class Counter extends StatefulWidget {
     required this.layout,
     required this.players,
     this.stateChanged,
+    this.highlighted = false,
+    this.highlightedInstant = false,
   });
 
   final int i;
   final Layout layout;
   final List<Player> players;
   final VoidCallback? stateChanged;
+  final bool highlighted;
+  final bool highlightedInstant;
 
   Player get player => players[i];
 
@@ -144,7 +149,9 @@ class _CounterState extends State<Counter> {
         child: GestureDetector(
           onTap: editPlayer,
           child: Card(
-            color: widget.player.card != null || widget.player.customImage != null ? const Color.fromARGB(140, 0, 0, 0) : null,
+            color: widget.player.card != null || widget.player.customImage != null
+                ? const Color.fromARGB(140, 0, 0, 0)
+                : null,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: Text(
@@ -351,6 +358,33 @@ class _CounterState extends State<Counter> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: commanderButton,
+                ),
+              IgnorePointer(
+                child: AnimatedFade(
+                  reverseDuration: const Duration(seconds: 2),
+                  visible: widget.highlighted,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(35),
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 8.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              if (widget.highlightedInstant)
+                IgnorePointer(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(35),
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 4.0,
+                      ),
+                    ),
+                  ),
                 ),
             ],
           ),

@@ -31,6 +31,10 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   bool rearrangeMode = false;
   List<Player>? oldPlayers;
   double rotatedAnimate = 0.0;
+  int? highlightedPlayer;
+  int highlightedPlayerKey = 0;
+  int? highlightedPlayerAnimation;
+  bool randomPlayerAnimationInProgress = false;
 
   bool get rotated => layout?.rotated ?? false;
   set rotated(bool val) => layout?.rotated = val;
@@ -234,6 +238,39 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     );
   }
 
+  void _chooseRandomPlayer() async {
+    randomPlayerAnimationInProgress = true;
+    var key = DateTime.now().millisecondsSinceEpoch;
+    highlightedPlayerKey = key;
+    highlightedPlayer = null;
+    var player = key % players.length;
+
+    for (var i = -2 * players.length; i < 0; i++) {
+      setState(() {
+        highlightedPlayerAnimation = (player + i) % players.length;
+      });
+      await Future.delayed(
+        Duration(
+          milliseconds: (((2 * players.length + i + 1) / (2 * players.length)) * 400).round(),
+        ),
+      );
+    }
+
+    setState(() {
+      highlightedPlayerAnimation = null;
+      highlightedPlayer = player;
+      randomPlayerAnimationInProgress = false;
+    });
+
+    await Future.delayed(const Duration(seconds: 10));
+
+    if (highlightedPlayerKey == key) {
+      setState(() {
+        highlightedPlayer = null;
+      });
+    }
+  }
+
   void _showLayoutSelector(int layoutRotationOffset) {
     showModalBottomSheet<void>(
       context: context,
@@ -416,6 +453,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                 layout: layout ?? Layout2a(),
                                 players: players,
                                 stateChanged: () => save(),
+                                highlighted: highlightedPlayer == i,
+                                highlightedInstant: highlightedPlayerAnimation == i,
                               ),
                             ),
                             if (rearrangeMode)
@@ -603,6 +642,11 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                               onPressed: _showResetGameDialog,
                               leadingIcon: const Icon(Icons.restart_alt),
                               child: const Text("Reset Game"),
+                            ),
+                            MenuItemButton(
+                              onPressed: randomPlayerAnimationInProgress ? null : _chooseRandomPlayer,
+                              leadingIcon: const Icon(Icons.shuffle),
+                              child: const Text("Randomise player"),
                             ),
                           ],
                           builder: (BuildContext context, MenuController controller, Widget? child) {
