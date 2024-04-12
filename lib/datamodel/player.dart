@@ -1,8 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:uuid/uuid.dart';
-import 'package:image_picker/image_picker.dart';
 
 part 'player.g.dart';
 
@@ -24,7 +25,7 @@ class Player {
     includeFromJson: false,
     includeToJson: false,
   )
-  XFile? customImage;
+  Uint8List? customImage;
 
   @JsonKey(
     includeFromJson: false,

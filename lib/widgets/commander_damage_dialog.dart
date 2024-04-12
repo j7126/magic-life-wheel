@@ -3,6 +3,7 @@ import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
+import 'package:magic_life_wheel/widgets/custom_image.dart';
 
 class CommanderDamageDialog extends StatefulWidget {
   const CommanderDamageDialog({super.key, required this.player, required this.layout, required this.players});
@@ -18,7 +19,7 @@ class CommanderDamageDialog extends StatefulWidget {
 class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
   @override
   Widget build(BuildContext context) {
-    var onBackgroundShadow = widget.player.card != null
+    var onBackgroundShadow = widget.player.card != null || widget.player.customImage != null
         ? const [
             Shadow(
               offset: Offset(0, 0),
@@ -85,6 +86,10 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                             key: Key(card.uuid),
                             cardSet: card,
                           ),
+                        if (!partner && player.customImage != null)
+                          CustomImage(
+                            file: player.customImage!,
+                          ),
                         Positioned.fill(
                           child: Column(
                             children: [
@@ -96,7 +101,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                     child: Text(
                                       widget.player.uuid == player.uuid && dmg <= 0 ? "me" : dmg.toString(),
                                       style: TextStyle(
-                                        shadows: card != null
+                                        shadows: card != null || (!partner && player.customImage != null)
                                             ? [
                                                 const Shadow(
                                                   offset: Offset(0.5, 0.5),

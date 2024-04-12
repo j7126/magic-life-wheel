@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +103,12 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
   }
 
   void setCustomImage() async {
-    widget.player.customImage = await picker.pickImage(source: ImageSource.gallery);
+    var file = await picker.pickImage(source: ImageSource.gallery);
+    if (file == null) {
+      return;
+    }
+    
+    widget.player.customImage = File(file.path).readAsBytesSync();
     setState(() {
       widget.player.card = null;
       widget.player.cardPartner = null;

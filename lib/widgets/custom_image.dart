@@ -1,7 +1,6 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
-import 'package:image_picker/image_picker.dart';
 
 class CustomImage extends StatelessWidget {
   const CustomImage({
@@ -9,12 +8,12 @@ class CustomImage extends StatelessWidget {
     required this.file,
   });
 
-  final XFile file;
+  final Uint8List file;
 
   @override
   Widget build(BuildContext context) {
-    return Image.file(
-      File(file.path),
+    return Image.memory(
+      file,
       fit: BoxFit.cover,
       width: double.infinity,
       height: double.infinity,
