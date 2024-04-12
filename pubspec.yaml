@@ -32,6 +32,7 @@ dependencies:
       ref: v3.0.x
   mana_icons_flutter: ^0.0.1
   image_picker: ^1.0.7
+  image: ^4.1.7
 
 dev_dependencies:
   flutter_test:

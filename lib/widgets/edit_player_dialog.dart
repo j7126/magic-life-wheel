@@ -23,6 +23,7 @@ class _EditPlayerDialogState extends State<EditPlayerDialog> {
   void editBackground() async {
     await showDialog<String>(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) => EditBackgroundDialog(player: widget.player),
     );
     setState(() {});

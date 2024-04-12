@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -38,9 +39,13 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
 
   bool get isGameReset => !players.any((x) => !x.isGameReset);
 
-  void save() {
+  void save() async {
+    await Future.delayed(const Duration(milliseconds: 200));
     Service.settingsService.conf_layout = layoutId;
-    Service.settingsService.conf_players = players.map((e) => jsonEncode(e)).toList();
+    Service.settingsService.conf_players = await compute(
+      (p) => p.map((e) => jsonEncode(e)).toList(),
+      players,
+    );
   }
 
   void switchLayout() {

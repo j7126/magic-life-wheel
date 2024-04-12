@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
+import 'package:magic_life_wheel/serialization/unit_8_list_converter.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:uuid/uuid.dart';
 
@@ -21,10 +22,7 @@ class Player {
   CardSet? card;
   CardSet? cardPartner;
 
-  @JsonKey(
-    includeFromJson: false,
-    includeToJson: false,
-  )
+  @Uint8ListConverter()
   Uint8List? customImage;
 
   @JsonKey(
