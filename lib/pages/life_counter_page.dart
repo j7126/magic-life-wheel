@@ -469,6 +469,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                       Draggable<int>(
                                         data: i,
                                         dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
+                                        maxSimultaneousDrags: 1,
                                         feedback: Card(
                                           clipBehavior: Clip.antiAlias,
                                           child: SizedBox(
