@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/layouts/layout_2a.dart';
@@ -28,13 +29,22 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   List<Player> players = [];
   int numPlayers = 0;
   int layoutId = 0;
-  bool rearrangeMode = false;
-  List<Player>? oldPlayers;
   double rotatedAnimate = 0.0;
   int? highlightedPlayer;
   int highlightedPlayerKey = 0;
   int? highlightedPlayerAnimation;
   bool randomPlayerAnimationInProgress = false;
+
+  List<Player>? oldPlayers;
+  int dragging = 0;
+  bool _rearrangeMode = false;
+  bool get rearrangeMode => _rearrangeMode;
+  set rearrangeMode(bool val) {
+    _rearrangeMode = val;
+    if (val) {
+      dragging = 0;
+    }
+  }
 
   bool get rotated => layout?.rotated ?? false;
   set rotated(bool val) => layout?.rotated = val;
@@ -123,6 +133,20 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
 
       save();
     });
+  }
+
+  void deletePlayer(int i) {
+    if (numPlayers > 2) {
+      setState(() {
+        players.removeAt(i);
+        numPlayers = players.length;
+        var layouts = Layouts.layoutsBySize[numPlayers]!;
+        if (layouts.length <= layoutId) {
+          layoutId = 0;
+        }
+        layout = layouts[layoutId];
+      });
+    }
   }
 
   Future<bool?> _showResetWarning() {
@@ -470,6 +494,16 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                         data: i,
                                         dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
                                         maxSimultaneousDrags: 1,
+                                        onDragStarted: () {
+                                          setState(() {
+                                            dragging++;
+                                          });
+                                        },
+                                        onDragEnd: (_) {
+                                          setState(() {
+                                            dragging--;
+                                          });
+                                        },
                                         feedback: Card(
                                           clipBehavior: Clip.antiAlias,
                                           child: SizedBox(
@@ -544,64 +578,126 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
             ),
             rearrangeMode
                 // rearrange toolbar
-                ? Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                ? Stack(
                     children: [
-                      Expanded(
-                        child: TextButton(
-                          key: const ValueKey("rearrangeCancelButton"),
-                          onPressed: () {
-                            players = oldPlayers ?? [];
-                            oldPlayers = null;
-                            setState(() {
-                              rearrangeMode = false;
-                            });
-                          },
-                          style: barButtonStyle,
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 12.0),
-                            child: Icon(
-                              Icons.close,
+                      // non dragging
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              key: const ValueKey("rearrangeCancelButton"),
+                              onPressed: dragging > 0
+                                  ? null
+                                  : () {
+                                      players = oldPlayers ?? [];
+                                      oldPlayers = null;
+                                      setState(() {
+                                        rearrangeMode = false;
+                                      });
+                                    },
+                              style: barButtonStyle,
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0),
+                                child: Icon(
+                                  Icons.close,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: TextButton(
-                          key: const ValueKey("rearrangeShuffleButton"),
-                          onPressed: () {
-                            setState(() {
-                              players.shuffle();
-                            });
-                          },
-                          style: barButtonStyle,
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 12.0),
-                            child: Icon(
-                              Icons.shuffle_outlined,
+                          Expanded(
+                            child: TextButton(
+                              key: const ValueKey("rearrangeShuffleButton"),
+                              onPressed: dragging > 0
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        players.shuffle();
+                                      });
+                                    },
+                              style: barButtonStyle,
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0),
+                                child: Icon(
+                                  Icons.shuffle_outlined,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: TextButton(
-                          key: const ValueKey("rearrangeDoneButton"),
-                          onPressed: () {
-                            setState(() {
-                              rearrangeMode = false;
-                              save();
-                            });
-                          },
-                          style: barButtonStyle,
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 12.0),
-                            child: Icon(
-                              Icons.done,
+                          Expanded(
+                            child: TextButton(
+                              key: const ValueKey("rearrangeDoneButton"),
+                              onPressed: dragging > 0
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        rearrangeMode = false;
+                                        save();
+                                      });
+                                    },
+                              style: barButtonStyle,
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0),
+                                child: Icon(
+                                  Icons.done,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
+                      // draging
+                      if (dragging > 0 && numPlayers > 2)
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            const Spacer(),
+                            DragTarget<int>(
+                              builder: (
+                                BuildContext context,
+                                List<dynamic> candidateData,
+                                List<dynamic> rejectedData,
+                              ) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: candidateData.isNotEmpty ? Colors.redAccent : Colors.red,
+                                      borderRadius: BorderRadius.circular(32.0),
+                                    ),
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.delete_outline,
+                                            size: 20.0,
+                                          ),
+                                          Gap(8.0),
+                                          Text(
+                                            "Remove Player",
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                              height: 1,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              onAcceptWithDetails: (DragTargetDetails<int> details) {
+                                var data = details.data;
+                                deletePlayer(data);
+                              },
+                              onWillAcceptWithDetails: (DragTargetDetails<int?> details) => details.data != null,
+                            ),
+                            const Spacer(),
+                          ],
+                        ),
                     ],
                   )
                 // standard toolbar
