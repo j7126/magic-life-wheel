@@ -6,9 +6,8 @@ import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/animated_fade.dart';
-import 'package:magic_life_wheel/widgets/card_image.dart';
 import 'package:magic_life_wheel/dialogs/commander_damage_dialog.dart';
-import 'package:magic_life_wheel/widgets/custom_image.dart';
+import 'package:magic_life_wheel/widgets/background_widget.dart';
 import 'package:magic_life_wheel/dialogs/edit_player_dialog.dart';
 
 class Counter extends StatefulWidget {
@@ -122,7 +121,7 @@ class _CounterState extends State<Counter> {
 
   @override
   Widget build(BuildContext context) {
-    var onBackgroundShadow = widget.player.card != null || widget.player.customImage != null
+    var onBackgroundShadow = widget.player.background.hasBackground
         ? const [
             Shadow(
               offset: Offset(0, 0),
@@ -149,9 +148,7 @@ class _CounterState extends State<Counter> {
         child: GestureDetector(
           onTap: editPlayer,
           child: Card(
-            color: widget.player.card != null || widget.player.customImage != null
-                ? const Color.fromARGB(140, 0, 0, 0)
-                : null,
+            color: widget.player.background.hasBackground ? const Color.fromARGB(140, 0, 0, 0) : null,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: Text(
@@ -190,13 +187,9 @@ class _CounterState extends State<Counter> {
           height: constraints.maxHeight,
           child: Stack(
             children: [
-              if (widget.player.card != null)
-                CardImage(
-                  key: Key((widget.player.card?.uuid ?? '') + (widget.player.cardPartner?.uuid ?? '')),
-                  cardSet: widget.player.card,
-                  partnerCard: widget.player.cardPartner,
-                ),
-              if (widget.player.customImage != null) CustomImage(file: widget.player.customImage!),
+              BackgroundWidget(
+                background: widget.player.background,
+              ),
               if (Service.settingsService.pref_showChangingLife && changedLife != 0)
                 Align(
                   alignment: Alignment.topCenter,
@@ -230,7 +223,7 @@ class _CounterState extends State<Counter> {
                           child: Text(
                             widget.player.dead ? "" : widget.player.life.toString(),
                             style: TextStyle(
-                              shadows: widget.player.card != null || widget.player.customImage != null
+                              shadows: widget.player.background.hasBackground
                                   ? [
                                       const Shadow(
                                         offset: Offset(0.5, 0.5),

@@ -12,7 +12,7 @@ import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/card_image.dart';
 import 'package:magic_life_wheel/dialogs/cards_variant_dialog.dart';
-import 'package:magic_life_wheel/widgets/custom_image.dart';
+import 'package:magic_life_wheel/widgets/background_widget.dart';
 
 class EditBackgroundDialog extends StatefulWidget {
   const EditBackgroundDialog({super.key, required this.player});
@@ -102,7 +102,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
             }
           }
         }
-        widget.player.customImage = null;
+        widget.player.background.customImage = null;
         Navigator.of(context).pop();
       }
     });
@@ -172,7 +172,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
       }
     }
 
-    widget.player.customImage = await compute(
+    widget.player.background.customImage = await compute(
         (image) => image_manipulation.encodeJpg(
               image,
               quality: 80,
@@ -275,7 +275,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                               widget.player.cardPartner = null;
                             }
                           }
-                          widget.player.customImage = null;
+                          widget.player.background.customImage = null;
                           Navigator.of(context).pop();
                         });
                       },
@@ -390,10 +390,10 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             child: const Text("Custom Image"),
                           ),
                           MenuItemButton(
-                            onPressed: widget.player.card != null || widget.player.customImage != null
+                            onPressed: widget.player.card != null || widget.player.background.customImage != null
                                 ? () {
                                     setState(() {
-                                      widget.player.customImage = null;
+                                      widget.player.background.customImage = null;
                                       widget.player.card = null;
                                       widget.player.cardPartner = null;
                                     });
@@ -490,7 +490,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                 ),
                 if (_searchFieldController.text.isEmpty || (cards?.isEmpty ?? true))
                   (widget.player.card != null && Service.dataLoader.allSetCards != null) ||
-                          widget.player.customImage != null
+                          widget.player.background.customImage != null
                       ? Expanded(
                           child: Column(
                             children: [
@@ -536,7 +536,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                     ),
                                   ),
                                 ),
-                              if (widget.player.customImage != null)
+                              if (widget.player.background.customImage != null)
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                   child: Container(
@@ -565,8 +565,8 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                                 Expanded(
                                                   child: Padding(
                                                     padding: const EdgeInsets.only(top: 8.0),
-                                                    child: CustomImage(
-                                                      file: widget.player.customImage!,
+                                                    child: BackgroundWidget(
+                                                      background: widget.player.background,
                                                     ),
                                                   ),
                                                 ),

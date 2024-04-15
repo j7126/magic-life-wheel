@@ -1,8 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:json_annotation/json_annotation.dart';
+import 'package:magic_life_wheel/datamodel/background.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
-import 'package:magic_life_wheel/serialization/unit_8_list_converter.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:uuid/uuid.dart';
 
@@ -19,11 +17,21 @@ class Player {
 
   late String uuid;
   String name;
-  CardSet? card;
-  CardSet? cardPartner;
+  Background background = Background();
 
-  @Uint8ListConverter()
-  Uint8List? customImage;
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
+  )
+  CardSet? get card => background.card;
+  set card(CardSet? c) => background.card = c;
+
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
+  )
+  CardSet? get cardPartner => background.cardPartner;
+  set cardPartner(CardSet? c) => background.cardPartner = c;
 
   @JsonKey(
     includeFromJson: false,
@@ -91,7 +99,7 @@ class Player {
 
   String getDisplayName(int i) {
     if (name.isEmpty) {
-      return card?.name ?? "Player ${i + 1}";
+      return background.card?.name ?? "Player ${i + 1}";
     } else {
       return name;
     }
