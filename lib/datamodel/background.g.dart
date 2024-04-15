@@ -6,20 +6,22 @@ part of 'background.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Background _$BackgroundFromJson(Map<String, dynamic> json) => Background(
-      card: json['card'] == null
-          ? null
-          : CardSet.fromJson(json['card'] as Map<String, dynamic>),
-      cardPartner: json['cardPartner'] == null
-          ? null
-          : CardSet.fromJson(json['cardPartner'] as Map<String, dynamic>),
-      customImage:
-          const Uint8ListConverter().fromJson(json['customImage'] as String?),
-    );
+Background _$BackgroundFromJson(Map<String, dynamic> json) => Background()
+  .._card = json['_card'] == null
+      ? null
+      : CardSet.fromJson(json['_card'] as Map<String, dynamic>)
+  .._cardPartner = json['_cardPartner'] == null
+      ? null
+      : CardSet.fromJson(json['_cardPartner'] as Map<String, dynamic>)
+  .._customImage =
+      const Uint8ListConverter().fromJson(json['_customImage'] as String?)
+  .._colors =
+      (json['_colors'] as List<dynamic>?)?.map((e) => e as int).toList();
 
 Map<String, dynamic> _$BackgroundToJson(Background instance) =>
     <String, dynamic>{
-      'card': instance.card?.toJson(),
-      'cardPartner': instance.cardPartner?.toJson(),
-      'customImage': const Uint8ListConverter().toJson(instance.customImage),
+      '_card': instance._card?.toJson(),
+      '_cardPartner': instance._cardPartner?.toJson(),
+      '_customImage': const Uint8ListConverter().toJson(instance._customImage),
+      '_colors': instance._colors,
     };

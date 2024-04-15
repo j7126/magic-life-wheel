@@ -102,7 +102,6 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
             }
           }
         }
-        widget.player.background.customImage = null;
         Navigator.of(context).pop();
       }
     });
@@ -179,8 +178,6 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
             ),
         image);
 
-    widget.player.card = null;
-    widget.player.cardPartner = null;
     pop();
   }
 
@@ -275,7 +272,6 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                               widget.player.cardPartner = null;
                             }
                           }
-                          widget.player.background.customImage = null;
                           Navigator.of(context).pop();
                         });
                       },
@@ -393,9 +389,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             onPressed: widget.player.card != null || widget.player.background.customImage != null
                                 ? () {
                                     setState(() {
-                                      widget.player.background.customImage = null;
-                                      widget.player.card = null;
-                                      widget.player.cardPartner = null;
+                                      widget.player.background.clear();
                                     });
                                   }
                                 : null,
