@@ -86,7 +86,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                             key: Key(card.uuid),
                             cardSet: card,
                           ),
-                        if (!partner && player.background.customImage != null)
+                        if (!partner && player.background.hasBackground)
                           BackgroundWidget(
                             background: player.background,
                           ),

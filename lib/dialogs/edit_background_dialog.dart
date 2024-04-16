@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as image_manipulation;
 import 'package:magic_life_wheel/datamodel/player.dart';
+import 'package:magic_life_wheel/dialogs/set_colors_dialog.dart';
 import 'package:magic_life_wheel/icons/custom_icons.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
@@ -179,6 +180,26 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
         image);
 
     pop();
+  }
+
+  void setColors() async {
+    var colors = await showDialog<List<Color>?>(
+      context: context,
+      builder: (BuildContext context) => SetColorsDialog(
+        colors: widget.player.background.colors,
+      ),
+    );
+
+    if (colors != null && colors.isNotEmpty) {
+      setState(() {
+        widget.player.background.colors = colors;
+      });
+      pop();
+    } else if (colors != null && colors.isEmpty && widget.player.background.colors != null) {
+      setState(() {
+        widget.player.background.colors = null;
+      });
+    }
   }
 
   @override
@@ -386,7 +407,12 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             child: const Text("Custom Image"),
                           ),
                           MenuItemButton(
-                            onPressed: widget.player.card != null || widget.player.background.customImage != null
+                            onPressed: setColors,
+                            leadingIcon: const Icon(Icons.color_lens_outlined),
+                            child: const Text("Color Background"),
+                          ),
+                          MenuItemButton(
+                            onPressed: widget.player.background.hasBackground
                                 ? () {
                                     setState(() {
                                       widget.player.background.clear();
@@ -483,8 +509,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                   onChanged: (value) => searchCards(value),
                 ),
                 if (_searchFieldController.text.isEmpty || (cards?.isEmpty ?? true))
-                  (widget.player.card != null && Service.dataLoader.allSetCards != null) ||
-                          widget.player.background.customImage != null
+                  widget.player.background.hasBackground
                       ? Expanded(
                           child: Column(
                             children: [
@@ -530,7 +555,8 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                     ),
                                   ),
                                 ),
-                              if (widget.player.background.customImage != null)
+                              if (widget.player.background.customImage != null ||
+                                  widget.player.background.colors != null)
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                   child: Container(
@@ -546,11 +572,15 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                const Padding(
-                                                  padding: EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
                                                   child: Text(
-                                                    "Custom Image",
-                                                    style: TextStyle(
+                                                    widget.player.background.customImage != null
+                                                        ? "Custom Image"
+                                                        : (widget.player.background.colors?.length ?? 0) > 1
+                                                            ? "Color Gradient"
+                                                            : "Color",
+                                                    style: const TextStyle(
                                                       fontSize: 18.0,
                                                       fontWeight: FontWeight.bold,
                                                     ),
@@ -574,22 +604,32 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                                   mainAxisSize: MainAxisSize.max,
                                                   children: [
                                                     FilledButton(
-                                                      onPressed: setCustomImage,
+                                                      onPressed: widget.player.background.customImage != null
+                                                          ? setCustomImage
+                                                          : setColors,
                                                       style: const ButtonStyle(
                                                         padding: MaterialStatePropertyAll(
                                                             EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
                                                       ),
-                                                      child: const Row(
+                                                      child: Row(
                                                         mainAxisSize: MainAxisSize.min,
                                                         children: [
                                                           Padding(
-                                                            padding: EdgeInsets.only(right: 6.0),
+                                                            padding: const EdgeInsets.only(right: 6.0),
                                                             child: Icon(
-                                                              Icons.image_outlined,
+                                                              widget.player.background.customImage != null
+                                                                  ? Icons.image_outlined
+                                                                  : Icons.color_lens_outlined,
                                                               size: 18.0,
                                                             ),
                                                           ),
-                                                          Text("Change Image"),
+                                                          Text(
+                                                            widget.player.background.customImage != null
+                                                                ? "Change Image"
+                                                                : (widget.player.background.colors?.length ?? 0) > 1
+                                                                    ? "Change Colors"
+                                                                    : "Change Color",
+                                                          ),
                                                         ],
                                                       ),
                                                     ),

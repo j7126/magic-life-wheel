@@ -40,6 +40,23 @@ class BackgroundWidget extends StatelessWidget {
       );
     }
 
+    if (background.colors != null && background.colors!.isNotEmpty) {
+      return Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: background.colors!.length > 1
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: background.colors!,
+                )
+              : null,
+          color: background.colors!.length > 1 ? null : background.colors!.first,
+        ),
+      );
+    }
+
     if (forceShowNoImageIcon) {
       return Padding(
         padding: iconPadding,
