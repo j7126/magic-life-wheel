@@ -43,7 +43,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
 
     return AlertDialog(
       insetPadding: EdgeInsets.symmetric(horizontal: isLandscape ? 132.0 : 60.0, vertical: isLandscape ? 60.0 : 132.0),
-      titlePadding: const EdgeInsets.only(top: 12.0, left: 18.0, right: 18.0),
+      titlePadding: const EdgeInsets.only(top: 12.0, left: 18.0, right: 16.0),
       contentPadding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 8.0),
       title: Row(
         children: [

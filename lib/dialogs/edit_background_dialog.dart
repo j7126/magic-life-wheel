@@ -378,7 +378,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12.0),
+                  padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
                   child: Row(
                     children: [
                       IconButton(
@@ -388,13 +388,21 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                         },
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
+                        padding: const EdgeInsets.only(left: 4.0),
                         child: Text(
                           "Background",
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
                       const Spacer(),
+                      IconButton(
+                        onPressed: setCustomImage,
+                        icon: const Icon(Icons.image_outlined),
+                      ),
+                      IconButton(
+                        onPressed: setColors,
+                        icon: const Icon(Icons.color_lens_outlined),
+                      ),
                       MenuAnchor(
                         childFocusNode: _menuButtonFocusNode,
                         style: const MenuStyle(
@@ -411,6 +419,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             leadingIcon: const Icon(Icons.color_lens_outlined),
                             child: const Text("Color Background"),
                           ),
+                          const Divider(),
                           MenuItemButton(
                             onPressed: widget.player.background.hasBackground
                                 ? () {

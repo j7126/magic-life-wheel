@@ -95,7 +95,7 @@ class _SetColorsDialogState extends State<SetColorsDialog> {
       var constrainedWidth = min(constraints.maxWidth, constraints.maxHeight) - 48 - 48 * 2;
 
       return AlertDialog(
-        titlePadding: const EdgeInsets.only(top: 12.0, left: 16.0, right: 16.0),
+        titlePadding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
         contentPadding: const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 32.0, top: 8.0),
         title: Row(
           children: [
@@ -106,7 +106,7 @@ class _SetColorsDialogState extends State<SetColorsDialog> {
               },
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 8.0),
+              padding: EdgeInsets.only(left: 4.0),
               child: Text("Customise Color"),
             ),
             const Spacer(),

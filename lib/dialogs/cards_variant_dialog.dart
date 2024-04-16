@@ -150,7 +150,7 @@ class _CardsVariantDialogState extends State<CardsVariantDialog> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12.0),
+            padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -162,7 +162,7 @@ class _CardsVariantDialogState extends State<CardsVariantDialog> {
                 ),
                 Flexible(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+                    padding: const EdgeInsets.only(left: 4.0),
                     child: Text(
                       widget.cards.first.name,
                       style: Theme.of(context).textTheme.titleLarge,

@@ -65,7 +65,7 @@ class _EditPlayerDialogState extends State<EditPlayerDialog> {
         : null;
 
     return AlertDialog(
-      titlePadding: const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0),
+      titlePadding: const EdgeInsets.only(top: 12.0, left: 24.0, right: 16.0),
       contentPadding: const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 32.0, top: 8.0),
       title: Row(
         children: [
