@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/layouts/layout_2a.dart';
@@ -11,7 +10,7 @@ import 'package:magic_life_wheel/pages/about_page.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/pages/settings_page.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
-import 'package:magic_life_wheel/widgets/card_image.dart';
+import 'package:magic_life_wheel/widgets/background_widget.dart';
 import 'package:magic_life_wheel/widgets/counter.dart';
 import 'package:magic_life_wheel/dialogs/planechase_dialog.dart';
 import 'package:mana_icons_flutter/mana_icons_flutter.dart';
@@ -509,11 +508,9 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                           child: SizedBox(
                                             width: 100,
                                             height: 100,
-                                            child: CardImage(
-                                              key: Key(
-                                                  (players[i].card?.uuid ?? '') + (players[i].cardPartner?.uuid ?? '')),
-                                              cardSet: players[i].card,
-                                              partnerCard: players[i].cardPartner,
+                                            child: BackgroundWidget(
+                                              background: players[i].background,
+                                              forceShowNoImageIcon: true,
                                             ),
                                           ),
                                         ),
