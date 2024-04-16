@@ -82,7 +82,7 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
       default:
     }
     if (code == "t" || int.tryParse(code) != null) {
-      return const Color.fromARGB(255, 202, 193, 190); 
+      return const Color.fromARGB(255, 202, 193, 190);
     }
     return null;
   }
@@ -106,7 +106,7 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
       default:
     }
     if (code == "t" || int.tryParse(code) != null) {
-      return const Color.fromARGB(255, 18, 11, 13); 
+      return const Color.fromARGB(255, 18, 11, 13);
     }
     return null;
   }
@@ -169,6 +169,16 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
                 leadingIcon: const Icon(Icons.shuffle),
                 child: const Text("Shuffle Deck"),
               ),
+              if (card != null)
+                MenuItemButton(
+                  onPressed: () {
+                    setState(() {
+                      PlanechaseDialog.showInfo = !PlanechaseDialog.showInfo;
+                    });
+                  },
+                  leadingIcon: Icon(PlanechaseDialog.showInfo ? Icons.image_outlined : Icons.info_outline),
+                  child: Text(PlanechaseDialog.showInfo ? "Show Image" : "Show Text"),
+                ),
             ],
             builder: (BuildContext context, MenuController controller, Widget? child) {
               return IconButton(
