@@ -36,6 +36,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   bool randomPlayerAnimationInProgress = false;
   CounterFontSizeGroup counterFontSizeGroup = CounterFontSizeGroup();
 
+  bool triggerReRender = false;
+
   List<Player>? oldPlayers;
   int dragging = 0;
   bool _rearrangeMode = false;
@@ -437,6 +439,13 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   Widget build(BuildContext context) {
     counterFontSizeGroup.setNumPlayers(players.length);
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (triggerReRender) {
+        triggerReRender = false;
+        setState(() {});
+      }
+    });
+
     var barButtonStyle = ButtonStyle(
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
         const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
@@ -480,6 +489,9 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                 layout: layout ?? Layout2a(),
                                 players: players,
                                 counterFontSizeGroup: counterFontSizeGroup,
+                                triggerReRender: () {
+                                  triggerReRender = true;
+                                },
                                 stateChanged: () => save(),
                                 highlighted: highlightedPlayer == i,
                                 highlightedInstant: highlightedPlayerAnimation == i,

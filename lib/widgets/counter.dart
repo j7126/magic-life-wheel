@@ -19,6 +19,7 @@ class Counter extends StatefulWidget {
     required this.layout,
     required this.players,
     required this.counterFontSizeGroup,
+    this.triggerReRender,
     this.stateChanged,
     this.highlighted = false,
     this.highlightedInstant = false,
@@ -28,6 +29,7 @@ class Counter extends StatefulWidget {
   final Layout layout;
   final List<Player> players;
   final CounterFontSizeGroup counterFontSizeGroup;
+  final VoidCallback? triggerReRender;
   final VoidCallback? stateChanged;
   final bool highlighted;
   final bool highlightedInstant;
@@ -189,7 +191,12 @@ class _CounterState extends State<Counter> {
             ),
             1.0,
           );
+          var before = widget.counterFontSizeGroup.minSize;
           widget.counterFontSizeGroup.setSize(widget.i, fontSize);
+          if (widget.triggerReRender != null && before != widget.counterFontSizeGroup.minSize) {
+            widget.triggerReRender!();
+          }
+
           return Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(35),
