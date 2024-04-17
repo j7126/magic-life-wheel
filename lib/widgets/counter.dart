@@ -184,8 +184,8 @@ class _CounterState extends State<Counter> {
         builder: (context, constraints) {
           var fontSize = max(
             min(
-              constraints.maxHeight - 102.0,
-              (constraints.maxWidth - 144.0) * 0.8,
+              constraints.maxHeight - 112.0,
+              (constraints.maxWidth - 144.0) * 0.9,
             ),
             1.0,
           );
@@ -232,7 +232,12 @@ class _CounterState extends State<Counter> {
                           widget.player.dead ? "" : widget.player.life.toString(),
                           maxLines: 1,
                           style: TextStyle(
-                            fontSize: widget.counterFontSizeGroup.minSize,
+                            fontSize: Service.settingsService.pref_maximiseFontSize
+                                ? min(
+                                    constraints.maxHeight,
+                                    constraints.maxWidth,
+                                  )
+                                : widget.counterFontSizeGroup.minSize,
                             shadows: onBackgroundShadow,
                           ),
                         ),

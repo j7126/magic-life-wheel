@@ -42,6 +42,11 @@ class SettingsService {
       _pref_showChangingLife = showChangingLife;
     }
 
+    var maximiseFontSize = prefs.getBool('maximiseFontSize');
+    if (maximiseFontSize != null) {
+      _pref_maximiseFontSize = maximiseFontSize;
+    }
+
     var startingLife = prefs.getInt('startingLife');
     if (startingLife != null) {
       _pref_startingLife = startingLife;
@@ -96,6 +101,13 @@ class SettingsService {
   set pref_showChangingLife(bool val) {
     _pref_showChangingLife = val;
     prefs.setBool('showChangingLife', val);
+  }
+
+  bool _pref_maximiseFontSize = false;
+  bool get pref_maximiseFontSize => _pref_maximiseFontSize;
+  set pref_maximiseFontSize(bool val) {
+    _pref_maximiseFontSize = val;
+    prefs.setBool('maximiseFontSize', val);
   }
 
   int _pref_startingLife = 40;
