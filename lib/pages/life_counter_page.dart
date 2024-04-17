@@ -471,116 +471,120 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
           children: [
             // ----- counters -----
             Expanded(
-              child: RotatedBox(
-                quarterTurns: (rotated ? 2 : 0) + layoutRotationOffset,
-                child: layout?.build(
-                      context,
-                      players,
-                      (int i) {
-                        const padding = 16.0;
-                        return Stack(
-                          children: [
-                            AnimatedPadding(
-                              padding: EdgeInsets.all(rearrangeMode ? padding : 0),
-                              duration: const Duration(milliseconds: 200),
-                              curve: Curves.ease,
-                              child: Counter(
-                                i: i,
-                                layout: layout ?? Layout2a(),
-                                players: players,
-                                counterFontSizeGroup: counterFontSizeGroup,
-                                triggerReRender: () {
-                                  triggerReRender = true;
-                                },
-                                stateChanged: () => save(),
-                                highlighted: highlightedPlayer == i,
-                                highlightedInstant: highlightedPlayerAnimation == i,
+              child: AnimatedPadding(
+                padding: EdgeInsets.all(rearrangeMode ? 8 : 0),
+                duration: const Duration(milliseconds: 200),
+                child: RotatedBox(
+                  quarterTurns: (rotated ? 2 : 0) + layoutRotationOffset,
+                  child: layout?.build(
+                        context,
+                        players,
+                        (int i) {
+                          const padding = 16.0;
+                          return Stack(
+                            children: [
+                              AnimatedPadding(
+                                padding: EdgeInsets.all(rearrangeMode ? padding : 0),
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.ease,
+                                child: Counter(
+                                  i: i,
+                                  layout: layout ?? Layout2a(),
+                                  players: players,
+                                  counterFontSizeGroup: counterFontSizeGroup,
+                                  triggerReRender: () {
+                                    triggerReRender = true;
+                                  },
+                                  stateChanged: () => save(),
+                                  highlighted: highlightedPlayer == i,
+                                  highlightedInstant: highlightedPlayerAnimation == i,
+                                ),
                               ),
-                            ),
-                            if (rearrangeMode)
-                              DragTarget<int>(
-                                builder: (
-                                  BuildContext context,
-                                  List<dynamic> candidateData,
-                                  List<dynamic> rejectedData,
-                                ) {
-                                  return Stack(
-                                    children: [
-                                      Draggable<int>(
-                                        data: i,
-                                        dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
-                                        maxSimultaneousDrags: 1,
-                                        onDragStarted: () {
-                                          setState(() {
-                                            dragging++;
-                                          });
-                                        },
-                                        onDragEnd: (_) {
-                                          setState(() {
-                                            dragging--;
-                                          });
-                                        },
-                                        feedback: Card(
-                                          clipBehavior: Clip.antiAlias,
-                                          child: SizedBox(
-                                            width: 100,
-                                            height: 100,
-                                            child: BackgroundWidget(
-                                              background: players[i].background,
-                                              forceShowNoImageIcon: true,
+                              if (rearrangeMode)
+                                DragTarget<int>(
+                                  builder: (
+                                    BuildContext context,
+                                    List<dynamic> candidateData,
+                                    List<dynamic> rejectedData,
+                                  ) {
+                                    return Stack(
+                                      children: [
+                                        Draggable<int>(
+                                          data: i,
+                                          dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
+                                          maxSimultaneousDrags: 1,
+                                          onDragStarted: () {
+                                            setState(() {
+                                              dragging++;
+                                            });
+                                          },
+                                          onDragEnd: (_) {
+                                            setState(() {
+                                              dragging--;
+                                            });
+                                          },
+                                          feedback: Card(
+                                            clipBehavior: Clip.antiAlias,
+                                            child: SizedBox(
+                                              width: 100,
+                                              height: 100,
+                                              child: BackgroundWidget(
+                                                background: players[i].background,
+                                                forceShowNoImageIcon: true,
+                                              ),
+                                            ),
+                                          ),
+                                          childWhenDragging: Padding(
+                                            padding: const EdgeInsets.all(padding),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(35),
+                                                color: const Color.fromARGB(100, 0, 0, 0),
+                                              ),
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(padding),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(35),
+                                                color: const Color.fromARGB(0, 0, 0, 0),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                        childWhenDragging: Padding(
-                                          padding: const EdgeInsets.all(padding),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(35),
-                                              color: const Color.fromARGB(100, 0, 0, 0),
+                                        if (candidateData.isNotEmpty)
+                                          Padding(
+                                            padding: const EdgeInsets.all(padding),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(35),
+                                                color: const Color.fromARGB(45, 48, 150, 63),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(padding),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(35),
-                                              color: const Color.fromARGB(0, 0, 0, 0),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      if (candidateData.isNotEmpty)
-                                        Padding(
-                                          padding: const EdgeInsets.all(padding),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(35),
-                                              color: const Color.fromARGB(45, 48, 150, 63),
-                                            ),
-                                          ),
-                                        )
-                                    ],
-                                  );
-                                },
-                                onAcceptWithDetails: (DragTargetDetails<int> details) {
-                                  var data = details.data;
-                                  setState(() {
-                                    if (i != data) {
-                                      var temp = players[data];
-                                      players[data] = players[i];
-                                      players[i] = temp;
-                                    }
-                                  });
-                                },
-                                onWillAcceptWithDetails: (DragTargetDetails<int?> details) =>
-                                    details.data != null && i != details.data,
-                              ),
-                          ],
-                        );
-                      },
-                    ) ??
-                    Container(),
+                                          )
+                                      ],
+                                    );
+                                  },
+                                  onAcceptWithDetails: (DragTargetDetails<int> details) {
+                                    var data = details.data;
+                                    setState(() {
+                                      if (i != data) {
+                                        var temp = players[data];
+                                        players[data] = players[i];
+                                        players[i] = temp;
+                                      }
+                                    });
+                                  },
+                                  onWillAcceptWithDetails: (DragTargetDetails<int?> details) =>
+                                      details.data != null && i != details.data,
+                                ),
+                            ],
+                          );
+                        },
+                      ) ??
+                      Container(),
+                ),
               ),
             ),
             // ----- toolbar -----
