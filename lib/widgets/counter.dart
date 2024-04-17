@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:keyrune_icons_flutter/keyrune_icons_flutter.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
+import 'package:magic_life_wheel/service/counter_font_size_group.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/animated_fade.dart';
 import 'package:magic_life_wheel/dialogs/commander_damage_dialog.dart';
@@ -16,6 +18,7 @@ class Counter extends StatefulWidget {
     required this.i,
     required this.layout,
     required this.players,
+    required this.counterFontSizeGroup,
     this.stateChanged,
     this.highlighted = false,
     this.highlightedInstant = false,
@@ -24,6 +27,7 @@ class Counter extends StatefulWidget {
   final int i;
   final Layout layout;
   final List<Player> players;
+  final CounterFontSizeGroup counterFontSizeGroup;
   final VoidCallback? stateChanged;
   final bool highlighted;
   final bool highlightedInstant;
@@ -177,211 +181,205 @@ class _CounterState extends State<Counter> {
     return Opacity(
       opacity: widget.player.dead ? 0.2 : 1,
       child: LayoutBuilder(
-        builder: (context, constraints) => Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(35),
-            color: const Color.fromARGB(50, 255, 255, 255),
-          ),
-          clipBehavior: Clip.antiAlias,
-          width: constraints.maxWidth,
-          height: constraints.maxHeight,
-          child: Stack(
-            children: [
-              BackgroundWidget(
-                background: widget.player.background,
-              ),
-              if (Service.settingsService.pref_showChangingLife && changedLife != 0)
+        builder: (context, constraints) {
+          var fontSize = max(
+            min(
+              constraints.maxHeight - 102.0,
+              (constraints.maxWidth - 144.0) * 0.8,
+            ),
+            1.0,
+          );
+          widget.counterFontSizeGroup.setSize(widget.i, fontSize);
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(35),
+              color: const Color.fromARGB(50, 255, 255, 255),
+            ),
+            clipBehavior: Clip.antiAlias,
+            width: constraints.maxWidth,
+            height: constraints.maxHeight,
+            child: Stack(
+              children: [
+                BackgroundWidget(
+                  background: widget.player.background,
+                ),
+                if (Service.settingsService.pref_showChangingLife && changedLife != 0)
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 42.0),
+                      child: Text(
+                        (changedLife > 0 ? "+" : "") + changedLife.toString(),
+                        style: TextStyle(fontSize: 16, shadows: onBackgroundShadow),
+                      ),
+                    ),
+                  ),
+                Positioned(
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: 32,
+                      bottom: Service.settingsService.pref_enableCommanderDamage ? 32 : 16,
+                      left: 72.0,
+                      right: 72.0,
+                    ),
+                    child: Center(
+                      child: FittedBox(
+                        child: Text(
+                          widget.player.dead ? "" : widget.player.life.toString(),
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: widget.counterFontSizeGroup.minSize,
+                            shadows: onBackgroundShadow,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onLongPressStart: (e) => handleLongPressInterval(-1),
+                          onLongPressEnd: (e) => handleLongPressEnd(),
+                          child: TextButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                              ),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).colorScheme.onBackground,
+                              ),
+                              overlayColor: MaterialStateProperty.all<Color>(
+                                longPressDirection == -1
+                                    ? Colors.transparent
+                                    : Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                              ),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                longPressDirection == -1
+                                    ? Theme.of(context).colorScheme.onBackground.withAlpha(30)
+                                    : Colors.transparent,
+                              ),
+                            ),
+                            onPressed: !showMinusButton ? null : () => changeLife(-1),
+                            child: showMinusButton
+                                ? SizedBox(
+                                    height: double.infinity,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                          child: Icon(
+                                            Icons.remove,
+                                            shadows: onBackgroundShadow,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Container(),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onLongPressStart: (e) => handleLongPressInterval(1),
+                          onLongPressEnd: (e) => handleLongPressEnd(),
+                          child: TextButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                              ),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).colorScheme.onBackground,
+                              ),
+                              overlayColor: MaterialStateProperty.all<Color>(
+                                longPressDirection == 1
+                                    ? Colors.transparent
+                                    : Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                              ),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                longPressDirection == 1
+                                    ? Theme.of(context).colorScheme.onBackground.withAlpha(30)
+                                    : Colors.transparent,
+                              ),
+                            ),
+                            onPressed: !showPlusButton ? null : () => changeLife(1),
+                            child: showPlusButton
+                                ? SizedBox(
+                                    height: double.infinity,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                          child: Icon(
+                                            Icons.add,
+                                            shadows: onBackgroundShadow,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Container(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Align(
                   alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 42.0),
-                    child: Text(
-                      (changedLife > 0 ? "+" : "") + changedLife.toString(),
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
+                  child: playerNameBtn,
+                ),
+                if (Service.settingsService.pref_enableCommanderDamage)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: commanderButton,
                   ),
-                ),
-              Positioned(
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Opacity(
-                      opacity: 0,
-                      child: playerNameBtn,
-                    ),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Text(
-                            widget.player.dead ? "" : widget.player.life.toString(),
-                            style: TextStyle(
-                              shadows: widget.player.background.hasBackground
-                                  ? [
-                                      const Shadow(
-                                        offset: Offset(0.5, 0.5),
-                                        blurRadius: 10.0,
-                                        color: Colors.black,
-                                      ),
-                                    ]
-                                  : null,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: Service.settingsService.pref_enableCommanderDamage ? 32 : 16,
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onLongPressStart: (e) => handleLongPressInterval(-1),
-                        onLongPressEnd: (e) => handleLongPressEnd(),
-                        child: TextButton(
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                            ),
-                            foregroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).colorScheme.onBackground,
-                            ),
-                            overlayColor: MaterialStateProperty.all<Color>(
-                              longPressDirection == -1
-                                  ? Colors.transparent
-                                  : Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                            ),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              longPressDirection == -1
-                                  ? Theme.of(context).colorScheme.onBackground.withAlpha(30)
-                                  : Colors.transparent,
-                            ),
-                          ),
-                          onPressed: !showMinusButton ? null : () => changeLife(-1),
-                          child: showMinusButton
-                              ? SizedBox(
-                                  height: double.infinity,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: Icon(
-                                          Icons.remove,
-                                          shadows: onBackgroundShadow,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : Container(),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onLongPressStart: (e) => handleLongPressInterval(1),
-                        onLongPressEnd: (e) => handleLongPressEnd(),
-                        child: TextButton(
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                            ),
-                            foregroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).colorScheme.onBackground,
-                            ),
-                            overlayColor: MaterialStateProperty.all<Color>(
-                              longPressDirection == 1
-                                  ? Colors.transparent
-                                  : Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                            ),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              longPressDirection == 1
-                                  ? Theme.of(context).colorScheme.onBackground.withAlpha(30)
-                                  : Colors.transparent,
-                            ),
-                          ),
-                          onPressed: !showPlusButton ? null : () => changeLife(1),
-                          child: showPlusButton
-                              ? SizedBox(
-                                  height: double.infinity,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: Icon(
-                                          Icons.add,
-                                          shadows: onBackgroundShadow,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : Container(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: playerNameBtn,
-              ),
-              if (Service.settingsService.pref_enableCommanderDamage)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: commanderButton,
-                ),
-              IgnorePointer(
-                child: AnimatedFade(
-                  reverseDuration: const Duration(seconds: 2),
-                  visible: widget.highlighted,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(35),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 8.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              if (widget.highlightedInstant)
                 IgnorePointer(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(35),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 4.0,
+                  child: AnimatedFade(
+                    reverseDuration: const Duration(seconds: 2),
+                    visible: widget.highlighted,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(35),
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 8.0,
+                        ),
                       ),
                     ),
                   ),
                 ),
-            ],
-          ),
-        ),
+                if (widget.highlightedInstant)
+                  IgnorePointer(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(35),
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 4.0,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

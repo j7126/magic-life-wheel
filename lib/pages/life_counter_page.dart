@@ -9,6 +9,7 @@ import 'package:magic_life_wheel/layouts/layouts.dart';
 import 'package:magic_life_wheel/pages/about_page.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/pages/settings_page.dart';
+import 'package:magic_life_wheel/service/counter_font_size_group.dart';
 import 'package:magic_life_wheel/service/static_service.dart';
 import 'package:magic_life_wheel/widgets/background_widget.dart';
 import 'package:magic_life_wheel/widgets/counter.dart';
@@ -33,6 +34,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   int highlightedPlayerKey = 0;
   int? highlightedPlayerAnimation;
   bool randomPlayerAnimationInProgress = false;
+  CounterFontSizeGroup counterFontSizeGroup = CounterFontSizeGroup();
 
   List<Player>? oldPlayers;
   int dragging = 0;
@@ -433,6 +435,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
 
   @override
   Widget build(BuildContext context) {
+    counterFontSizeGroup.setNumPlayers(players.length);
+
     var barButtonStyle = ButtonStyle(
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
         const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
@@ -475,6 +479,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                                 i: i,
                                 layout: layout ?? Layout2a(),
                                 players: players,
+                                counterFontSizeGroup: counterFontSizeGroup,
                                 stateChanged: () => save(),
                                 highlighted: highlightedPlayer == i,
                                 highlightedInstant: highlightedPlayerAnimation == i,
