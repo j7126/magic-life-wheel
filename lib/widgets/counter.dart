@@ -186,8 +186,11 @@ class _CounterState extends State<Counter> {
         builder: (context, constraints) {
           var fontSize = max(
             min(
-              constraints.maxHeight - 112.0,
-              (constraints.maxWidth - 144.0) * 0.9,
+              min(
+                constraints.maxHeight - 112.0,
+                (constraints.maxWidth - 144.0) * 0.9,
+              ),
+              128.0,
             ),
             1.0,
           );
