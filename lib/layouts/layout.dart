@@ -8,8 +8,12 @@ class Layout {
 
   bool rotated = false;
 
-  Widget build(BuildContext context, List<Player> players, Widget Function(int i) counterParentBuilder) {
+  Widget build(BuildContext context, List<Player> players, Widget Function(int i, int turns) counterParentBuilder) {
     assert(players.length == this.players);
+    throw UnimplementedError();
+  }
+
+  int getTurnsInPosition(int pos) {
     throw UnimplementedError();
   }
 

@@ -11,11 +11,15 @@ class Layout3b extends Layout {
   bool get symetrical => false;
 
   @override
-  Widget build(BuildContext context, List<Player> players, Widget Function(int i) counterParentBuilder) {
+  Widget build(BuildContext context, List<Player> players, Widget Function(int i, int turns) counterParentBuilder) {
     assert(players.length == this.players);
 
     counter(int x) {
-      return counterParentBuilder(x);
+      var turns = getTurnsInPosition(x);
+      return RotatedBox(
+        quarterTurns: turns,
+        child: counterParentBuilder(x, turns),
+      );
     }
 
     return Row(
@@ -24,30 +28,35 @@ class Layout3b extends Layout {
           child: Column(
             children: [
               Expanded(
-                child: RotatedBox(
-                  quarterTurns: 1,
-                  child: counter(2),
-                ),
+                child: counter(2),
               ),
               const Gap(8),
               Expanded(
-                child: RotatedBox(
-                  quarterTurns: 1,
-                  child: counter(1),
-                ),
+                child: counter(1),
               ),
             ],
           ),
         ),
         const Gap(8),
         Expanded(
-          child: RotatedBox(
-            quarterTurns: 3,
-            child: counter(0),
-          ),
+          child: counter(0),
         )
       ],
     );
+  }
+
+  @override
+  int getTurnsInPosition(int pos) {
+    switch (pos) {
+      case 0:
+        return 3;
+      case 1:
+        return 1;
+      case 2:
+        return 1;
+      default:
+    }
+    return 0;
   }
 
   @override

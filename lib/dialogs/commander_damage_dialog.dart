@@ -41,6 +41,8 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
 
     var isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
+    var myIndex = widget.players.indexWhere((x) => widget.player.uuid == x.uuid);
+
     return AlertDialog(
       insetPadding: EdgeInsets.symmetric(horizontal: isLandscape ? 132.0 : 60.0, vertical: isLandscape ? 60.0 : 132.0),
       titlePadding: const EdgeInsets.only(top: 12.0, left: 18.0, right: 16.0),
@@ -68,7 +70,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
             child: widget.layout.build(
               context,
               widget.players,
-              (i) {
+              (i, turns) {
                 var player = widget.players[i];
 
                 Widget counter({bool partner = false}) {
@@ -76,132 +78,137 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                   var cmdid = partner ? (card?.uuid ?? player.uuid) : player.uuid;
                   var dmg = (widget.player.commanderDamage[cmdid] ?? 0);
 
-                  return Card(
-                    clipBehavior: Clip.antiAlias,
-                    margin: const EdgeInsets.all(2.0),
-                    child: Stack(
-                      children: [
-                        if (card != null)
-                          CardImage(
-                            key: Key(card.uuid),
-                            cardSet: card,
-                          ),
-                        if (!partner && player.background.hasBackground)
-                          BackgroundWidget(
-                            background: player.background,
-                          ),
-                        Positioned.fill(
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                    child: Text(
-                                      widget.player.uuid == player.uuid && dmg <= 0 ? "me" : dmg.toString(),
-                                      style: TextStyle(
-                                        shadows: card != null || (!partner && player.background.customImage != null)
-                                            ? [
-                                                const Shadow(
-                                                  offset: Offset(0.5, 0.5),
-                                                  blurRadius: 10.0,
-                                                  color: Colors.black,
-                                                ),
-                                              ]
-                                            : null,
+                  return RotatedBox(
+                    quarterTurns: Service.settingsService.pref_commanderDamageButtonsFacePlayer
+                        ? widget.layout.getTurnsInPosition(myIndex) + -1 * turns
+                        : 0,
+                    child: Card(
+                      clipBehavior: Clip.antiAlias,
+                      margin: const EdgeInsets.all(2.0),
+                      child: Stack(
+                        children: [
+                          if (card != null)
+                            CardImage(
+                              key: Key(card.uuid),
+                              cardSet: card,
+                            ),
+                          if (!partner && player.background.hasBackground)
+                            BackgroundWidget(
+                              background: player.background,
+                            ),
+                          Positioned.fill(
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                      child: Text(
+                                        widget.player.uuid == player.uuid && dmg <= 0 ? "me" : dmg.toString(),
+                                        style: TextStyle(
+                                          shadows: card != null || (!partner && player.background.customImage != null)
+                                              ? [
+                                                  const Shadow(
+                                                    offset: Offset(0.5, 0.5),
+                                                    blurRadius: 10.0,
+                                                    color: Colors.black,
+                                                  ),
+                                                ]
+                                              : null,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Positioned.fill(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                      const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                          Positioned.fill(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: TextButton(
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                        const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                      ),
+                                      foregroundColor: MaterialStateProperty.all<Color>(
+                                        Theme.of(context).colorScheme.onBackground,
+                                      ),
+                                      overlayColor: MaterialStateProperty.all<Color>(
+                                        Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                      ),
                                     ),
-                                    foregroundColor: MaterialStateProperty.all<Color>(
-                                      Theme.of(context).colorScheme.onBackground,
-                                    ),
-                                    overlayColor: MaterialStateProperty.all<Color>(
-                                      Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      widget.player.dealCommander(cmdid, 1);
-                                    });
-                                  },
-                                  onLongPress: () {
-                                    setState(() {
-                                      widget.player.dealCommander(cmdid, 10);
-                                    });
-                                  },
-                                  child: SizedBox(
-                                    height: double.infinity,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Icon(
-                                          Icons.remove,
-                                          shadows: onBackgroundShadow,
-                                        ),
-                                      ],
+                                    onPressed: () {
+                                      setState(() {
+                                        widget.player.dealCommander(cmdid, 1);
+                                      });
+                                    },
+                                    onLongPress: () {
+                                      setState(() {
+                                        widget.player.dealCommander(cmdid, 10);
+                                      });
+                                    },
+                                    child: SizedBox(
+                                      height: double.infinity,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            Icons.remove,
+                                            shadows: onBackgroundShadow,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                flex: Service.settingsService.pref_asymmetricalCommanderDamageButtons ? 2 : 1,
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                      const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                Expanded(
+                                  flex: Service.settingsService.pref_asymmetricalCommanderDamageButtons ? 2 : 1,
+                                  child: TextButton(
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                        const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                      ),
+                                      foregroundColor: MaterialStateProperty.all<Color>(
+                                        Theme.of(context).colorScheme.onBackground,
+                                      ),
+                                      overlayColor: MaterialStateProperty.all<Color>(
+                                        Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                      ),
                                     ),
-                                    foregroundColor: MaterialStateProperty.all<Color>(
-                                      Theme.of(context).colorScheme.onBackground,
-                                    ),
-                                    overlayColor: MaterialStateProperty.all<Color>(
-                                      Theme.of(context).colorScheme.onBackground.withAlpha(30),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      widget.player.dealCommander(cmdid, -1);
-                                    });
-                                  },
-                                  onLongPress: () {
-                                    setState(() {
-                                      widget.player.dealCommander(cmdid, -10);
-                                    });
-                                  },
-                                  child: SizedBox(
-                                    height: double.infinity,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Icon(
-                                          Icons.add,
-                                          shadows: onBackgroundShadow,
-                                        ),
-                                      ],
+                                    onPressed: () {
+                                      setState(() {
+                                        widget.player.dealCommander(cmdid, -1);
+                                      });
+                                    },
+                                    onLongPress: () {
+                                      setState(() {
+                                        widget.player.dealCommander(cmdid, -10);
+                                      });
+                                    },
+                                    child: SizedBox(
+                                      height: double.infinity,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Icon(
+                                            Icons.add,
+                                            shadows: onBackgroundShadow,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   );
                 }

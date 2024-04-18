@@ -490,6 +490,61 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                             GestureDetector(
                               onTap: () {
                                 setState(() {
+                                  Service.settingsService.pref_commanderDamageButtonsFacePlayer =
+                                      !Service.settingsService.pref_commanderDamageButtonsFacePlayer;
+                                });
+                              },
+                              behavior: HitTestBehavior.opaque,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                                child: Row(
+                                  children: [
+                                    const Opacity(
+                                      opacity: 0.5,
+                                      child: Icon(
+                                        Icons.rotate_90_degrees_ccw,
+                                        size: 32,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                        child: Opacity(
+                                          opacity: 0.9,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Buttons Face Player",
+                                                style: Theme.of(context).textTheme.titleLarge,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                              Text(
+                                                "The commander damage buttons will face the player taking the damage.",
+                                                style: Theme.of(context).textTheme.titleSmall,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: Service.settingsService.pref_commanderDamageButtonsFacePlayer,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          Service.settingsService.pref_commanderDamageButtonsFacePlayer = value;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const Divider(),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
                                   Service.settingsService.pref_showChangingLife =
                                       !Service.settingsService.pref_showChangingLife;
                                 });

@@ -8,30 +8,40 @@ class Layout2a extends Layout {
   int get players => 2;
 
   @override
-  Widget build(BuildContext context, List<Player> players, Widget Function(int i) counterParentBuilder) {
+  Widget build(BuildContext context, List<Player> players, Widget Function(int i, int turns) counterParentBuilder) {
     assert(players.length == this.players);
 
     counter(int x) {
-      return counterParentBuilder(x);
+      var turns = getTurnsInPosition(x);
+      return RotatedBox(
+        quarterTurns: turns,
+        child: counterParentBuilder(x, turns),
+      );
     }
 
     return Column(
       children: [
         Expanded(
-          child: RotatedBox(
-            quarterTurns: 2,
-            child: counter(1),
-          ),
+          child: counter(1),
         ),
         const Gap(8),
         Expanded(
-          child: RotatedBox(
-            quarterTurns: 0,
-            child: counter(0),
-          ),
+          child: counter(0),
         )
       ],
     );
+  }
+
+  @override
+  int getTurnsInPosition(int pos) {
+    switch (pos) {
+      case 0:
+        return 0;
+      case 1:
+        return 2;
+      default:
+    }
+    return 0;
   }
 
   @override

@@ -479,7 +479,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                   child: layout?.build(
                         context,
                         players,
-                        (int i) {
+                        (int i, _) {
                           const padding = 16.0;
                           return Stack(
                             children: [

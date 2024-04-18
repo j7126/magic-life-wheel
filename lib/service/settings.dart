@@ -37,6 +37,11 @@ class SettingsService {
       _pref_asymmetricalCommanderDamageButtons = symmetricalCommanderDamageButtons;
     }
 
+    var commanderDamageButtonsFacePlayer = prefs.getBool('commanderDamageButtonsFacePlayer');
+    if (commanderDamageButtonsFacePlayer != null) {
+      _pref_commanderDamageButtonsFacePlayer = commanderDamageButtonsFacePlayer;
+    }
+
     var showChangingLife = prefs.getBool('showChangingLife');
     if (showChangingLife != null) {
       _pref_showChangingLife = showChangingLife;
@@ -94,6 +99,14 @@ class SettingsService {
   set pref_asymmetricalCommanderDamageButtons(bool val) {
     _pref_asymmetricalCommanderDamageButtons = val;
     prefs.setBool('symmetricalCommanderDamageButtons', val);
+  }
+
+
+  bool _pref_commanderDamageButtonsFacePlayer = true;
+  bool get pref_commanderDamageButtonsFacePlayer => _pref_commanderDamageButtonsFacePlayer;
+  set pref_commanderDamageButtonsFacePlayer(bool val) {
+    _pref_commanderDamageButtonsFacePlayer = val;
+    prefs.setBool('commanderDamageButtonsFacePlayer', val);
   }
 
   bool _pref_showChangingLife = true;

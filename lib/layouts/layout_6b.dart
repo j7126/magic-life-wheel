@@ -8,21 +8,22 @@ class Layout6b extends Layout {
   int get players => 6;
 
   @override
-  Widget build(BuildContext context, List<Player> players, Widget Function(int i) counterParentBuilder) {
+  Widget build(BuildContext context, List<Player> players, Widget Function(int i, int turns) counterParentBuilder) {
     assert(players.length == this.players);
 
     counter(int x) {
-      return counterParentBuilder(x);
+      var turns = getTurnsInPosition(x);
+      return RotatedBox(
+        quarterTurns: turns,
+        child: counterParentBuilder(x, turns),
+      );
     }
 
     return Column(
       children: [
         Expanded(
           flex: 2,
-          child: RotatedBox(
-            quarterTurns: 2,
-            child: counter(3),
-          ),
+          child: counter(3),
         ),
         const Gap(8),
         Expanded(
@@ -30,17 +31,11 @@ class Layout6b extends Layout {
           child: Row(
             children: [
               Expanded(
-                child: RotatedBox(
-                  quarterTurns: 1,
-                  child: counter(2),
-                ),
+                child: counter(2),
               ),
               const Gap(8),
               Expanded(
-                child: RotatedBox(
-                  quarterTurns: 3,
-                  child: counter(4),
-                ),
+                child: counter(4),
               ),
             ],
           ),
@@ -51,17 +46,11 @@ class Layout6b extends Layout {
           child: Row(
             children: [
               Expanded(
-                child: RotatedBox(
-                  quarterTurns: 1,
-                  child: counter(1),
-                ),
+                child: counter(1),
               ),
               const Gap(8),
               Expanded(
-                child: RotatedBox(
-                  quarterTurns: 3,
-                  child: counter(5),
-                ),
+                child: counter(5),
               ),
             ],
           ),
@@ -69,13 +58,30 @@ class Layout6b extends Layout {
         const Gap(8),
         Expanded(
           flex: 2,
-          child: RotatedBox(
-            quarterTurns: 0,
-            child: counter(0),
-          ),
+          child: counter(0),
         ),
       ],
     );
+  }
+
+  @override
+  int getTurnsInPosition(int pos) {
+    switch (pos) {
+      case 0:
+        return 0;
+      case 1:
+        return 1;
+      case 2:
+        return 1;
+      case 3:
+        return 2;
+      case 4:
+        return 3;
+      case 5:
+        return 3;
+      default:
+    }
+    return 0;
   }
 
   @override
