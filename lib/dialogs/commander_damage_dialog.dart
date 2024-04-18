@@ -92,7 +92,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                               key: Key(card.uuid),
                               cardSet: card,
                             ),
-                          if (!partner && player.background.hasBackground)
+                          if (!partner && card == null && player.background.hasBackground)
                             BackgroundWidget(
                               background: player.background,
                             ),
