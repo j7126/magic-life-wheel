@@ -557,7 +557,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                     const Opacity(
                                       opacity: 0.5,
                                       child: Icon(
-                                        Icons.history_outlined,
+                                        Icons.format_size,
                                         size: 32,
                                       ),
                                     ),
