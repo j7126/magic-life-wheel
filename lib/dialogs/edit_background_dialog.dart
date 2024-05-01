@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -144,7 +143,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
       return customImageError();
     }
 
-    var bytes = await File(file.path).readAsBytes();
+    var bytes = await file.readAsBytes();
 
     var image = await compute((bytes) => image_manipulation.decodeImage(bytes), bytes);
     if (image == null) {
