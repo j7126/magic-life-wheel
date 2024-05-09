@@ -11,10 +11,16 @@ Player _$PlayerFromJson(Map<String, dynamic> json) => Player(
     )
       ..uuid = json['uuid'] as String
       ..background =
-          Background.fromJson(json['background'] as Map<String, dynamic>);
+          Background.fromJson(json['background'] as Map<String, dynamic>)
+      ..commanderDamage = Map<String, int>.from(json['commanderDamage'] as Map)
+      ..enableDead = json['enableDead'] as bool
+      ..life = json['life'] as int;
 
 Map<String, dynamic> _$PlayerToJson(Player instance) => <String, dynamic>{
       'uuid': instance.uuid,
       'name': instance.name,
       'background': instance.background.toJson(),
+      'commanderDamage': instance.commanderDamage,
+      'enableDead': instance.enableDead,
+      'life': instance.life,
     };

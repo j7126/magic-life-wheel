@@ -84,7 +84,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     });
   }
 
-  void setPlayers(int players, {int layoutId = 0}) {
+  void setPlayers(int players, {int layoutId = 0, bool reset = true}) {
     setState(() {
       numPlayers = players;
       layout = null;
@@ -96,7 +96,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
         }
         layout = layouts[this.layoutId];
       }
-      setupPlayers();
+      setupPlayers(reset: reset);
     });
   }
 
@@ -115,7 +115,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     });
   }
 
-  void setupPlayers() {
+  void setupPlayers({bool reset = true}) {
     setState(() {
       if (numPlayers > players.length) {
         for (var i = players.length; i < numPlayers; i++) {
@@ -132,7 +132,9 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
         }
       }
 
-      resetGame();
+      if (reset) {
+        resetGame();
+      }
 
       save();
     });
@@ -424,7 +426,11 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
         }
         players.add(player);
       }
-      setPlayers(players.length, layoutId: Service.settingsService.conf_layout);
+      setPlayers(
+        players.length,
+        layoutId: Service.settingsService.conf_layout,
+        reset: false,
+      );
     }
     super.initState();
   }

@@ -69,6 +69,7 @@ class _CounterState extends State<Counter> {
       ),
     );
     setState(() {});
+    widget.stateChanged?.call();
   }
 
   void changeLife(int x) {
@@ -87,6 +88,7 @@ class _CounterState extends State<Counter> {
         lifeChangedTimer = null;
       },
     );
+    widget.stateChanged?.call();
   }
 
   void handleLongPressInterval(int direction, {int i = 0}) {

@@ -39,10 +39,6 @@ class Player {
   )
   bool forcePartner = false;
 
-  @JsonKey(
-    includeFromJson: false,
-    includeToJson: false,
-  )
   Map<String, int> commanderDamage = {};
 
   @JsonKey(
@@ -57,16 +53,8 @@ class Player {
   )
   bool get dead => (enableDead && life <= 0) || deadByCommander;
 
-  @JsonKey(
-    includeFromJson: false,
-    includeToJson: false,
-  )
   bool enableDead = true;
 
-  @JsonKey(
-    includeFromJson: false,
-    includeToJson: false,
-  )
   late int life;
 
   @JsonKey(
