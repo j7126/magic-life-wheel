@@ -6,7 +6,7 @@ version: 1.6.2+13
 
 environment:
   sdk: '>=3.3.3 <4.0.0'
-  flutter: '>=3.19.6 <4.0.0'
+  flutter: '>=3.19.6 <3.22.0'
 
 dependencies:
   flutter:
@@ -16,7 +16,7 @@ dependencies:
   gap: ^3.0.1
   cupertino_icons: ^1.0.8
   dynamic_color: ^1.7.0
-  package_info_plus: ^8.0.0
+  package_info_plus: ^7.0.0
   flutter_svg: ^2.0.10
   url_launcher: ^6.2.6
   json_annotation: ^4.8.1
@@ -37,7 +37,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^4.0.0
+  flutter_lints: ^3.0.2
   flutter_launcher_icons: ^0.13.1
   build_runner: ^2.4.9
   json_serializable: ^6.7.1
