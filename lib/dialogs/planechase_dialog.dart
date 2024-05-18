@@ -137,9 +137,9 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
     var imgh = isLandscape ? 672.0 : 936.0;
 
     return AlertDialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: isLandscape ? 64.0 : 32.0, vertical: isLandscape ? 32.0 : 64.0),
-      titlePadding: const EdgeInsets.only(top: 12.0, left: 20.0, right: 12.0),
-      contentPadding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 8.0),
+      insetPadding: EdgeInsets.symmetric(horizontal: isLandscape ? 64.0 : 0.0, vertical: isLandscape ? 0.0 : 64.0),
+      titlePadding: EdgeInsets.only(top: isLandscape ? 8.0 : 12.0, left: 20.0, right: 12.0),
+      contentPadding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0, top: 8.0),
       title: Row(
         children: [
           const Text("Planechase"),
