@@ -50,6 +50,22 @@ packages:
       url: "https://github.com/j7126/auto_size_text.git"
     source: git
     version: "3.0.0"
+  barcode:
+    dependency: transitive
+    description:
+      name: barcode
+      sha256: ab180ce22c6555d77d45f0178a523669db67f95856e3378259ef2ffeb43e6003
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.8"
+  barcode_widget:
+    dependency: "direct main"
+    description:
+      name: barcode_widget
+      sha256: "6f2c5b08659b1a5f4d88d183e6007133ea2f96e50e7b8bb628f03266c3931427"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.4"
   boolean_selector:
     dependency: transitive
     description:
@@ -585,6 +601,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  mobile_scanner:
+    dependency: "direct main"
+    description:
+      name: mobile_scanner
+      sha256: b8c0e9afcfd52534f85ec666f3d52156f560b5e6c25b1e3d4fe2087763607926
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.1"
   package_config:
     dependency: transitive
     description:
@@ -697,6 +721,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.3"
+  qr:
+    dependency: transitive
+    description:
+      name: qr
+      sha256: "64957a3930367bf97cc211a5af99551d630f2f4625e38af10edd6b19131b64b3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -846,6 +878,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  tab_container:
+    dependency: "direct main"
+    description:
+      name: tab_container
+      sha256: "15f87032f63fd7f0a59740aa31c5bc7056af3159a37311bca546d343240f3029"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.5.3"
   term_glyph:
     dependency: transitive
     description:

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:magic_life_wheel/dialogs/transfer_game_dialog.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/layouts/layout_2a.dart';
 import 'package:magic_life_wheel/layouts/layouts.dart';
@@ -264,6 +265,16 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
       context: context,
       // ignore: prefer_const_constructors
       builder: (BuildContext context) => PlanechaseDialog(),
+    );
+  }
+
+  void _showTransferGameDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => TransferGameDialog(
+        players: players,
+        layoutId: layoutId,
+      ),
     );
   }
 
@@ -758,6 +769,11 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                               },
                               leadingIcon: const Icon(Icons.settings),
                               child: const Text("Settings"),
+                            ),
+                            MenuItemButton(
+                              onPressed: _showTransferGameDialog,
+                              leadingIcon: const Icon(Icons.send),
+                              child: const Text("Transfer Game"),
                             ),
                             MenuItemButton(
                               onPressed: _showResetGameDialog,

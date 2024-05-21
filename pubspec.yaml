@@ -32,6 +32,9 @@ dependencies:
   mana_icons_flutter: ^0.0.1
   image_picker: ^1.1.0
   image: ^4.1.7
+  tab_container: ^3.5.3
+  barcode_widget: ^2.0.4
+  mobile_scanner: ^5.1.1
 
 dev_dependencies:
   flutter_test:
