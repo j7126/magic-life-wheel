@@ -313,6 +313,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
 
   void _showLayoutSelector(int layoutRotationOffset) {
     showModalBottomSheet<void>(
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
