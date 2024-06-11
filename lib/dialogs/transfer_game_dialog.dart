@@ -41,7 +41,7 @@ class _TransferGameDialogState extends State<TransferGameDialog> with WidgetsBin
   StreamSubscription<Object?>? _scannerSubscription;
 
   void buildQrData() async {
-    await Future.delayed(const Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 10));
     data = await compute(
       (d) {
         var p = d.$1;
