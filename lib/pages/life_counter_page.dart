@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
-import 'package:magic_life_wheel/dialogs/transfer_game_dialog.dart';
+import 'package:magic_life_wheel/pages/transfer_game_page.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/layouts/layout_2a.dart';
 import 'package:magic_life_wheel/layouts/layouts.dart';
@@ -158,7 +158,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   Future<bool?> _showResetWarning() {
     return showDialog<bool>(
       context: context,
-      barrierDismissible: true, // user must tap button!
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Column(
@@ -209,7 +209,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   Future<bool?> _showResetPlayersWarning() {
     return showDialog<bool>(
       context: context,
-      barrierDismissible: true, // user must tap button!
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('The player configuration will be reset!'),
@@ -268,14 +268,18 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     );
   }
 
-  void _showTransferGameDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => TransferGameDialog(
-        players: players,
-        layoutId: layoutId,
+  void _showTransferGamePage() async {
+    var result = await Navigator.of(context).push<(List<Player> players, int layoutId)>(
+      MaterialPageRoute(
+        builder: (context) => TransferGamePage(
+          players: players,
+          layoutId: layoutId,
+        ),
       ),
     );
+    if (result != null) {
+      importGame(result.$1, result.$2);
+    }
   }
 
   void _chooseRandomPlayer() async {
@@ -414,6 +418,15 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
           );
         });
       },
+    );
+  }
+
+  void importGame(List<Player> players, int layoutId) {
+    this.players = players;
+    setPlayers(
+      this.players.length,
+      layoutId: layoutId,
+      reset: false,
     );
   }
 
@@ -772,7 +785,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                               child: const Text("Settings"),
                             ),
                             MenuItemButton(
-                              onPressed: _showTransferGameDialog,
+                              onPressed: _showTransferGamePage,
                               leadingIcon: const Icon(Icons.send),
                               child: const Text("Transfer Game"),
                             ),
