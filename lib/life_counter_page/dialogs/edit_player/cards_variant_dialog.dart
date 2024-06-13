@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
-import 'package:magic_life_wheel/service/static_service.dart';
-import 'package:magic_life_wheel/widgets/card_image.dart';
+import 'package:magic_life_wheel/static_service.dart';
+import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 
 class CardsVariantDialog extends StatefulWidget {
   const CardsVariantDialog({

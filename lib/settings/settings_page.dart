@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:keyrune_icons_flutter/keyrune_icons_flutter.dart';
-import 'package:magic_life_wheel/service/static_service.dart';
+import 'package:magic_life_wheel/static_service.dart';
 import 'package:mana_icons_flutter/mana_icons_flutter.dart';
 
 class SettingsPage extends StatefulWidget {

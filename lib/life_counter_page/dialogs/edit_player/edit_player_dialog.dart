@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
-import 'package:magic_life_wheel/service/static_service.dart';
-import 'package:magic_life_wheel/widgets/background_widget.dart';
-import 'package:magic_life_wheel/dialogs/edit_background_dialog.dart';
+import 'package:magic_life_wheel/static_service.dart';
+import 'package:magic_life_wheel/life_counter_page/card_image/background_widget.dart';
+import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/edit_background_dialog.dart';
 
 class EditPlayerDialog extends StatefulWidget {
   const EditPlayerDialog({super.key, required this.player});

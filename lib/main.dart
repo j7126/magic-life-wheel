@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:magic_life_wheel/mtgjson/mtgjson_data_loader.dart';
-import 'package:magic_life_wheel/pages/life_counter_page.dart';
-import 'package:magic_life_wheel/service/settings.dart';
-import 'package:magic_life_wheel/service/static_service.dart';
+import 'package:magic_life_wheel/life_counter_page/life_counter_page.dart';
+import 'package:magic_life_wheel/settings/settings.dart';
+import 'package:magic_life_wheel/static_service.dart';
 
 void main() {
   runApp(const App());

@@ -7,8 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
-import 'package:magic_life_wheel/service/static_service.dart';
-import 'package:magic_life_wheel/service/transfer_url_service.dart';
+import 'package:magic_life_wheel/static_service.dart';
+import 'package:magic_life_wheel/transfer_game/transfer_url_service.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:tab_container/tab_container.dart';
 

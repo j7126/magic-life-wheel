@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
-import 'package:magic_life_wheel/service/static_service.dart';
+import 'package:magic_life_wheel/static_service.dart';
 
 class TransferUrlService {
   static Future<String> buildUrl(List<Player> players, int layoutId) async {

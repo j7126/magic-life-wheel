@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:magic_life_wheel/mtgjson/mtgjson_data_loader.dart';
-import 'package:magic_life_wheel/service/settings.dart';
+import 'package:magic_life_wheel/settings/settings.dart';
 
 class Service {
   static const appName = "Magic Life Wheel";

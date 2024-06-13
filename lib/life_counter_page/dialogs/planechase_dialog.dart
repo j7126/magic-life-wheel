@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:magic_life_wheel/service/static_service.dart';
-import 'package:magic_life_wheel/widgets/card_image.dart';
+import 'package:magic_life_wheel/static_service.dart';
+import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 import 'package:mana_icons_flutter/mana_icons_flutter.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 

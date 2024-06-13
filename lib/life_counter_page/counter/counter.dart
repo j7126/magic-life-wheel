@@ -5,12 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:keyrune_icons_flutter/keyrune_icons_flutter.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
-import 'package:magic_life_wheel/service/counter_font_size_group.dart';
-import 'package:magic_life_wheel/service/static_service.dart';
+import 'package:magic_life_wheel/life_counter_page/counter/counter_font_size_group.dart';
+import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/widgets/animated_fade.dart';
-import 'package:magic_life_wheel/dialogs/commander_damage_dialog.dart';
-import 'package:magic_life_wheel/widgets/background_widget.dart';
-import 'package:magic_life_wheel/dialogs/edit_player_dialog.dart';
+import 'package:magic_life_wheel/life_counter_page/dialogs/commander_damage_dialog.dart';
+import 'package:magic_life_wheel/life_counter_page/card_image/background_widget.dart';
+import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/edit_player_dialog.dart';
 
 class Counter extends StatefulWidget {
   const Counter({

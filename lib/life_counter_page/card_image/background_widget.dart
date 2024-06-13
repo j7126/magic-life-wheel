@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:magic_life_wheel/datamodel/background.dart';
-import 'package:magic_life_wheel/widgets/card_image.dart';
+import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 
 class BackgroundWidget extends StatelessWidget {
   const BackgroundWidget({

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
-import 'package:magic_life_wheel/service/static_service.dart';
-import 'package:magic_life_wheel/widgets/card_image.dart';
-import 'package:magic_life_wheel/widgets/background_widget.dart';
+import 'package:magic_life_wheel/static_service.dart';
+import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
+import 'package:magic_life_wheel/life_counter_page/card_image/background_widget.dart';
 
 class CommanderDamageDialog extends StatefulWidget {
   const CommanderDamageDialog({super.key, required this.player, required this.layout, required this.players});

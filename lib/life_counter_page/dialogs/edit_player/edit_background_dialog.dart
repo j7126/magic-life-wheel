@@ -6,13 +6,13 @@ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as image_manipulation;
 import 'package:magic_life_wheel/datamodel/player.dart';
-import 'package:magic_life_wheel/dialogs/set_colors_dialog.dart';
+import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/set_colors_dialog.dart';
 import 'package:magic_life_wheel/icons/custom_icons.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
-import 'package:magic_life_wheel/service/static_service.dart';
-import 'package:magic_life_wheel/widgets/card_image.dart';
-import 'package:magic_life_wheel/dialogs/cards_variant_dialog.dart';
-import 'package:magic_life_wheel/widgets/background_widget.dart';
+import 'package:magic_life_wheel/static_service.dart';
+import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
+import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/cards_variant_dialog.dart';
+import 'package:magic_life_wheel/life_counter_page/card_image/background_widget.dart';
 
 class EditBackgroundDialog extends StatefulWidget {
   const EditBackgroundDialog({super.key, required this.player});
