@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:magic_life_wheel/dialogs/warning_dialog.dart';
 import 'package:magic_life_wheel/transfer_game/transfer_game_page.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/layouts/layout_2a.dart';
@@ -155,109 +156,52 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     }
   }
 
-  Future<bool?> _showResetWarning() {
-    return showDialog<bool>(
+  void _showReset() async {
+    var result = await showDialog<int>(
       context: context,
       barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Column(
-            children: [
-              const Text('The life counters will be reset'),
-              const Gap(16.0),
-              Row(
-                children: [
-                  TextButton(
-                    child: const Text('Reset Players'),
-                    onPressed: () async {
-                      Navigator.of(context).pop(false);
-                      _showResetPlayersDialog();
-                    },
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    child: const Text('Cancel'),
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: FilledButton(
-                      style: const ButtonStyle(
-                        padding: MaterialStatePropertyAll(
-                          EdgeInsets.symmetric(horizontal: 16.0),
-                        ),
-                        backgroundColor: MaterialStatePropertyAll(Colors.red),
-                        foregroundColor: MaterialStatePropertyAll(Colors.white),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop(true);
-                      },
-                      child: const Text('Reset'),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+      builder: (context) {
+        return const WarningDialog(
+          message: 'The life counters will be reset',
+          confirmMessage: 'Reset',
+          secondaryMessage: 'Reset Players',
         );
       },
     );
+    if (result == null) return null;
+    if (result < 0) _showResetPlayers();
+    if (result == 1) resetGame();
   }
 
-  Future<bool?> _showResetPlayersWarning() {
-    return showDialog<bool>(
+  void _showResetPlayers() async {
+    var result = await showDialog<int>(
       context: context,
       barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('The player configuration will be reset!'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: FilledButton(
-                style: const ButtonStyle(
-                  padding: MaterialStatePropertyAll(
-                    EdgeInsets.symmetric(horizontal: 16.0),
-                  ),
-                  backgroundColor: MaterialStatePropertyAll(Colors.red),
-                  foregroundColor: MaterialStatePropertyAll(Colors.white),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text('Reset'),
-              ),
-            ),
-          ],
+      builder: (context) {
+        return const WarningDialog(
+          message: 'The player configuration will be reset!',
+          confirmMessage: 'Reset',
         );
       },
     );
+    if (result == 1) resetPlayers();
   }
 
   Future _showSwitchPlayersDialog(int players) async {
-    var result = isGameReset ? true : await _showResetWarning();
+    var result = isGameReset ||
+        (1 ==
+            await showDialog<int>(
+              context: context,
+              barrierDismissible: true,
+              builder: (context) {
+                return const WarningDialog(
+                  message: 'The life counters will be reset',
+                  confirmMessage: 'Reset',
+                );
+              },
+            ));
 
-    if (result ?? false) setPlayers(players);
-  }
-
-  void _showResetGameDialog() async {
-    var result = await _showResetWarning();
-
-    if (result ?? false) resetGame();
-  }
-
-  void _showResetPlayersDialog() async {
-    var result = await _showResetPlayersWarning();
-
-    if (result ?? false) resetPlayers();
+    if (result) setPlayers(players);
   }
 
   void _showPlanechase() {
@@ -790,7 +734,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                               child: const Text("Transfer Game"),
                             ),
                             MenuItemButton(
-                              onPressed: _showResetGameDialog,
+                              onPressed: _showReset,
                               leadingIcon: const Icon(Icons.restart_alt),
                               child: const Text("Reset Game"),
                             ),
