@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:magic_life_wheel/dialog_service.dart';
 
 class SetColorsDialog extends StatefulWidget {
   const SetColorsDialog({
@@ -44,8 +45,15 @@ class _SetColorsDialogState extends State<SetColorsDialog> {
 
   @override
   void initState() {
+    DialogService.register(context);
     colors = widget.colors ?? [];
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    DialogService.deregister(context);
+    super.dispose();
   }
 
   @override

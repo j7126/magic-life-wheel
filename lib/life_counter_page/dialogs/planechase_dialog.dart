@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 import 'package:mana_icons_flutter/mana_icons_flutter.dart';
@@ -109,6 +110,18 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
       return const Color.fromARGB(255, 18, 11, 13);
     }
     return null;
+  }
+
+  @override
+  void initState() {
+    DialogService.register(context);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    DialogService.deregister(context);
+    super.dispose();
   }
 
   @override

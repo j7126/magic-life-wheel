@@ -6,6 +6,8 @@ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as image_manipulation;
 import 'package:magic_life_wheel/datamodel/player.dart';
+import 'package:magic_life_wheel/dialog_service.dart';
+import 'package:magic_life_wheel/dialogs/message_dialog.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/set_colors_dialog.dart';
 import 'package:magic_life_wheel/icons/custom_icons.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
@@ -115,17 +117,9 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Failed to set image!"),
-          content: const Text("The image format may not be supported, please try another image."),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+        return const MessageDialog(
+          title: 'Failed to set image!',
+          message: 'The image format may not be supported, please try another image.',
         );
       },
     );
@@ -203,6 +197,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
 
   @override
   void initState() {
+    DialogService.register(context);
     _searchFieldController = TextEditingController();
     _scrollController = ScrollController();
     super.initState();
@@ -210,6 +205,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
 
   @override
   void dispose() {
+    DialogService.deregister(context);
     _searchFieldController.dispose();
     _scrollController.dispose();
     _menuButtonFocusNode.dispose();

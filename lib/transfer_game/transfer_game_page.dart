@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
+import 'package:magic_life_wheel/dialogs/warning_dialog.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/transfer_game/transfer_url_service.dart';
 import 'package:system_info2/system_info2.dart';
@@ -39,48 +40,18 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
 
   late final TabController _tabController;
 
-  Future<bool?> _showResetWarning(int numPlayers) {
-    return showDialog<bool>(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Column(
-            children: [
-              Text('Do you want to import this $numPlayers player game? Your current game will be lost!'),
-              const Gap(16.0),
-              Row(
-                children: [
-                  const Spacer(),
-                  TextButton(
-                    child: const Text('Cancel'),
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: FilledButton(
-                      style: const ButtonStyle(
-                        padding: MaterialStatePropertyAll(
-                          EdgeInsets.symmetric(horizontal: 16.0),
-                        ),
-                        backgroundColor: MaterialStatePropertyAll(Colors.red),
-                        foregroundColor: MaterialStatePropertyAll(Colors.white),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop(true);
-                      },
-                      child: const Text('Import'),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+  Future<bool> _showResetWarning(int numPlayers) async {
+    return 1 ==
+        await showDialog<int>(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return WarningDialog(
+              message: 'Do you want to import this $numPlayers player game? Your current game will be lost!',
+              confirmMessage: 'Import',
+            );
+          },
         );
-      },
-    );
   }
 
   void buildQrData() async {
@@ -102,7 +73,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
     if (result == null) {
       dataError();
     } else {
-      if (await _showResetWarning(result.$1.length) ?? false) {
+      if (await _showResetWarning(result.$1.length)) {
         if (mounted) {
           setState(() {
             finalising = true;

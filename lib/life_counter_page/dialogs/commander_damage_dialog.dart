@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
+import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
@@ -17,6 +18,18 @@ class CommanderDamageDialog extends StatefulWidget {
 }
 
 class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
+  @override
+  void initState() {
+    DialogService.register(context);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    DialogService.deregister(context);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var onBackgroundShadow = widget.player.background.hasBackground

@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:magic_life_wheel/dialog_service.dart';
+import 'package:magic_life_wheel/dialogs/message_dialog.dart';
 import 'package:magic_life_wheel/dialogs/warning_dialog.dart';
 import 'package:magic_life_wheel/transfer_game/transfer_game_page.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
@@ -16,11 +18,19 @@ import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/background_widget.dart';
 import 'package:magic_life_wheel/life_counter_page/counter/counter.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/planechase_dialog.dart';
+import 'package:magic_life_wheel/transfer_game/transfer_url_service.dart';
 import 'package:mana_icons_flutter/mana_icons_flutter.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 class LifeCounterPage extends StatefulWidget {
-  const LifeCounterPage({super.key});
+  const LifeCounterPage({
+    super.key,
+    this.waitingUri,
+    this.onUriConsumed,
+  });
+
+  final String? waitingUri;
+  final Function()? onUriConsumed;
 
   @override
   State<LifeCounterPage> createState() => _LifeCounterPageState();
@@ -37,6 +47,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   int? highlightedPlayerAnimation;
   bool randomPlayerAnimationInProgress = false;
   CounterFontSizeGroup counterFontSizeGroup = CounterFontSizeGroup();
+  String? waitingUri;
+  bool processingImport = false;
 
   bool triggerReRender = false;
 
@@ -107,6 +119,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
       for (var player in players) {
         player.resetGame();
       }
+      save();
     });
   }
 
@@ -374,6 +387,60 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     );
   }
 
+  Future<bool> _showImportWarning(int numPlayers) async {
+    return 1 ==
+        await showDialog<int>(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return WarningDialog(
+              message: 'Do you want to import this $numPlayers player game? Your current game will be lost!',
+              confirmMessage: 'Import',
+            );
+          },
+        );
+  }
+
+  void handleWaitingUri() async {
+    setState(() {
+      processingImport = true;
+    });
+    var url = waitingUri;
+    if (url == null || !url.startsWith(Service.appBaseUrl)) {
+      dataError();
+      setState(() {
+        processingImport = false;
+      });
+      return;
+    }
+    var result = await TransferUrlService.parseUrl(url);
+    if (result == null) {
+      dataError();
+    } else {
+      if (await _showImportWarning(result.$1.length)) {
+        if (mounted) {
+          await DialogService.closeAllDialogs();
+          importGame(result.$1, result.$2);
+        }
+      }
+    }
+    setState(() {
+      processingImport = false;
+    });
+  }
+
+  void dataError() {
+    if (mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return const MessageDialog(title: 'The link data was not valid.');
+        },
+      );
+    }
+  }
+
   @override
   void initState() {
     WakelockPlus.enable();
@@ -421,6 +488,18 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
       }
     });
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Service.dataLoader.loaded) {
+        if (widget.waitingUri != waitingUri) {
+          waitingUri = widget.waitingUri;
+          if (widget.waitingUri != null) {
+            widget.onUriConsumed?.call();
+            handleWaitingUri();
+          }
+        }
+      }
+    });
+
     var barButtonStyle = ButtonStyle(
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
         const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
@@ -442,387 +521,398 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            // ----- counters -----
-            Expanded(
-              child: AnimatedPadding(
-                padding: EdgeInsets.all(rearrangeMode ? 8 : 0),
-                duration: const Duration(milliseconds: 200),
-                child: RotatedBox(
-                  quarterTurns: (rotated ? 2 : 0) + layoutRotationOffset,
-                  child: layout?.build(
-                        context,
-                        players,
-                        (int i, _) {
-                          const padding = 16.0;
-                          return Stack(
+            Column(
+              children: [
+                // ----- counters -----
+                Expanded(
+                  child: AnimatedPadding(
+                    padding: EdgeInsets.all(rearrangeMode ? 8 : 0),
+                    duration: const Duration(milliseconds: 200),
+                    child: RotatedBox(
+                      quarterTurns: (rotated ? 2 : 0) + layoutRotationOffset,
+                      child: layout?.build(
+                            context,
+                            players,
+                            (int i, _) {
+                              const padding = 16.0;
+                              return Stack(
+                                children: [
+                                  AnimatedPadding(
+                                    padding: EdgeInsets.all(rearrangeMode ? padding : 0),
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.ease,
+                                    child: Counter(
+                                      i: i,
+                                      layout: layout ?? Layout2a(),
+                                      players: players,
+                                      counterFontSizeGroup: counterFontSizeGroup,
+                                      triggerReRender: () {
+                                        triggerReRender = true;
+                                      },
+                                      stateChanged: () => save(),
+                                      highlighted: highlightedPlayer == i,
+                                      highlightedInstant: highlightedPlayerAnimation == i,
+                                    ),
+                                  ),
+                                  if (rearrangeMode)
+                                    DragTarget<int>(
+                                      builder: (
+                                        BuildContext context,
+                                        List<dynamic> candidateData,
+                                        List<dynamic> rejectedData,
+                                      ) {
+                                        return Stack(
+                                          children: [
+                                            Draggable<int>(
+                                              data: i,
+                                              dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
+                                              maxSimultaneousDrags: 1,
+                                              onDragStarted: () {
+                                                setState(() {
+                                                  dragging++;
+                                                });
+                                              },
+                                              onDragEnd: (_) {
+                                                setState(() {
+                                                  dragging--;
+                                                });
+                                              },
+                                              feedback: Card(
+                                                clipBehavior: Clip.antiAlias,
+                                                child: SizedBox(
+                                                  width: 100,
+                                                  height: 100,
+                                                  child: BackgroundWidget(
+                                                    background: players[i].background,
+                                                    forceShowNoImageIcon: true,
+                                                  ),
+                                                ),
+                                              ),
+                                              childWhenDragging: Padding(
+                                                padding: const EdgeInsets.all(padding),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(35),
+                                                    color: const Color.fromARGB(100, 0, 0, 0),
+                                                  ),
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(padding),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(35),
+                                                    color: const Color.fromARGB(0, 0, 0, 0),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            if (candidateData.isNotEmpty)
+                                              Padding(
+                                                padding: const EdgeInsets.all(padding),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(35),
+                                                    color: const Color.fromARGB(45, 48, 150, 63),
+                                                  ),
+                                                ),
+                                              )
+                                          ],
+                                        );
+                                      },
+                                      onAcceptWithDetails: (DragTargetDetails<int> details) {
+                                        var data = details.data;
+                                        setState(() {
+                                          if (i != data) {
+                                            var temp = players[data];
+                                            players[data] = players[i];
+                                            players[i] = temp;
+                                          }
+                                        });
+                                      },
+                                      onWillAcceptWithDetails: (DragTargetDetails<int?> details) =>
+                                          details.data != null && i != details.data,
+                                    ),
+                                ],
+                              );
+                            },
+                          ) ??
+                          Container(),
+                    ),
+                  ),
+                ),
+                // ----- toolbar -----
+                const Padding(
+                  padding: EdgeInsets.only(top: 8.0),
+                  child: Divider(
+                    height: 2,
+                  ),
+                ),
+                rearrangeMode
+                    // rearrange toolbar
+                    ? Stack(
+                        children: [
+                          // non dragging
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              AnimatedPadding(
-                                padding: EdgeInsets.all(rearrangeMode ? padding : 0),
-                                duration: const Duration(milliseconds: 200),
-                                curve: Curves.ease,
-                                child: Counter(
-                                  i: i,
-                                  layout: layout ?? Layout2a(),
-                                  players: players,
-                                  counterFontSizeGroup: counterFontSizeGroup,
-                                  triggerReRender: () {
-                                    triggerReRender = true;
-                                  },
-                                  stateChanged: () => save(),
-                                  highlighted: highlightedPlayer == i,
-                                  highlightedInstant: highlightedPlayerAnimation == i,
+                              Expanded(
+                                child: TextButton(
+                                  key: const ValueKey("rearrangeCancelButton"),
+                                  onPressed: dragging > 0
+                                      ? null
+                                      : () {
+                                          players = oldPlayers ?? [];
+                                          oldPlayers = null;
+                                          setState(() {
+                                            rearrangeMode = false;
+                                          });
+                                        },
+                                  style: barButtonStyle,
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                                    child: Icon(
+                                      Icons.close,
+                                    ),
+                                  ),
                                 ),
                               ),
-                              if (rearrangeMode)
+                              Expanded(
+                                child: TextButton(
+                                  key: const ValueKey("rearrangeShuffleButton"),
+                                  onPressed: dragging > 0
+                                      ? null
+                                      : () {
+                                          setState(() {
+                                            players.shuffle();
+                                          });
+                                        },
+                                  style: barButtonStyle,
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                                    child: Icon(
+                                      Icons.shuffle_outlined,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: TextButton(
+                                  key: const ValueKey("rearrangeDoneButton"),
+                                  onPressed: dragging > 0
+                                      ? null
+                                      : () {
+                                          setState(() {
+                                            rearrangeMode = false;
+                                            save();
+                                          });
+                                        },
+                                  style: barButtonStyle,
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                                    child: Icon(
+                                      Icons.done,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          // draging
+                          if (dragging > 0 && numPlayers > 2)
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                const Spacer(),
                                 DragTarget<int>(
                                   builder: (
                                     BuildContext context,
                                     List<dynamic> candidateData,
                                     List<dynamic> rejectedData,
                                   ) {
-                                    return Stack(
-                                      children: [
-                                        Draggable<int>(
-                                          data: i,
-                                          dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
-                                          maxSimultaneousDrags: 1,
-                                          onDragStarted: () {
-                                            setState(() {
-                                              dragging++;
-                                            });
-                                          },
-                                          onDragEnd: (_) {
-                                            setState(() {
-                                              dragging--;
-                                            });
-                                          },
-                                          feedback: Card(
-                                            clipBehavior: Clip.antiAlias,
-                                            child: SizedBox(
-                                              width: 100,
-                                              height: 100,
-                                              child: BackgroundWidget(
-                                                background: players[i].background,
-                                                forceShowNoImageIcon: true,
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: candidateData.isNotEmpty ? Colors.redAccent : Colors.red,
+                                          borderRadius: BorderRadius.circular(32.0),
+                                        ),
+                                        child: const Padding(
+                                          padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.delete_outline,
+                                                size: 20.0,
                                               ),
-                                            ),
-                                          ),
-                                          childWhenDragging: Padding(
-                                            padding: const EdgeInsets.all(padding),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(35),
-                                                color: const Color.fromARGB(100, 0, 0, 0),
+                                              Gap(8.0),
+                                              Text(
+                                                "Remove Player",
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                  height: 1,
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(padding),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(35),
-                                                color: const Color.fromARGB(0, 0, 0, 0),
-                                              ),
-                                            ),
+                                            ],
                                           ),
                                         ),
-                                        if (candidateData.isNotEmpty)
-                                          Padding(
-                                            padding: const EdgeInsets.all(padding),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(35),
-                                                color: const Color.fromARGB(45, 48, 150, 63),
-                                              ),
-                                            ),
-                                          )
-                                      ],
+                                      ),
                                     );
                                   },
                                   onAcceptWithDetails: (DragTargetDetails<int> details) {
                                     var data = details.data;
-                                    setState(() {
-                                      if (i != data) {
-                                        var temp = players[data];
-                                        players[data] = players[i];
-                                        players[i] = temp;
-                                      }
-                                    });
+                                    deletePlayer(data);
                                   },
-                                  onWillAcceptWithDetails: (DragTargetDetails<int?> details) =>
-                                      details.data != null && i != details.data,
+                                  onWillAcceptWithDetails: (DragTargetDetails<int?> details) => details.data != null,
                                 ),
-                            ],
-                          );
-                        },
-                      ) ??
-                      Container(),
-                ),
-              ),
-            ),
-            // ----- toolbar -----
-            const Padding(
-              padding: EdgeInsets.only(top: 8.0),
-              child: Divider(
-                height: 2,
-              ),
-            ),
-            rearrangeMode
-                // rearrange toolbar
-                ? Stack(
-                    children: [
-                      // non dragging
-                      Row(
+                                const Spacer(),
+                              ],
+                            ),
+                        ],
+                      )
+                    // standard toolbar
+                    : Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Expanded(
-                            child: TextButton(
-                              key: const ValueKey("rearrangeCancelButton"),
-                              onPressed: dragging > 0
-                                  ? null
-                                  : () {
-                                      players = oldPlayers ?? [];
-                                      oldPlayers = null;
-                                      setState(() {
-                                        rearrangeMode = false;
-                                      });
-                                    },
-                              style: barButtonStyle,
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 12.0),
-                                child: Icon(
-                                  Icons.close,
-                                ),
+                            child: MenuAnchor(
+                              childFocusNode: _menuButtonFocusNode,
+                              style: const MenuStyle(
+                                visualDensity: VisualDensity.comfortable,
                               ),
+                              menuChildren: <Widget>[
+                                MenuItemButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => const AboutPage(),
+                                      ),
+                                    );
+                                  },
+                                  leadingIcon: const Icon(Icons.info_outline),
+                                  child: const Text("About"),
+                                ),
+                                MenuItemButton(
+                                  onPressed: () async {
+                                    await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => const SettingsPage(),
+                                      ),
+                                    );
+                                    setState(() {});
+                                  },
+                                  leadingIcon: const Icon(Icons.settings),
+                                  child: const Text("Settings"),
+                                ),
+                                MenuItemButton(
+                                  onPressed: _showTransferGamePage,
+                                  leadingIcon: const Icon(Icons.send),
+                                  child: const Text("Transfer Game"),
+                                ),
+                                MenuItemButton(
+                                  onPressed: _showReset,
+                                  leadingIcon: const Icon(Icons.restart_alt),
+                                  child: const Text("Reset Game"),
+                                ),
+                                MenuItemButton(
+                                  onPressed: randomPlayerAnimationInProgress ? null : _chooseRandomPlayer,
+                                  leadingIcon: const Icon(Icons.shuffle),
+                                  child: const Text("Randomise player"),
+                                ),
+                              ],
+                              builder: (BuildContext context, MenuController controller, Widget? child) {
+                                return TextButton(
+                                  focusNode: _menuButtonFocusNode,
+                                  onPressed: () {
+                                    if (controller.isOpen) {
+                                      controller.close();
+                                    } else {
+                                      controller.open();
+                                    }
+                                  },
+                                  style: barButtonStyle,
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                                    child: Icon(
+                                      Icons.more_vert,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           Expanded(
                             child: TextButton(
-                              key: const ValueKey("rearrangeShuffleButton"),
-                              onPressed: dragging > 0
-                                  ? null
-                                  : () {
-                                      setState(() {
-                                        players.shuffle();
-                                      });
-                                    },
+                              onPressed: () => _showLayoutSelector(layoutRotationOffset),
                               style: barButtonStyle,
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 12.0),
-                                child: Icon(
-                                  Icons.shuffle_outlined,
-                                ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                child: layout != null
+                                    ? SizedBox(
+                                        height: 24,
+                                        width: 24,
+                                        child: RotatedBox(
+                                          quarterTurns: (rotated ? 2 : 0) + layoutRotationOffset,
+                                          child: layout?.buildPreview(context),
+                                        ),
+                                      )
+                                    : const Icon(
+                                        Icons.grid_view,
+                                      ),
                               ),
                             ),
                           ),
+                          if (Service.settingsService.pref_enablePlanechase)
+                            Expanded(
+                              child: TextButton(
+                                onPressed: _showPlanechase,
+                                style: barButtonStyle,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                  child: Transform.scale(
+                                    scale: 1.2,
+                                    alignment: Alignment.bottomCenter,
+                                    child: const Icon(
+                                      ManaIcons.ms_planeswalker,
+                                      size: 24,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           Expanded(
                             child: TextButton(
-                              key: const ValueKey("rearrangeDoneButton"),
-                              onPressed: dragging > 0
-                                  ? null
-                                  : () {
-                                      setState(() {
-                                        rearrangeMode = false;
-                                        save();
-                                      });
-                                    },
+                              onPressed: () {
+                                oldPlayers = List.from(players);
+                                setState(() {
+                                  rearrangeMode = true;
+                                });
+                              },
                               style: barButtonStyle,
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 12.0),
                                 child: Icon(
-                                  Icons.done,
+                                  Icons.swap_horiz_outlined,
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      // draging
-                      if (dragging > 0 && numPlayers > 2)
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            const Spacer(),
-                            DragTarget<int>(
-                              builder: (
-                                BuildContext context,
-                                List<dynamic> candidateData,
-                                List<dynamic> rejectedData,
-                              ) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: candidateData.isNotEmpty ? Colors.redAccent : Colors.red,
-                                      borderRadius: BorderRadius.circular(32.0),
-                                    ),
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.delete_outline,
-                                            size: 20.0,
-                                          ),
-                                          Gap(8.0),
-                                          Text(
-                                            "Remove Player",
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              height: 1,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              onAcceptWithDetails: (DragTargetDetails<int> details) {
-                                var data = details.data;
-                                deletePlayer(data);
-                              },
-                              onWillAcceptWithDetails: (DragTargetDetails<int?> details) => details.data != null,
-                            ),
-                            const Spacer(),
-                          ],
-                        ),
-                    ],
-                  )
-                // standard toolbar
-                : Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: MenuAnchor(
-                          childFocusNode: _menuButtonFocusNode,
-                          style: const MenuStyle(
-                            visualDensity: VisualDensity.comfortable,
-                          ),
-                          menuChildren: <Widget>[
-                            MenuItemButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const AboutPage(),
-                                  ),
-                                );
-                              },
-                              leadingIcon: const Icon(Icons.info_outline),
-                              child: const Text("About"),
-                            ),
-                            MenuItemButton(
-                              onPressed: () async {
-                                await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const SettingsPage(),
-                                  ),
-                                );
-                                setState(() {});
-                              },
-                              leadingIcon: const Icon(Icons.settings),
-                              child: const Text("Settings"),
-                            ),
-                            MenuItemButton(
-                              onPressed: _showTransferGamePage,
-                              leadingIcon: const Icon(Icons.send),
-                              child: const Text("Transfer Game"),
-                            ),
-                            MenuItemButton(
-                              onPressed: _showReset,
-                              leadingIcon: const Icon(Icons.restart_alt),
-                              child: const Text("Reset Game"),
-                            ),
-                            MenuItemButton(
-                              onPressed: randomPlayerAnimationInProgress ? null : _chooseRandomPlayer,
-                              leadingIcon: const Icon(Icons.shuffle),
-                              child: const Text("Randomise player"),
-                            ),
-                          ],
-                          builder: (BuildContext context, MenuController controller, Widget? child) {
-                            return TextButton(
-                              focusNode: _menuButtonFocusNode,
-                              onPressed: () {
-                                if (controller.isOpen) {
-                                  controller.close();
-                                } else {
-                                  controller.open();
-                                }
-                              },
-                              style: barButtonStyle,
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 12.0),
-                                child: Icon(
-                                  Icons.more_vert,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () => _showLayoutSelector(layoutRotationOffset),
-                          style: barButtonStyle,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
-                            child: layout != null
-                                ? SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: RotatedBox(
-                                      quarterTurns: (rotated ? 2 : 0) + layoutRotationOffset,
-                                      child: layout?.buildPreview(context),
-                                    ),
-                                  )
-                                : const Icon(
-                                    Icons.grid_view,
-                                  ),
-                          ),
-                        ),
-                      ),
-                      if (Service.settingsService.pref_enablePlanechase)
-                        Expanded(
-                          child: TextButton(
-                            onPressed: _showPlanechase,
-                            style: barButtonStyle,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12.0),
-                              child: Transform.scale(
-                                scale: 1.2,
-                                alignment: Alignment.bottomCenter,
-                                child: const Icon(
-                                  ManaIcons.ms_planeswalker,
-                                  size: 24,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () {
-                            oldPlayers = List.from(players);
-                            setState(() {
-                              rearrangeMode = true;
-                            });
-                          },
-                          style: barButtonStyle,
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 12.0),
-                            child: Icon(
-                              Icons.swap_horiz_outlined,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+              ],
+            ),
+            if ((widget.waitingUri != null && widget.waitingUri != waitingUri) || processingImport)
+              Container(
+                color: const Color.fromARGB(75, 0, 0, 0),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
           ],
         ),
       ),

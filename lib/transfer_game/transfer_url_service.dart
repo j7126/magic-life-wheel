@@ -32,7 +32,7 @@ class TransferUrlService {
         var jsonResultUtf8 = utf8.encode(jsonResult);
         var gzipJsonResult = gzip.encode(jsonResultUtf8);
         var base64Result = base64.encode(gzipJsonResult);
-        return "${Service.appBaseUrl}$base64Result";
+        return "${Service.appBaseUrl}?import=$base64Result";
       },
       (players, layoutId),
     );
@@ -41,7 +41,7 @@ class TransferUrlService {
   static Future<(List<Player> players, int layoutId)?> parseUrl(String url) async {
     var jsonDecoded = await compute<String, Map<String, dynamic>?>(
       (url) {
-        var exp = RegExp(r'^(https:\/\/[^\/]*\/)([A-Za-z0-9+\/]*={0,2})$');
+        var exp = RegExp(r'^(https:\/\/[^\/]*\/)\?import=([A-Za-z0-9+\/]*={0,2})$');
         var match = exp.allMatches(url).toList();
         if (match.length == 1 &&
             match.first.groupCount == 2 &&

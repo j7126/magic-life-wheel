@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
+import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/background_widget.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/edit_background_dialog.dart';
@@ -30,6 +31,7 @@ class _EditPlayerDialogState extends State<EditPlayerDialog> {
 
   @override
   void initState() {
+    DialogService.register(context);
     _nameController = TextEditingController(text: widget.player.name);
     _lifeController = TextEditingController(text: widget.player.life.toString());
     super.initState();
@@ -37,6 +39,7 @@ class _EditPlayerDialogState extends State<EditPlayerDialog> {
 
   @override
   void dispose() {
+    DialogService.deregister(context);
     _nameController.dispose();
     _lifeController.dispose();
     super.dispose();

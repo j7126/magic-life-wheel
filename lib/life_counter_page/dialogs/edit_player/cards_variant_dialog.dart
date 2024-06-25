@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
+import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
@@ -20,6 +21,18 @@ class CardsVariantDialog extends StatefulWidget {
 }
 
 class _CardsVariantDialogState extends State<CardsVariantDialog> {
+  @override
+  void initState() {
+    DialogService.register(context);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    DialogService.deregister(context);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     cardSelector(CardSet card) {

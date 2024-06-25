@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:magic_life_wheel/mtgjson/mtgjson_data_loader.dart';
@@ -20,6 +21,9 @@ class _AppState extends State<App> {
   bool settingsReady = false;
   bool get ready => settingsReady;
 
+  String? waitingUri;
+  late AppLinks _appLinks;
+
   void mtgDataOnLoad() {
     setState(() {});
   }
@@ -34,6 +38,17 @@ class _AppState extends State<App> {
   @override
   void initState() {
     WidgetsFlutterBinding.ensureInitialized();
+
+    _appLinks = AppLinks();
+    _appLinks.uriLinkStream.listen((uri) {
+      var str = uri.toString();
+      if (str.startsWith(Service.appBaseUrl) && str != Service.appBaseUrl) {
+        setState(() {
+          waitingUri = str;
+        });
+      }
+    });
+
     Service.dataLoader = MTGDataLoader(mtgDataOnLoad);
     loadSettingsService();
     super.initState();
@@ -54,7 +69,14 @@ class _AppState extends State<App> {
             useMaterial3: true,
           ),
           home: ready
-              ? const LifeCounterPage()
+              ? LifeCounterPage(
+                  waitingUri: waitingUri,
+                  onUriConsumed: () {
+                    setState(() {
+                      waitingUri = null;
+                    });
+                  },
+                )
               : const Center(
                   child: CircularProgressIndicator(),
                 ),
