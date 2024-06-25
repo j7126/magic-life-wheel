@@ -120,7 +120,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                       child: Text(
                                         widget.player.uuid == player.uuid && dmg <= 0 ? "me" : dmg.toString(),
                                         style: TextStyle(
-                                          shadows: card != null || (!partner && player.background.customImage != null)
+                                          shadows: card != null || (!partner && player.background.hasBackground)
                                               ? [
                                                   const Shadow(
                                                     offset: Offset(0.5, 0.5),
