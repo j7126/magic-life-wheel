@@ -97,7 +97,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                         : 0,
                     child: Card(
                       clipBehavior: Clip.antiAlias,
-                      margin: const EdgeInsets.all(2.0),
+                      margin: const EdgeInsets.all(1.0),
                       child: Stack(
                         children: [
                           if (card != null)
@@ -226,21 +226,29 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                   );
                 }
 
-                return SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: counter(),
-                      ),
-                      if (player.cardPartner != null)
-                        Expanded(
-                          child: counter(
-                            partner: true,
-                          ),
-                        ),
-                    ],
+                return Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Flex(
+                          direction: constraints.maxWidth > constraints.maxHeight ? Axis.horizontal : Axis.vertical,
+                          children: [
+                            Expanded(
+                              child: counter(),
+                            ),
+                            if (player.cardPartner != null)
+                              Expanded(
+                                child: counter(
+                                  partner: true,
+                                ),
+                              ),
+                          ],
+                        );
+                      }
+                    ),
                   ),
                 );
               },
