@@ -1,11 +1,11 @@
 {
-    "name": "magic_life_wheel",
-    "short_name": "magic_life_wheel",
+    "name": "Magic Life Wheel",
+    "short_name": "Magic Life Wheel",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#5fb356",
     "theme_color": "#5fb356",
-    "description": "A new Flutter project.",
+    "description": "A simple life counter app.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
