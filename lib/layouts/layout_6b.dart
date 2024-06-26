@@ -8,7 +8,13 @@ class Layout6b extends Layout {
   int get players => 6;
 
   @override
-  Widget build(BuildContext context, List<Player> players, Widget Function(int i, int turns) counterParentBuilder) {
+  Widget build(
+    BuildContext context,
+    List<Player> players,
+    Widget Function(int i, int turns) counterParentBuilder, {
+    double gap = 8,
+    bool evenFlex = false,
+  }) {
     assert(players.length == this.players);
 
     counter(int x) {
@@ -22,42 +28,42 @@ class Layout6b extends Layout {
     return Column(
       children: [
         Expanded(
-          flex: 2,
+          flex: evenFlex ? 1 : 2,
           child: counter(3),
         ),
-        const Gap(8),
+        Gap(gap),
         Expanded(
-          flex: 3,
+          flex: evenFlex ? 1 : 3,
           child: Row(
             children: [
               Expanded(
                 child: counter(2),
               ),
-              const Gap(8),
+              Gap(gap),
               Expanded(
                 child: counter(4),
               ),
             ],
           ),
         ),
-        const Gap(8),
+        Gap(gap),
         Expanded(
-          flex: 3,
+          flex: evenFlex ? 1 : 3,
           child: Row(
             children: [
               Expanded(
                 child: counter(1),
               ),
-              const Gap(8),
+              Gap(gap),
               Expanded(
                 child: counter(5),
               ),
             ],
           ),
         ),
-        const Gap(8),
+        Gap(gap),
         Expanded(
-          flex: 2,
+          flex: evenFlex ? 1 : 2,
           child: counter(0),
         ),
       ],

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:keyrune_icons_flutter/keyrune_icons_flutter.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
+import 'package:magic_life_wheel/life_counter_page/counter/commander_damage_grid.dart';
 import 'package:magic_life_wheel/life_counter_page/counter/counter_font_size_group.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/widgets/animated_fade.dart';
@@ -170,17 +171,33 @@ class _CounterState extends State<Counter> {
       ),
     );
 
-    var commanderButton = IconButton(
-      icon: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Icon(
-          KeyruneIcons.ss_cmd,
-          size: 28.0,
-          shadows: onBackgroundShadow,
-        ),
-      ),
-      onPressed: commanderDamage,
-    );
+    var commanderButton = Service.settingsService.pref_commanderDamageMiniGrid
+        ? GestureDetector(
+            onTap: commanderDamage,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 4.0),
+              child: SizedBox(
+                width: 72,
+                height: 66,
+                child: CommanderDamageGrid(
+                  player: widget.player,
+                  layout: widget.layout,
+                  players: widget.players,
+                ),
+              ),
+            ),
+          )
+        : IconButton(
+            icon: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                KeyruneIcons.ss_cmd,
+                size: 28.0,
+                shadows: onBackgroundShadow,
+              ),
+            ),
+            onPressed: commanderDamage,
+          );
 
     return Opacity(
       opacity: widget.player.dead ? 0.2 : 1,
@@ -233,8 +250,15 @@ class _CounterState extends State<Counter> {
                   right: 0,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      top: 32,
-                      bottom: Service.settingsService.pref_enableCommanderDamage ? 32 : 16,
+                      top: Service.settingsService.pref_enableCommanderDamage &&
+                              Service.settingsService.pref_commanderDamageMiniGrid
+                          ? 16
+                          : 32,
+                      bottom: Service.settingsService.pref_enableCommanderDamage
+                          ? Service.settingsService.pref_commanderDamageMiniGrid
+                              ? 48
+                              : 32
+                          : 16,
                       left: 72.0,
                       right: 72.0,
                     ),

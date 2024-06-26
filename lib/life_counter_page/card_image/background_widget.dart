@@ -9,11 +9,13 @@ class BackgroundWidget extends StatelessWidget {
     required this.background,
     this.forceShowNoImageIcon = false,
     this.iconPadding = EdgeInsets.zero,
+    this.showLoader = true,
   });
 
   final Background background;
   final bool forceShowNoImageIcon;
   final EdgeInsets iconPadding;
+  final bool showLoader;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ class BackgroundWidget extends StatelessWidget {
         cardSet: background.card,
         partnerCard: background.cardPartner,
         iconPadding: iconPadding,
+        showLoader: showLoader,
       );
     }
 

@@ -8,7 +8,13 @@ class Layout {
 
   bool rotated = false;
 
-  Widget build(BuildContext context, List<Player> players, Widget Function(int i, int turns) counterParentBuilder) {
+  Widget build(
+    BuildContext context,
+    List<Player> players,
+    Widget Function(int i, int turns) counterParentBuilder, {
+    double gap = 8,
+    bool evenFlex = false,
+  }) {
     assert(players.length == this.players);
     throw UnimplementedError();
   }

@@ -11,7 +11,13 @@ class Layout5b extends Layout {
   bool get symetrical => false;
 
   @override
-  Widget build(BuildContext context, List<Player> players, Widget Function(int i, int turns) counterParentBuilder) {
+  Widget build(
+    BuildContext context,
+    List<Player> players,
+    Widget Function(int i, int turns) counterParentBuilder, {
+    double gap = 8,
+    bool evenFlex = false,
+  }) {
     assert(players.length == this.players);
 
     counter(int x) {
@@ -30,25 +36,25 @@ class Layout5b extends Layout {
               Expanded(
                 child: counter(1),
               ),
-              const Gap(8),
+              Gap(gap),
               Expanded(
                 child: counter(0),
               ),
             ],
           ),
         ),
-        const Gap(8),
+        Gap(gap),
         Expanded(
           child: Column(
             children: [
               Expanded(
                 child: counter(2),
               ),
-              const Gap(8),
+              Gap(gap),
               Expanded(
                 child: counter(3),
               ),
-              const Gap(8),
+              Gap(gap),
               Expanded(
                 child: counter(4),
               ),

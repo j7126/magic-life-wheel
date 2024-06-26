@@ -42,6 +42,11 @@ class SettingsService {
       _pref_commanderDamageButtonsFacePlayer = commanderDamageButtonsFacePlayer;
     }
 
+    var commanderDamageMiniGrid = prefs.getBool('commanderDamageMiniGrid');
+    if (commanderDamageMiniGrid != null) {
+      _pref_commanderDamageMiniGrid = commanderDamageMiniGrid;
+    }
+
     var showChangingLife = prefs.getBool('showChangingLife');
     if (showChangingLife != null) {
       _pref_showChangingLife = showChangingLife;
@@ -107,6 +112,13 @@ class SettingsService {
   set pref_commanderDamageButtonsFacePlayer(bool val) {
     _pref_commanderDamageButtonsFacePlayer = val;
     prefs.setBool('commanderDamageButtonsFacePlayer', val);
+  }
+
+  bool _pref_commanderDamageMiniGrid = false;
+  bool get pref_commanderDamageMiniGrid => _pref_commanderDamageMiniGrid;
+  set pref_commanderDamageMiniGrid(bool val) {
+    _pref_commanderDamageMiniGrid = val;
+    prefs.setBool('commanderDamageMiniGrid', val);
   }
 
   bool _pref_showChangingLife = true;

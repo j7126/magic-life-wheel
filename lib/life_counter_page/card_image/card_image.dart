@@ -11,12 +11,14 @@ class CardImage extends StatefulWidget {
     this.partnerCard,
     this.iconPadding = EdgeInsets.zero,
     this.fullCard = false,
+    this.showLoader = true,
   });
 
   final CardSet? cardSet;
   final CardSet? partnerCard;
   final EdgeInsets iconPadding;
   final bool fullCard;
+  final bool showLoader;
 
   @override
   State<CardImage> createState() => _CardImageState();
@@ -102,12 +104,13 @@ class _CardImageState extends State<CardImage> {
         if (_ready) {
           return Stack(
             children: [
-              Center(
-                child: Padding(
-                  padding: widget.iconPadding,
-                  child: const CircularProgressIndicator(),
+              if (widget.showLoader)
+                Center(
+                  child: Padding(
+                    padding: widget.iconPadding,
+                    child: const CircularProgressIndicator(),
+                  ),
                 ),
-              ),
               Row(
                 children: [
                   Expanded(
@@ -132,12 +135,14 @@ class _CardImageState extends State<CardImage> {
             ],
           );
         } else {
-          return Center(
-            child: Padding(
-              padding: widget.iconPadding,
-              child: const CircularProgressIndicator(),
-            ),
-          );
+          return widget.showLoader
+              ? Center(
+                  child: Padding(
+                    padding: widget.iconPadding,
+                    child: const CircularProgressIndicator(),
+                  ),
+                )
+              : Container();
         }
       } else {
         return Padding(
