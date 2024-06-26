@@ -62,13 +62,19 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
   }
 
   void useData(String? url) async {
-    if (url == null || !url.startsWith(Service.appBaseUrl)) {
-      dataError();
-      return;
-    }
     setState(() {
       importingData = true;
     });
+
+    if (url == null || !url.startsWith(Service.appBaseUrl)) {
+      dataError();
+      await Future.delayed(const Duration(milliseconds: 1000));
+      setState(() {
+        importingData = false;
+      });
+      return;
+    }
+
     var result = await TransferUrlService.parseUrl(url);
     if (result == null) {
       dataError();
@@ -86,6 +92,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
         }
       }
     }
+
     if (mounted) {
       setState(() {
         importingData = false;
