@@ -70,6 +70,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
 
   bool get isGameReset => !players.any((x) => !x.isGameReset);
 
+  bool get isPlayersReset => !players.any((x) => !x.isReset);
+
   void save() async {
     await Future.delayed(const Duration(milliseconds: 200));
     Service.settingsService.conf_layout = layoutId;
@@ -417,7 +419,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     if (result == null) {
       dataError();
     } else {
-      if (await _showImportWarning(result.$1.length)) {
+      if (isPlayersReset || await _showImportWarning(result.$1.length)) {
         if (mounted) {
           await DialogService.closeAllDialogs();
           importGame(result.$1, result.$2);

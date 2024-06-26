@@ -73,7 +73,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
     if (result == null) {
       dataError();
     } else {
-      if (await _showResetWarning(result.$1.length)) {
+      if (!widget.players.any((x) => !x.isReset) || await _showResetWarning(result.$1.length)) {
         if (mounted) {
           setState(() {
             finalising = true;

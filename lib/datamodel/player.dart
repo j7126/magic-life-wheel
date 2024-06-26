@@ -61,7 +61,13 @@ class Player {
     includeFromJson: false,
     includeToJson: false,
   )
-  bool get isGameReset => life == Service.settingsService.pref_startingLife;
+  bool get isGameReset => life == Service.settingsService.pref_startingLife && commanderDamage.isEmpty;
+
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
+  )
+  bool get isReset => isGameReset && name.isEmpty && !background.hasBackground;
 
   void dealCommander(String player, int life) {
     commanderDamage[player] = (commanderDamage[player] ?? 0) - life;
