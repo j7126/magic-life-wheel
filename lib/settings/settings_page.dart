@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:keyrune_icons_flutter/keyrune_icons_flutter.dart';
 import 'package:magic_life_wheel/static_service.dart';
@@ -32,6 +33,26 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
       _advancedAnimationController.forward();
     } else {
       _advancedAnimationController.reverse();
+    }
+  }
+
+  late final AnimationController _commanderAnimationController = AnimationController(
+    duration: const Duration(milliseconds: 200),
+    vsync: this,
+    value: enableCommander ? 1.0 : 0.0,
+  );
+  late final Animation<double> _commanderAnimation = CurvedAnimation(
+    parent: _commanderAnimationController,
+    curve: Curves.fastOutSlowIn,
+  );
+
+  bool get enableCommander => Service.settingsService.pref_enableCommanderDamage;
+  set enableCommander(bool value) {
+    Service.settingsService.pref_enableCommanderDamage = value;
+    if (value) {
+      _commanderAnimationController.forward();
+    } else {
+      _commanderAnimationController.reverse();
     }
   }
 
@@ -75,6 +96,74 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Column(
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                        child: Row(
+                          children: [
+                            const Opacity(
+                              opacity: 0.5,
+                              child: Icon(
+                                Icons.favorite_outline,
+                                size: 32,
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                child: Opacity(
+                                  opacity: 0.9,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Starting Life",
+                                        style: Theme.of(context).textTheme.titleLarge,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                      Text(
+                                        "The starting life total for players.",
+                                        style: Theme.of(context).textTheme.titleSmall,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            DropdownMenu<int>(
+                              controller: startingLifeController,
+                              enableFilter: false,
+                              requestFocusOnTap: true,
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                              inputDecorationTheme: const InputDecorationTheme(
+                                filled: false,
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(vertical: 2.0),
+                              ),
+                              textStyle: const TextStyle(
+                                fontSize: 24,
+                              ),
+                              width: 94,
+                              onSelected: (int? val) {
+                                setState(() {
+                                  if (val != null) {
+                                    Service.settingsService.pref_startingLife = val;
+                                  }
+                                });
+                              },
+                              dropdownMenuEntries: [20, 30, 40, 60]
+                                  .map(
+                                    (e) => DropdownMenuEntry<int>(
+                                      value: e,
+                                      label: e.toString(),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Divider(),
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -130,83 +219,15 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                         ),
                       ),
                       const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-                        child: Row(
-                          children: [
-                            const Opacity(
-                              opacity: 0.5,
-                              child: Icon(
-                                Icons.favorite_outline,
-                                size: 32,
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                child: Opacity(
-                                  opacity: 0.9,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Starting Life",
-                                        style: Theme.of(context).textTheme.titleLarge,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
-                                      Text(
-                                        "The starting life total for players.",
-                                        style: Theme.of(context).textTheme.titleSmall,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            DropdownMenu<int>(
-                              controller: startingLifeController,
-                              enableFilter: false,
-                              requestFocusOnTap: true,
-                              inputDecorationTheme: const InputDecorationTheme(
-                                filled: false,
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.symmetric(vertical: 2.0),
-                              ),
-                              textStyle: const TextStyle(
-                                fontSize: 24,
-                              ),
-                              width: 94,
-                              onSelected: (int? val) {
-                                setState(() {
-                                  if (val != null) {
-                                    Service.settingsService.pref_startingLife = val;
-                                  }
-                                });
-                              },
-                              dropdownMenuEntries: [20, 30, 40, 60]
-                                  .map(
-                                    (e) => DropdownMenuEntry<int>(
-                                      value: e,
-                                      label: e.toString(),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Divider(),
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            Service.settingsService.pref_enableCommanderDamage =
-                                !Service.settingsService.pref_enableCommanderDamage;
+                            enableCommander = !enableCommander;
                           });
                         },
                         behavior: HitTestBehavior.opaque,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                          padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 12.0, bottom: 0.0),
                           child: Row(
                             children: [
                               const Opacity(
@@ -240,10 +261,10 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 ),
                               ),
                               Switch(
-                                value: Service.settingsService.pref_enableCommanderDamage,
+                                value: enableCommander,
                                 onChanged: (bool value) {
                                   setState(() {
-                                    Service.settingsService.pref_enableCommanderDamage = value;
+                                    enableCommander = value;
                                   });
                                 },
                               ),
@@ -251,61 +272,136 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                           ),
                         ),
                       ),
-                      const Divider(),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            Service.settingsService.pref_getScryfallImages =
-                                !Service.settingsService.pref_getScryfallImages;
-                          });
-                        },
-                        behavior: HitTestBehavior.opaque,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-                          child: Row(
-                            children: [
-                              const Opacity(
-                                opacity: 0.5,
-                                child: Icon(
-                                  Icons.image_outlined,
-                                  size: 32,
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Opacity(
-                                    opacity: 0.9,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Card images",
-                                          style: Theme.of(context).textTheme.titleLarge,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                        Text(
-                                          "Fetch card images from scryfall.",
-                                          style: Theme.of(context).textTheme.titleSmall,
-                                        ),
-                                      ],
+                      SizeTransition(
+                        sizeFactor: _commanderAnimation,
+                        axis: Axis.vertical,
+                        axisAlignment: -1,
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  Service.settingsService.pref_asymmetricalCommanderDamageButtons =
+                                      !Service.settingsService.pref_asymmetricalCommanderDamageButtons;
+                                });
+                              },
+                              behavior: HitTestBehavior.opaque,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                child: Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 32,
+                                      height: 32,
                                     ),
-                                  ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                        child: Opacity(
+                                          opacity: 0.9,
+                                          child: Text(
+                                            "Larger + button.",
+                                            style: Theme.of(context).textTheme.titleLarge,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: Service.settingsService.pref_asymmetricalCommanderDamageButtons,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          Service.settingsService.pref_asymmetricalCommanderDamageButtons = value;
+                                        });
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Switch(
-                                value: Service.settingsService.pref_getScryfallImages,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    Service.settingsService.pref_getScryfallImages = value;
-                                  });
-                                },
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  Service.settingsService.pref_commanderDamageButtonsFacePlayer =
+                                      !Service.settingsService.pref_commanderDamageButtonsFacePlayer;
+                                });
+                              },
+                              behavior: HitTestBehavior.opaque,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                child: Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 32,
+                                      height: 32,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                        child: Opacity(
+                                          opacity: 0.9,
+                                          child: Text(
+                                            "Buttons face player",
+                                            style: Theme.of(context).textTheme.titleLarge,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: Service.settingsService.pref_commanderDamageButtonsFacePlayer,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          Service.settingsService.pref_commanderDamageButtonsFacePlayer = value;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  Service.settingsService.pref_commanderDamageMiniGrid =
+                                      !Service.settingsService.pref_commanderDamageMiniGrid;
+                                });
+                              },
+                              behavior: HitTestBehavior.opaque,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                child: Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 32,
+                                      height: 32,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                        child: Opacity(
+                                          opacity: 0.9,
+                                          child: Text(
+                                            "Mini Grid",
+                                            style: Theme.of(context).textTheme.titleLarge,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: Service.settingsService.pref_commanderDamageMiniGrid,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          Service.settingsService.pref_commanderDamageMiniGrid = value;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                      const Gap(12.0),
                     ],
                   ),
                 ),
@@ -380,6 +476,61 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                             GestureDetector(
                               onTap: () {
                                 setState(() {
+                                  Service.settingsService.pref_getScryfallImages =
+                                      !Service.settingsService.pref_getScryfallImages;
+                                });
+                              },
+                              behavior: HitTestBehavior.opaque,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                                child: Row(
+                                  children: [
+                                    const Opacity(
+                                      opacity: 0.5,
+                                      child: Icon(
+                                        Icons.image_outlined,
+                                        size: 32,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                        child: Opacity(
+                                          opacity: 0.9,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Card images",
+                                                style: Theme.of(context).textTheme.titleLarge,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                              Text(
+                                                "Fetch card images from scryfall.",
+                                                style: Theme.of(context).textTheme.titleSmall,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: Service.settingsService.pref_getScryfallImages,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          Service.settingsService.pref_getScryfallImages = value;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const Divider(),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
                                   Service.settingsService.pref_enableSaveState =
                                       !Service.settingsService.pref_enableSaveState;
                                 });
@@ -424,171 +575,6 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                       onChanged: (bool value) {
                                         setState(() {
                                           Service.settingsService.pref_enableSaveState = value;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const Divider(),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  Service.settingsService.pref_asymmetricalCommanderDamageButtons =
-                                      !Service.settingsService.pref_asymmetricalCommanderDamageButtons;
-                                });
-                              },
-                              behavior: HitTestBehavior.opaque,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-                                child: Row(
-                                  children: [
-                                    const Opacity(
-                                      opacity: 0.5,
-                                      child: Icon(
-                                        Icons.space_dashboard_outlined,
-                                        size: 32,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: Opacity(
-                                          opacity: 0.9,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Asymmetrical Buttons",
-                                                style: Theme.of(context).textTheme.titleLarge,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                              ),
-                                              Text(
-                                                "Commander damage larger + button.",
-                                                style: Theme.of(context).textTheme.titleSmall,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Switch(
-                                      value: Service.settingsService.pref_asymmetricalCommanderDamageButtons,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          Service.settingsService.pref_asymmetricalCommanderDamageButtons = value;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const Divider(),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  Service.settingsService.pref_commanderDamageButtonsFacePlayer =
-                                      !Service.settingsService.pref_commanderDamageButtonsFacePlayer;
-                                });
-                              },
-                              behavior: HitTestBehavior.opaque,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-                                child: Row(
-                                  children: [
-                                    const Opacity(
-                                      opacity: 0.5,
-                                      child: Icon(
-                                        Icons.rotate_90_degrees_ccw,
-                                        size: 32,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: Opacity(
-                                          opacity: 0.9,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Buttons Face Player",
-                                                style: Theme.of(context).textTheme.titleLarge,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                              ),
-                                              Text(
-                                                "The commander damage buttons will face the player taking the damage.",
-                                                style: Theme.of(context).textTheme.titleSmall,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Switch(
-                                      value: Service.settingsService.pref_commanderDamageButtonsFacePlayer,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          Service.settingsService.pref_commanderDamageButtonsFacePlayer = value;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const Divider(),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  Service.settingsService.pref_commanderDamageMiniGrid =
-                                      !Service.settingsService.pref_commanderDamageMiniGrid;
-                                });
-                              },
-                              behavior: HitTestBehavior.opaque,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-                                child: Row(
-                                  children: [
-                                    const Opacity(
-                                      opacity: 0.5,
-                                      child: Icon(
-                                        Icons.grid_3x3,
-                                        size: 32,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: Opacity(
-                                          opacity: 0.9,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Commander Mini Grid",
-                                                style: Theme.of(context).textTheme.titleLarge,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                              ),
-                                              Text(
-                                                "Commander damage displayed in mini grid.",
-                                                style: Theme.of(context).textTheme.titleSmall,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Switch(
-                                      value: Service.settingsService.pref_commanderDamageMiniGrid,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          Service.settingsService.pref_commanderDamageMiniGrid = value;
                                         });
                                       },
                                     ),
