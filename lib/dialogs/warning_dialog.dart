@@ -58,11 +58,11 @@ class _WarningDialogState extends State<WarningDialog> {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: FilledButton(
                   style: const ButtonStyle(
-                    padding: MaterialStatePropertyAll(
+                    padding: WidgetStatePropertyAll(
                       EdgeInsets.symmetric(horizontal: 16.0),
                     ),
-                    backgroundColor: MaterialStatePropertyAll(Colors.red),
-                    foregroundColor: MaterialStatePropertyAll(Colors.white),
+                    backgroundColor: WidgetStatePropertyAll(Colors.red),
+                    foregroundColor: WidgetStatePropertyAll(Colors.white),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop(1);

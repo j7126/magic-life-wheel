@@ -100,12 +100,12 @@ class _CardsVariantDialogState extends State<CardsVariantDialog> {
                           },
                           style: ButtonStyle(
                             padding:
-                                const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                                const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
                             backgroundColor: widget.player.cardPartner?.uuid == card.uuid
-                                ? MaterialStatePropertyAll(Theme.of(context).colorScheme.inversePrimary)
+                                ? WidgetStatePropertyAll(Theme.of(context).colorScheme.inversePrimary)
                                 : null,
                             foregroundColor: widget.player.cardPartner?.uuid == card.uuid
-                                ? MaterialStatePropertyAll(Theme.of(context).colorScheme.inverseSurface)
+                                ? WidgetStatePropertyAll(Theme.of(context).colorScheme.inverseSurface)
                                 : null,
                           ),
                           child: Row(
@@ -140,11 +140,11 @@ class _CardsVariantDialogState extends State<CardsVariantDialog> {
                           });
                         },
                         style: ButtonStyle(
-                          padding: const MaterialStatePropertyAll(
+                          padding: const WidgetStatePropertyAll(
                             EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                           ),
-                          backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.inversePrimary),
-                          foregroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.inverseSurface),
+                          backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.inversePrimary),
+                          foregroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.inverseSurface),
                         ),
                         child: const Text("Partner"),
                       ),

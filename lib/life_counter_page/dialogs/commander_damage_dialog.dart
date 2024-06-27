@@ -145,14 +145,14 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                 Expanded(
                                   child: TextButton(
                                     style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                         const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                                       ),
-                                      foregroundColor: MaterialStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onBackground,
+                                      foregroundColor: WidgetStateProperty.all<Color>(
+                                        Theme.of(context).colorScheme.onSurface,
                                       ),
-                                      overlayColor: MaterialStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                      overlayColor: WidgetStateProperty.all<Color>(
+                                        Theme.of(context).colorScheme.onSurface.withAlpha(30),
                                       ),
                                     ),
                                     onPressed: () {
@@ -183,14 +183,14 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                   flex: Service.settingsService.pref_asymmetricalCommanderDamageButtons ? 2 : 1,
                                   child: TextButton(
                                     style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                         const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                                       ),
-                                      foregroundColor: MaterialStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onBackground,
+                                      foregroundColor: WidgetStateProperty.all<Color>(
+                                        Theme.of(context).colorScheme.onSurface,
                                       ),
-                                      overlayColor: MaterialStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                      overlayColor: WidgetStateProperty.all<Color>(
+                                        Theme.of(context).colorScheme.onSurface.withAlpha(30),
                                       ),
                                     ),
                                     onPressed: () {

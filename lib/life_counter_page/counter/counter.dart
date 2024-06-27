@@ -296,20 +296,20 @@ class _CounterState extends State<Counter> {
                           onLongPressEnd: (e) => handleLongPressEnd(),
                           child: TextButton(
                             style: ButtonStyle(
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                 const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                               ),
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                Theme.of(context).colorScheme.onBackground,
+                              foregroundColor: WidgetStateProperty.all<Color>(
+                                Theme.of(context).colorScheme.onSurface,
                               ),
-                              overlayColor: MaterialStateProperty.all<Color>(
+                              overlayColor: WidgetStateProperty.all<Color>(
                                 longPressDirection == -1
                                     ? Colors.transparent
-                                    : Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                    : Theme.of(context).colorScheme.onSurface.withAlpha(30),
                               ),
-                              backgroundColor: MaterialStateProperty.all<Color>(
+                              backgroundColor: WidgetStateProperty.all<Color>(
                                 longPressDirection == -1
-                                    ? Theme.of(context).colorScheme.onBackground.withAlpha(30)
+                                    ? Theme.of(context).colorScheme.onSurface.withAlpha(30)
                                     : Colors.transparent,
                               ),
                             ),
@@ -340,20 +340,20 @@ class _CounterState extends State<Counter> {
                           onLongPressEnd: (e) => handleLongPressEnd(),
                           child: TextButton(
                             style: ButtonStyle(
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                 const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                               ),
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                Theme.of(context).colorScheme.onBackground,
+                              foregroundColor: WidgetStateProperty.all<Color>(
+                                Theme.of(context).colorScheme.onSurface,
                               ),
-                              overlayColor: MaterialStateProperty.all<Color>(
+                              overlayColor: WidgetStateProperty.all<Color>(
                                 longPressDirection == 1
                                     ? Colors.transparent
-                                    : Theme.of(context).colorScheme.onBackground.withAlpha(30),
+                                    : Theme.of(context).colorScheme.onSurface.withAlpha(30),
                               ),
-                              backgroundColor: MaterialStateProperty.all<Color>(
+                              backgroundColor: WidgetStateProperty.all<Color>(
                                 longPressDirection == 1
-                                    ? Theme.of(context).colorScheme.onBackground.withAlpha(30)
+                                    ? Theme.of(context).colorScheme.onSurface.withAlpha(30)
                                     : Colors.transparent,
                               ),
                             ),

@@ -292,12 +292,12 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                         });
                       },
                       style: ButtonStyle(
-                        padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                        padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
                         backgroundColor: widget.player.cardPartner?.name == selectedCard.name
-                            ? MaterialStatePropertyAll(Theme.of(context).colorScheme.inversePrimary)
+                            ? WidgetStatePropertyAll(Theme.of(context).colorScheme.inversePrimary)
                             : null,
                         foregroundColor: widget.player.cardPartner?.name == selectedCard.name
-                            ? MaterialStatePropertyAll(Theme.of(context).colorScheme.inverseSurface)
+                            ? WidgetStatePropertyAll(Theme.of(context).colorScheme.inverseSurface)
                             : null,
                       ),
                       child: Row(
@@ -335,9 +335,9 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                           },
                           style: ButtonStyle(
                             padding:
-                                const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
-                            backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.inversePrimary),
-                            foregroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.inverseSurface),
+                                const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                            backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.inversePrimary),
+                            foregroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.inverseSurface),
                           ),
                           child: const Text("Partner"),
                         ),
@@ -349,7 +349,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                         child: FilledButton.tonal(
                           onPressed: () => selectVariant(card),
                           style: const ButtonStyle(
-                            padding: MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                            padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
                           ),
                           child: Text("${card.length} Variants"),
                         ),
@@ -612,7 +612,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                                           ? setCustomImage
                                                           : setColors,
                                                       style: const ButtonStyle(
-                                                        padding: MaterialStatePropertyAll(
+                                                        padding: WidgetStatePropertyAll(
                                                             EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
                                                       ),
                                                       child: Row(

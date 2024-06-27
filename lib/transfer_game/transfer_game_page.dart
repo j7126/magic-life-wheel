@@ -215,7 +215,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                     children: [
                       TextButton(
                         style: ButtonStyle(
-                          foregroundColor: MaterialStatePropertyAll(
+                          foregroundColor: WidgetStatePropertyAll(
                             HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.4).toColor(),
                           ),
                         ),
@@ -315,7 +315,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                             color: Colors.black,
                           ),
                       unselectedTextStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.onBackground,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                       colors: [
                         Colors.white,
@@ -382,7 +382,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                                       height: 38,
                                       child: FilledButton(
                                         style: const ButtonStyle(
-                                          padding: MaterialStatePropertyAll(
+                                          padding: WidgetStatePropertyAll(
                                             EdgeInsets.symmetric(
                                               vertical: 2.0,
                                               horizontal: 20.0,
@@ -461,7 +461,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                                                         children: [
                                                           TextButton(
                                                             style: ButtonStyle(
-                                                              foregroundColor: MaterialStatePropertyAll(
+                                                              foregroundColor: WidgetStatePropertyAll(
                                                                 HSLColor.fromColor(
                                                                         Theme.of(context).colorScheme.primary)
                                                                     .withLightness(0.4)
@@ -588,7 +588,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                                   ? null
                                   : FilledButton(
                                       style: const ButtonStyle(
-                                        padding: MaterialStatePropertyAll(
+                                        padding: WidgetStatePropertyAll(
                                           EdgeInsets.symmetric(
                                             vertical: 2.0,
                                             horizontal: 20.0,

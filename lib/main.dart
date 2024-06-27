@@ -61,11 +61,10 @@ class _AppState extends State<App> {
         return MaterialApp(
           title: Service.appName,
           theme: ThemeData(
-            colorScheme: darkDynamic ??
-                ColorScheme.fromSeed(
-                  seedColor: Colors.green,
-                  brightness: Brightness.dark,
-                ),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: darkDynamic?.primary ?? Colors.green,
+              brightness: Brightness.dark,
+            ),
             useMaterial3: true,
           ),
           home: ready

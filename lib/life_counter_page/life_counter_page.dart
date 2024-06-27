@@ -503,19 +503,19 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     });
 
     var barButtonStyle = ButtonStyle(
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       ),
-      foregroundColor: MaterialStateProperty.resolveWith<Color?>(
-        (Set<MaterialState> states) {
-          if (states.contains(MaterialState.disabled)) {
+      foregroundColor: WidgetStateProperty.resolveWith<Color?>(
+        (Set<WidgetState> states) {
+          if (states.contains(WidgetState.disabled)) {
             return null;
           }
-          return Theme.of(context).colorScheme.onBackground;
+          return Theme.of(context).colorScheme.onSurface;
         },
       ),
-      overlayColor: MaterialStateProperty.all<Color>(
-        Theme.of(context).colorScheme.onBackground.withAlpha(20),
+      overlayColor: WidgetStateProperty.all<Color>(
+        Theme.of(context).colorScheme.onSurface.withAlpha(20),
       ),
     );
 
