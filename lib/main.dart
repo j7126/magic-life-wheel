@@ -1,10 +1,12 @@
 import 'package:app_links/app_links.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:magic_life_wheel/mtgjson/mtgjson_data_loader.dart';
 import 'package:magic_life_wheel/life_counter_page/life_counter_page.dart';
 import 'package:magic_life_wheel/settings/settings.dart';
 import 'package:magic_life_wheel/static_service.dart';
+import 'package:magic_life_wheel/web_util/index.dart';
 
 void main() {
   runApp(const App());
@@ -43,6 +45,9 @@ class _AppState extends State<App> {
     _appLinks.uriLinkStream.listen((uri) {
       var str = uri.toString();
       if (str.startsWith(Service.appBaseUrl) && str != Service.appBaseUrl) {
+        if (kIsWeb) {
+          pushHome();
+        }
         setState(() {
           waitingUri = str;
         });
