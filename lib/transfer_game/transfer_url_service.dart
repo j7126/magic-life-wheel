@@ -30,8 +30,7 @@ class TransferUrlService {
         resultMap["layoutId"] = layoutId;
         var jsonResult = jsonEncode(resultMap);
         var jsonResultUtf8 = utf8.encode(jsonResult);
-        var gzipJsonResult = gzip.encode(jsonResultUtf8);
-        var base64Result = base64.encode(gzipJsonResult);
+        var base64Result = base64.encode(jsonResultUtf8);
         return "${Service.appBaseUrl}?import=$base64Result";
       },
       (players, layoutId),
@@ -50,8 +49,7 @@ class TransferUrlService {
           var data = match.first[2]!;
           try {
             var base64Decoded = base64.decode(data);
-            var gzipDecoded = gzip.decode(base64Decoded);
-            var utf8Decoded = utf8.decode(gzipDecoded);
+            var utf8Decoded = utf8.decode(base64Decoded);
             var jsonDecoded = jsonDecode(utf8Decoded) as Map<String, dynamic>;
             return jsonDecoded;
           } catch (_) {}
