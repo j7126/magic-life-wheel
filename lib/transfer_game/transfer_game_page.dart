@@ -421,7 +421,9 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                           ],
                         ),
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            const SizedBox(width: double.infinity),
                             Text(
                               "Scan the QR code displayed on the other device.",
                               style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
