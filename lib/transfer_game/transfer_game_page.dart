@@ -356,6 +356,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                       children: [
                         Column(
                           children: [
+                            const SizedBox(width: double.infinity),
                             Text(
                               "Use the \"Import\" tab to scan this QR code on the other device.",
                               style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
