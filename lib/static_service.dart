@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:magic_life_wheel/mtgjson/mtgjson_data_loader.dart';
 import 'package:magic_life_wheel/settings/settings.dart';
 
@@ -9,5 +10,5 @@ class Service {
   static late SettingsService settingsService;
   static late MTGDataLoader dataLoader;
 
-  static final bool supportScanner = Platform.isAndroid || Platform.isIOS;
+  static final bool supportScanner = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 }

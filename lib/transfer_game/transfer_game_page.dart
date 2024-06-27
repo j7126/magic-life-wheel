@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
@@ -163,7 +164,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
         }
       });
     });
-    if (SysInfo.getTotalPhysicalMemory() < 3500000000) {
+    if (!kIsWeb && SysInfo.getTotalPhysicalMemory() < 3500000000) {
       showLowPerformanceWarning = true;
     }
   }
