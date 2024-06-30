@@ -414,7 +414,16 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             leadingIcon: const Icon(Icons.color_lens_outlined),
                             child: const Text("Color Background"),
                           ),
-                          const Divider(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 7.0),
+                            child: Opacity(
+                              opacity: 0.5,
+                              child: Container(
+                                height: 2.0,
+                                color: DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant,
+                              ),
+                            ),
+                          ),
                           MenuItemButton(
                             onPressed: widget.player.background.hasBackground
                                 ? () {
