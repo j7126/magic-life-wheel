@@ -206,7 +206,12 @@ class _CounterState extends State<Counter> {
           var fontSize = max(
             min(
               min(
-                constraints.maxHeight - 112.0,
+                constraints.maxHeight -
+                    (Service.settingsService.pref_enableCommanderDamage
+                        ? Service.settingsService.pref_commanderDamageMiniGrid
+                            ? 102
+                            : 82
+                        : 20),
                 (constraints.maxWidth - 144.0) * 0.9,
               ),
               128.0,
@@ -264,6 +269,7 @@ class _CounterState extends State<Counter> {
                     ),
                     child: Center(
                       child: FittedBox(
+                        fit: Service.settingsService.pref_maximiseFontSize ? BoxFit.contain : BoxFit.none,
                         child: Text(
                           widget.player.dead ? "" : widget.player.life.toString(),
                           maxLines: 1,
