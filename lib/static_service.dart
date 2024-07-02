@@ -11,4 +11,5 @@ class Service {
   static late MTGDataLoader dataLoader;
 
   static final bool supportScanner = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+  static final bool supportFullScreenButton = kIsWeb || (Platform.isLinux || Platform.isWindows || Platform.isMacOS);
 }

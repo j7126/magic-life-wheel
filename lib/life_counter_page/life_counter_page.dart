@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_fullscreen/flutter_fullscreen.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/dialogs/message_dialog.dart';
@@ -36,7 +37,7 @@ class LifeCounterPage extends StatefulWidget {
   State<LifeCounterPage> createState() => _LifeCounterPageState();
 }
 
-class _LifeCounterPageState extends State<LifeCounterPage> {
+class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListener {
   Layout? layout;
   List<Player> players = [];
   int numPlayers = 0;
@@ -51,6 +52,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   bool processingImport = false;
 
   bool triggerReRender = false;
+  bool isFullScreen = false;
+  bool isFullScreenForced = false;
 
   List<Player>? oldPlayers;
   int dragging = 0;
@@ -450,6 +453,9 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    FullScreen.addListener(this);
+    isFullScreen = FullScreen.isFullScreen;
+    isFullScreenForced = FullScreen.isFullScreenForced;
     if (Service.settingsService.conf_players.length < 2 || Service.settingsService.conf_players.length > 6) {
       setPlayers(3);
     } else {
@@ -476,7 +482,22 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   @override
   void dispose() {
     _menuButtonFocusNode.dispose();
+    FullScreen.removeListener(this);
     super.dispose();
+  }
+
+  @override
+  void onFullScreenChanged(bool enabled, SystemUiMode? _) {
+    setState(() {
+      isFullScreen = enabled;
+    });
+  }
+
+  @override
+  void onFullScreenForcedChanged(bool forced) {
+    setState(() {
+      isFullScreenForced = forced;
+    });
   }
 
   @override
@@ -904,6 +925,17 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                               ),
                             ),
                           ),
+                          if (Service.supportFullScreenButton)
+                            IconButton(
+                              onPressed: !isFullScreenForced
+                                  ? () {
+                                      FullScreen.setFullScreen(!isFullScreen);
+                                    }
+                                  : null,
+                              icon: Icon(
+                                (isFullScreen || isFullScreenForced) ? Icons.fullscreen_exit : Icons.fullscreen,
+                              ),
+                            ),
                         ],
                       ),
               ],
