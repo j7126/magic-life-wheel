@@ -151,7 +151,7 @@ class _CounterState extends State<Counter> {
         : null;
 
     var playerNameBtn = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
@@ -237,17 +237,6 @@ class _CounterState extends State<Counter> {
                 BackgroundWidget(
                   background: widget.player.background,
                 ),
-                if (Service.settingsService.pref_showChangingLife && changedLife != 0)
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 42.0),
-                      child: Text(
-                        (changedLife > 0 ? "+" : "") + changedLife.toString(),
-                        style: TextStyle(fontSize: 16, shadows: onBackgroundShadow),
-                      ),
-                    ),
-                  ),
                 Positioned(
                   top: 0,
                   bottom: 0,
@@ -389,7 +378,46 @@ class _CounterState extends State<Counter> {
                 ),
                 Align(
                   alignment: Alignment.topCenter,
-                  child: playerNameBtn,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Service.settingsService.pref_showChangingLife && changedLife < 0
+                              ? Container(
+                                  constraints: const BoxConstraints(minWidth: 38),
+                                  child: Text(
+                                    changedLife.toString(),
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      shadows: onBackgroundShadow,
+                                    ),
+                                    maxLines: 1,
+                                  ),
+                                )
+                              : const SizedBox(width: 38, height: 0),
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: playerNameBtn,
+                          ),
+                          Service.settingsService.pref_showChangingLife && changedLife > 0
+                              ? Container(
+                                  constraints: const BoxConstraints(minWidth: 38),
+                                  child: Text(
+                                    "+$changedLife",
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      shadows: onBackgroundShadow,
+                                    ),
+                                    maxLines: 1,
+                                  ),
+                                )
+                              : const SizedBox(width: 38, height: 0),
+                        ],
+                      );
+                    }),
+                  ),
                 ),
                 if (Service.settingsService.pref_enableCommanderDamage)
                   Align(
