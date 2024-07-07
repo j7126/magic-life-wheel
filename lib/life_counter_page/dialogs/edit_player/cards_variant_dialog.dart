@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
+import 'package:magic_life_wheel/dialogs/card_full_dialog.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
@@ -74,9 +75,36 @@ class _CardsVariantDialogState extends State<CardsVariantDialog> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: CardImage(
-                      key: Key(card.uuid),
-                      cardSet: card,
+                    child: Stack(
+                      children: [
+                        CardImage(
+                          key: Key(card.uuid),
+                          cardSet: card,
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.open_in_new,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black,
+                                  blurRadius: 2,
+                                  offset: Offset(1, 1),
+                                ),
+                              ],
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => CardFullDialog(
+                                  card: card,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
