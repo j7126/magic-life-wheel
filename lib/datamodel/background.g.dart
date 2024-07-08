@@ -15,8 +15,9 @@ Background _$BackgroundFromJson(Map<String, dynamic> json) => Background()
       : CardSet.fromJson(json['_cardPartner'] as Map<String, dynamic>)
   .._customImage =
       const Uint8ListConverter().fromJson(json['_customImage'] as String?)
-  .._colors =
-      (json['_colors'] as List<dynamic>?)?.map((e) => e as int).toList();
+  .._colors = (json['_colors'] as List<dynamic>?)
+      ?.map((e) => (e as num).toInt())
+      .toList();
 
 Map<String, dynamic> _$BackgroundToJson(Background instance) =>
     <String, dynamic>{

@@ -57,6 +57,9 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
         if (commanderOnly && !(card.leadershipSkills?.commander ?? false)) {
           return false;
         }
+        if (card.cardSearchStringAlt != null && card.cardSearchStringAlt!.contains(finalSearchStr)) {
+          return true;
+        }
         return card.cardSearchString.contains(finalSearchStr);
       },
     );
@@ -215,7 +218,10 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
 
   @override
   Widget build(BuildContext context) {
-    cardSelector(List<CardSet>? card) {
+    cardSelector(
+      List<CardSet>? card, {
+      bool useSelectedName = false,
+    }) {
       if (card == null) {
         return Container();
       }
@@ -232,7 +238,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                 Padding(
                   padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
                   child: Text(
-                    card.first.name,
+                    useSelectedName ? selectedCard.displayName : card.first.displayName,
                     style: const TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
@@ -590,9 +596,12 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                     ),
                                     child: AspectRatio(
                                       aspectRatio: 1.1,
-                                      child: cardSelector(Service.dataLoader.allSetCards?.data
-                                          .where((element) => element.name == widget.player.card?.name)
-                                          .toList()),
+                                      child: cardSelector(
+                                        Service.dataLoader.allSetCards?.data
+                                            .where((element) => element.name == widget.player.card?.name)
+                                            .toList(),
+                                        useSelectedName: true,
+                                      ),
                                     ),
                                   ),
                                 ),

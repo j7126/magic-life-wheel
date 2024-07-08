@@ -34,9 +34,12 @@ class CardSet {
   LeadershipSkills? leadershipSkills;
   List<String>? keywords;
   String? text;
+  String? flavorName;
 
   String cardSearchString;
   List<String> cardSearchStringWords;
+  String? cardSearchStringAlt;
+  List<String>? cardSearchStringWordsAlt;
 
   factory CardSet.fromJson(Map<String, dynamic> json) => _$CardSetFromJson(json);
 
@@ -71,4 +74,6 @@ class CardSet {
   }
 
   bool get isPartner => keywords?.contains("Partner") ?? false;
+
+  String get displayName => flavorName ?? name;
 }

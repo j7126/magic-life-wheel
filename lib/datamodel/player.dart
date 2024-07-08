@@ -93,7 +93,7 @@ class Player {
 
   String getDisplayName(int i) {
     if (name.isEmpty) {
-      return background.card?.name ?? "Player ${i + 1}";
+      return background.card?.displayName ?? "Player ${i + 1}";
     } else {
       return name;
     }

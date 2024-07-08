@@ -47,7 +47,7 @@ class _CardsVariantDialogState extends State<CardsVariantDialog> {
                 Padding(
                   padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
                   child: Text(
-                    card.name,
+                    card.displayName,
                     style: const TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,

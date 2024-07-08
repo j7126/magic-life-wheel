@@ -46,7 +46,7 @@ class _CardFullDialogState extends State<CardFullDialog> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: Text(
-                      widget.card.name,
+                      widget.card.displayName,
                       style: Theme.of(context).textTheme.titleLarge,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
