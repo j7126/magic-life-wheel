@@ -88,7 +88,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
 
                 Widget counter({bool partner = false}) {
                   var card = partner ? player.cardPartner : player.card;
-                  var cmdid = partner ? (card?.uuid ?? player.uuid) : player.uuid;
+                  var cmdid = partner ? "${player.uuid}_partner" : player.uuid;
                   var dmg = (widget.player.commanderDamage[cmdid] ?? 0);
 
                   return RotatedBox(
