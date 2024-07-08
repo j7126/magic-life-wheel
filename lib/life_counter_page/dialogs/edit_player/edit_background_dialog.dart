@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as image_manipulation;
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
+import 'package:magic_life_wheel/dialogs/card_full_dialog.dart';
 import 'package:magic_life_wheel/dialogs/message_dialog.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/set_colors_dialog.dart';
 import 'package:magic_life_wheel/icons/custom_icons.dart';
@@ -259,9 +260,36 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: CardImage(
-                      key: Key(selectedCard.uuid),
-                      cardSet: selectedCard,
+                    child: Stack(
+                      children: [
+                        CardImage(
+                          key: Key(selectedCard.uuid),
+                          cardSet: selectedCard,
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.open_in_new,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black,
+                                  blurRadius: 2,
+                                  offset: Offset(1, 1),
+                                ),
+                              ],
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => CardFullDialog(
+                                  card: selectedCard!,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
