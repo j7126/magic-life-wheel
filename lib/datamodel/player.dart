@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:magic_life_wheel/datamodel/background.dart';
+import 'package:magic_life_wheel/datamodel/damage_event.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:uuid/uuid.dart';
@@ -18,6 +19,10 @@ class Player {
   late String uuid;
   String name;
   Background background = Background();
+  bool enableDead = true;
+  late int life;
+  Map<String, int> commanderDamage = {};
+  List<DamageEvent> damageHistory = [];
 
   @JsonKey(
     includeFromJson: false,
@@ -39,8 +44,6 @@ class Player {
   )
   bool forcePartner = false;
 
-  Map<String, int> commanderDamage = {};
-
   @JsonKey(
     includeFromJson: false,
     includeToJson: false,
@@ -52,10 +55,6 @@ class Player {
     includeToJson: false,
   )
   bool get dead => (enableDead && life <= 0) || deadByCommander;
-
-  bool enableDead = true;
-
-  late int life;
 
   @JsonKey(
     includeFromJson: false,
@@ -70,16 +69,55 @@ class Player {
   bool get isReset => isGameReset && name.isEmpty && !background.hasBackground;
 
   void dealCommander(String player, int life) {
+    // handle commander
     commanderDamage[player] = (commanderDamage[player] ?? 0) - life;
+    // don't allow going below 0 commander damage
     if ((commanderDamage[player] ?? 0) < 0) {
       life += (commanderDamage[player] ?? 0);
       commanderDamage[player] = 0;
     }
+    // history
+    var now = DateTime.now();
+    if (damageHistory.isNotEmpty &&
+        damageHistory.last.fromCommander == player &&
+        (now.millisecondsSinceEpoch - damageHistory.last.time.millisecondsSinceEpoch) < 5000) {
+      damageHistory.last.change += life;
+      damageHistory.last.time = now;
+      if (damageHistory.last.change == 0) {
+        damageHistory.removeLast();
+      }
+    } else {
+      damageHistory.add(DamageEvent(
+        priorLife: this.life,
+        change: life,
+        fromCommander: player,
+      ));
+    }
+    // update life
     this.life += life;
   }
 
   void deal(int life) {
-    if (dead && life > 0 && !deadByCommander) {
+    var fromDead = dead && life > 0 && !deadByCommander;
+    // history
+    var now = DateTime.now();
+    if (!fromDead &&
+        damageHistory.isNotEmpty &&
+        damageHistory.last.fromCommander == null &&
+        (now.millisecondsSinceEpoch - damageHistory.last.time.millisecondsSinceEpoch) < 5000) {
+      damageHistory.last.change += life;
+      damageHistory.last.time = now;
+      if (damageHistory.last.change == 0) {
+        damageHistory.removeLast();
+      }
+    } else {
+      damageHistory.add(DamageEvent(
+        priorLife: fromDead ? 0 : this.life,
+        change: life,
+      ));
+    }
+    // update life
+    if (fromDead) {
       this.life = life;
     } else {
       this.life += life;
@@ -89,6 +127,7 @@ class Player {
   void resetGame() {
     life = Service.settingsService.pref_startingLife;
     commanderDamage.clear();
+    damageHistory.clear();
   }
 
   String getDisplayName(int i) {

@@ -45,7 +45,11 @@ class _CounterState extends State<Counter> {
   Timer? longPressTimer;
   int? longPressDirection;
 
-  int changedLife = 0;
+  int get changedLife => widget.player.damageHistory.isNotEmpty &&
+          widget.player.damageHistory.last.fromCommander == null &&
+          DateTime.now().millisecondsSinceEpoch - widget.player.damageHistory.last.time.millisecondsSinceEpoch < 5000
+      ? widget.player.damageHistory.last.change
+      : 0;
   Timer? lifeChangedTimer;
 
   bool get showMinusButton => !widget.player.dead;
@@ -54,7 +58,10 @@ class _CounterState extends State<Counter> {
   void editPlayer() async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => EditPlayerDialog(player: widget.player),
+      builder: (BuildContext context) => EditPlayerDialog(
+        player: widget.player,
+        players: widget.players,
+      ),
     );
     setState(() {});
     widget.stateChanged?.call();
@@ -77,14 +84,11 @@ class _CounterState extends State<Counter> {
     setState(() {
       widget.player.deal(x);
     });
-    changedLife += x;
     lifeChangedTimer?.cancel();
     lifeChangedTimer = Timer(
-      const Duration(seconds: 5),
+      const Duration(milliseconds: 5001),
       () {
-        setState(() {
-          changedLife = 0;
-        });
+        setState(() {});
         lifeChangedTimer?.cancel();
         lifeChangedTimer = null;
       },

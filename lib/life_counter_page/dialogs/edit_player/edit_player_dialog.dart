@@ -3,14 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
+import 'package:magic_life_wheel/life_counter_page/dialogs/damage_history_dialog.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/background_widget.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/edit_background_dialog.dart';
 
 class EditPlayerDialog extends StatefulWidget {
-  const EditPlayerDialog({super.key, required this.player});
+  const EditPlayerDialog({
+    super.key,
+    required this.player,
+    required this.players,
+  });
 
   final Player player;
+  final List<Player> players;
 
   @override
   State<EditPlayerDialog> createState() => _EditPlayerDialogState();
@@ -74,6 +80,19 @@ class _EditPlayerDialogState extends State<EditPlayerDialog> {
         children: [
           const Text("Edit Player"),
           const Spacer(),
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () {
+              Navigator.of(context).pop();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => DamageHistoryDialog(
+                  player: widget.player,
+                  players: widget.players,
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () {

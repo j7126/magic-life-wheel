@@ -12,6 +12,7 @@ class TransferUrlService {
         var layoutId = d.$2;
         var players = p.map((e) {
           var jsonMap = e.toJson();
+          jsonMap.remove("damageHistory");
           var bg = (jsonMap["background"] as Map<String, dynamic>);
           bg.remove("_customImage");
           if (bg["_card"] != null) {
@@ -66,6 +67,7 @@ class TransferUrlService {
       var players = playersJson
           .map((e) {
             if (e is Map<String, dynamic>) {
+              e["damageHistory"] = [];
               var bg = (e["background"] as Map<String, dynamic>);
               var cardUuid = bg["_card"] as String?;
               bg["_card"] = null;
