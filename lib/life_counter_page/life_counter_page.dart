@@ -567,6 +567,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                                     duration: const Duration(milliseconds: 200),
                                     curve: Curves.ease,
                                     child: Counter(
+                                      key: ValueKey(players[i].uuid),
                                       i: i,
                                       layout: layout ?? Layout2a(),
                                       players: players,
