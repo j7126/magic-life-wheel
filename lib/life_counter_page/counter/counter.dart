@@ -237,45 +237,46 @@ class _CounterState extends State<Counter> {
                 BackgroundWidget(
                   background: widget.player.background,
                 ),
-                Positioned(
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: Service.settingsService.pref_enableCommanderDamage &&
-                              Service.settingsService.pref_commanderDamageMiniGrid
-                          ? 16
-                          : 32,
-                      bottom: Service.settingsService.pref_enableCommanderDamage
-                          ? Service.settingsService.pref_commanderDamageMiniGrid
-                              ? 48
-                              : 32
-                          : 16,
-                      left: 72.0,
-                      right: 72.0,
-                    ),
-                    child: Center(
-                      child: FittedBox(
-                        fit: Service.settingsService.pref_maximiseFontSize ? BoxFit.contain : BoxFit.none,
-                        child: Text(
-                          widget.player.dead ? "" : widget.player.life.toString(),
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: Service.settingsService.pref_maximiseFontSize
-                                ? min(
-                                    constraints.maxHeight,
-                                    constraints.maxWidth,
-                                  )
-                                : widget.counterFontSizeGroup.minSize,
-                            shadows: onBackgroundShadow,
+                if (!widget.player.dead)
+                  Positioned(
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: Service.settingsService.pref_enableCommanderDamage &&
+                                Service.settingsService.pref_commanderDamageMiniGrid
+                            ? 16
+                            : 32,
+                        bottom: Service.settingsService.pref_enableCommanderDamage
+                            ? Service.settingsService.pref_commanderDamageMiniGrid
+                                ? 48
+                                : 32
+                            : 16,
+                        left: 72.0,
+                        right: 72.0,
+                      ),
+                      child: Center(
+                        child: FittedBox(
+                          fit: Service.settingsService.pref_maximiseFontSize ? BoxFit.contain : BoxFit.none,
+                          child: Text(
+                            widget.player.life.toString(),
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: Service.settingsService.pref_maximiseFontSize
+                                  ? min(
+                                      constraints.maxHeight,
+                                      constraints.maxWidth,
+                                    )
+                                  : widget.counterFontSizeGroup.minSize,
+                              shadows: onBackgroundShadow,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
                 Positioned(
                   top: 0,
                   bottom: 0,
