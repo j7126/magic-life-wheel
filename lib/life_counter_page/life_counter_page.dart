@@ -69,8 +69,6 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
   bool get rotated => layout?.rotated ?? false;
   set rotated(bool val) => layout?.rotated = val;
 
-  final FocusNode _menuButtonFocusNode = FocusNode();
-
   bool get isGameReset => !players.any((x) => !x.isGameReset);
 
   bool get isPlayersReset => !players.any((x) => !x.isReset);
@@ -383,6 +381,97 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
     );
   }
 
+  void _showMenu() {
+    var menuButtonStyle = ButtonStyle(
+      foregroundColor: WidgetStateProperty.resolveWith<Color?>(
+        (Set<WidgetState> states) {
+          if (states.contains(WidgetState.disabled)) {
+            return null;
+          }
+          return Theme.of(context).colorScheme.onSurface;
+        },
+      ),
+      overlayColor: WidgetStateProperty.all<Color>(
+        Theme.of(context).colorScheme.onSurface.withAlpha(20),
+      ),
+    );
+
+    var items = [
+      (
+        () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const AboutPage(),
+            ),
+          );
+        },
+        Icons.info_outline,
+        "About",
+      ),
+      (
+        () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const SettingsPage(),
+            ),
+          );
+          setState(() {});
+        },
+        Icons.settings,
+        "Settings",
+      ),
+      (
+        _showTransferGamePage,
+        Icons.send,
+        "Transfer Game",
+      ),
+      (
+        _showReset,
+        Icons.restart_alt,
+        "Reset Game",
+      ),
+      (
+        randomPlayerAnimationInProgress ? null : _chooseRandomPlayer,
+        Icons.shuffle,
+        "Randomise player",
+      ),
+    ];
+
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (var item in items)
+                TextButton(
+                  onPressed: item.$1 == null
+                      ? null
+                      : () {
+                          Navigator.of(context).pop();
+                          item.$1!();
+                        },
+                  style: menuButtonStyle,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 2.0),
+                    child: Row(
+                      children: [
+                        Icon(item.$2),
+                        const Gap(8.0),
+                        Text(item.$3),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void importGame(List<Player> players, int layoutId) {
     this.players = players;
     setPlayers(
@@ -481,7 +570,6 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
 
   @override
   void dispose() {
-    _menuButtonFocusNode.dispose();
     FullScreen.removeListener(this);
     super.dispose();
   }
@@ -804,70 +892,15 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Expanded(
-                            child: MenuAnchor(
-                              childFocusNode: _menuButtonFocusNode,
-                              style: const MenuStyle(
-                                visualDensity: VisualDensity.comfortable,
+                            child: TextButton(
+                              onPressed: () => _showMenu(),
+                              style: barButtonStyle,
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0),
+                                child: Icon(
+                                  Icons.more_vert,
+                                ),
                               ),
-                              menuChildren: <Widget>[
-                                MenuItemButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => const AboutPage(),
-                                      ),
-                                    );
-                                  },
-                                  leadingIcon: const Icon(Icons.info_outline),
-                                  child: const Text("About"),
-                                ),
-                                MenuItemButton(
-                                  onPressed: () async {
-                                    await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => const SettingsPage(),
-                                      ),
-                                    );
-                                    setState(() {});
-                                  },
-                                  leadingIcon: const Icon(Icons.settings),
-                                  child: const Text("Settings"),
-                                ),
-                                MenuItemButton(
-                                  onPressed: _showTransferGamePage,
-                                  leadingIcon: const Icon(Icons.send),
-                                  child: const Text("Transfer Game"),
-                                ),
-                                MenuItemButton(
-                                  onPressed: _showReset,
-                                  leadingIcon: const Icon(Icons.restart_alt),
-                                  child: const Text("Reset Game"),
-                                ),
-                                MenuItemButton(
-                                  onPressed: randomPlayerAnimationInProgress ? null : _chooseRandomPlayer,
-                                  leadingIcon: const Icon(Icons.shuffle),
-                                  child: const Text("Randomise player"),
-                                ),
-                              ],
-                              builder: (BuildContext context, MenuController controller, Widget? child) {
-                                return TextButton(
-                                  focusNode: _menuButtonFocusNode,
-                                  onPressed: () {
-                                    if (controller.isOpen) {
-                                      controller.close();
-                                    } else {
-                                      controller.open();
-                                    }
-                                  },
-                                  style: barButtonStyle,
-                                  child: const Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 12.0),
-                                    child: Icon(
-                                      Icons.more_vert,
-                                    ),
-                                  ),
-                                );
-                              },
                             ),
                           ),
                           Expanded(
