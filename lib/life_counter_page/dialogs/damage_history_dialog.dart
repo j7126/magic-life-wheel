@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -17,9 +19,37 @@ class DamageHistoryDialog extends StatefulWidget {
 }
 
 class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
+  String timeDiffString(DateTime dt) {
+    var diff = DateTime.now().millisecondsSinceEpoch - dt.millisecondsSinceEpoch;
+    diff ~/= 1000;
+    var s = diff % 60;
+    diff ~/= 60;
+    var m = diff % 60;
+    diff ~/= 60;
+    var h = diff % 24;
+    diff ~/= 24;
+    var d = diff;
+    if (d != 0) {
+      return "$d d";
+    } else if (h != 0) {
+      return "$h h";
+    } else if (m != 0) {
+      return "$m m";
+    } else {
+      return "$s s";
+    }
+  }
+
   @override
   void initState() {
     DialogService.register(context);
+    Timer.periodic(const Duration(seconds: 1), (t) {
+      if (mounted) {
+        setState(() {});
+      } else {
+        t.cancel();
+      }
+    });
     super.initState();
   }
 
@@ -48,7 +78,7 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
         ],
       ),
       content: Container(
-        constraints: const BoxConstraints(minWidth: 260),
+        constraints: const BoxConstraints(minWidth: 320),
         child: Padding(
           padding: const EdgeInsets.only(bottom: 16.0, top: 8.0),
           child: SingleChildScrollView(
@@ -187,18 +217,31 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                                 }),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Expanded(
-                                child: Text(
-                                  event.change > 0
-                                      ? "Life Gain"
-                                      : event.fromCommander != null
-                                          ? "Commander"
-                                          : "Damage",
-                                  style: const TextStyle(fontSize: 28),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: Text(
+                                    event.change > 0
+                                        ? "Life Gain"
+                                        : event.fromCommander != null
+                                            ? "Commander"
+                                            : "Damage",
+                                    style: const TextStyle(fontSize: 28),
+                                  ),
                                 ),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: Text(
+                                    timeDiffString(event.time),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
