@@ -1,0 +1,1 @@
+An easy to use life counter app for Magic: The Gathering or other games.

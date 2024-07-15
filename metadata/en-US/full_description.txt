@@ -1,0 +1,10 @@
+ - Support for 2 to 6 players, with various layouts.
+ - Customize player backgrounds:
+   - Art from any Magic: The Gathering card.
+   - Colors and gradients.
+   - Custom art / images.
+ - Track commander damage. (With support for partner commanders!)
+ - Damage history.
+ - Transfer the game to another device using a qr code.
+ - Support for planechase.
+ - Quickly rearrange seating positions by dragging, or randomize them.
