@@ -1,6 +1,6 @@
 # Magic Life Wheel
 
-A simple life counter app.
+An easy to use life counter app for Magic: The Gathering or other games.
 
 [<img src="https://j7126.dev/store-badges/play.png" style="width: 250px;">](https://play.google.com/store/apps/details?id=dev.j7126.magic_life_wheel)
 
@@ -14,12 +14,14 @@ A simple life counter app.
    - Colors and gradients.
    - Custom art / images.
  - Track commander damage. (With support for partner commanders!)
+ - Damage history.
+ - Transfer the game to another device using a qr code.
  - Support for planechase.
  - Quickly rearrange seating positions by dragging, or randomize them.
 
 ## Installing
 
-Currently builds are provided for android.
+Currently builds are provided for android, web and linux.
 
 ### Android
 
@@ -35,10 +37,17 @@ Magic Life Wheel is available in my [F-Droid](https://f-droid.org/) repo at [fdr
 
 You can download the latest apk from the github release [here](https://github.com/j7126/magic-life-wheel/releases/latest).
 
+### Web
+
+Magic life wheel is available as a [web app](https://magic-life-wheel.j7126.dev/). Please note that the web version may be missing some features from the android version.
+
+### Linux
+
+Builds are provided for linux (x86_64 and arm64). They can be downloaded from the github release [here](https://github.com/j7126/magic-life-wheel/releases/latest).
+
 ## Building
 
-### Android
-Set up flutter [https://docs.flutter.dev/get-started/install](https://docs.flutter.dev/get-started/install), following the instructions for developing for android.
+Set up flutter [https://docs.flutter.dev/get-started/install](https://docs.flutter.dev/get-started/install), following the instructions for the platform you want to build for.
 
 Pouplate the data files. Data files are derrived from [MtgJson](https://mtgjson.com/). See [data/readme.md](https://github.com/j7126/magic-life-wheel/blob/1.3.2/data/readme.md).
 
