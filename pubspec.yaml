@@ -2,7 +2,7 @@ name: magic_life_wheel
 description: "A simple life counter app."
 publish_to: 'none'
 
-version: 1.8.0+17
+version: 1.8.1+18
 
 environment:
   sdk: '>=3.3.3 <4.0.0'
