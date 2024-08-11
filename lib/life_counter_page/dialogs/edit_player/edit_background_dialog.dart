@@ -16,6 +16,7 @@ import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/cards_variant_dialog.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/background_widget.dart';
+import 'package:mana_icons_flutter/mana_icons_flutter.dart';
 
 class EditBackgroundDialog extends StatefulWidget {
   const EditBackgroundDialog({super.key, required this.player});
@@ -138,7 +139,10 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
 
     var file = await picker.pickImage(source: ImageSource.gallery);
     if (file == null) {
-      return customImageError();
+      setState(() {
+        loadingCustomImage = false;
+      });
+      return;
     }
 
     var bytes = await file.readAsBytes();
@@ -398,8 +402,13 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
     }
 
     return loadingCustomImage
-        ? const Center(
-            child: CircularProgressIndicator(),
+        ? Container(
+            color: Colors.transparent,
+            width: double.infinity,
+            height: double.infinity,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
           )
         : Dialog(
             clipBehavior: Clip.antiAlias,
@@ -531,234 +540,387 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                     ],
                   ),
                 ),
-                TextField(
-                  controller: _searchFieldController,
-                  decoration: InputDecoration(
-                      hintText: "Search Cards",
-                      border: const UnderlineInputBorder(),
-                      prefixIcon: const Icon(Icons.search),
-                      isDense: true,
-                      suffixIcon: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (_searchFieldController.text.isNotEmpty)
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _searchFieldController.clear();
-                                });
-                              },
-                              icon: const Icon(Icons.delete_outline),
-                            ),
-                        ],
-                      )),
-                  autofocus: true,
-                  onChanged: (value) => searchCards(value),
-                ),
-                if (_searchFieldController.text.isEmpty || (cards?.isEmpty ?? true))
-                  widget.player.background.hasBackground
-                      ? Expanded(
-                          child: Column(
-                            children: [
-                              if (cards?.isEmpty ?? false)
-                                Opacity(
-                                  opacity: 0.3,
+                if (Service.settingsService.pref_getScryfallImages)
+                  TextField(
+                    controller: _searchFieldController,
+                    decoration: InputDecoration(
+                        hintText: "Search Cards",
+                        border: const UnderlineInputBorder(),
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (_searchFieldController.text.isNotEmpty)
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _searchFieldController.clear();
+                                  });
+                                },
+                                icon: const Icon(Icons.close),
+                              ),
+                          ],
+                        )),
+                    autofocus: true,
+                    onChanged: (value) => searchCards(value),
+                  )
+                else if (!widget.player.background.hasBackground)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        GestureDetector(
+                          onTap: setColors,
+                          behavior: HitTestBehavior.opaque,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                            child: Row(
+                              children: [
+                                const Opacity(
+                                  opacity: 0.5,
+                                  child: Icon(
+                                    Icons.palette_outlined,
+                                    size: 32,
+                                  ),
+                                ),
+                                Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
-                                    child: Row(
-                                      children: [
-                                        const Spacer(),
-                                        const Icon(
-                                          CustomIcons.cards_outlined,
-                                          size: 34,
-                                        ),
-                                        const Gap(8.0),
-                                        Text(
-                                          "No results found",
-                                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 24,
-                                              ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        const Spacer(),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              const Gap(16.0),
-                              if (widget.player.card != null && Service.dataLoader.allSetCards != null)
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Container(
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 500,
-                                    ),
-                                    child: AspectRatio(
-                                      aspectRatio: 1.1,
-                                      child: cardSelector(
-                                        Service.dataLoader.allSetCards?.data
-                                            .where((element) => element.name == widget.player.card?.name)
-                                            .toList(),
-                                        useSelectedName: true,
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: Opacity(
+                                      opacity: 0.9,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Color background",
+                                            style: Theme.of(context).textTheme.titleLarge,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                          Text(
+                                            "Set a solid color or gradient background.",
+                                            style: Theme.of(context).textTheme.titleSmall,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
                                 ),
-                              if (widget.player.background.customImage != null ||
-                                  widget.player.background.colors != null)
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Container(
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 500,
-                                    ),
-                                    child: AspectRatio(
-                                      aspectRatio: 1.1,
-                                      child: Card(
-                                        clipBehavior: Clip.antiAlias,
-                                        child: Stack(
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
-                                                  child: Text(
-                                                    widget.player.background.customImage != null
-                                                        ? "Custom Image"
-                                                        : (widget.player.background.colors?.length ?? 0) > 1
-                                                            ? "Color Gradient"
-                                                            : "Color",
-                                                    style: const TextStyle(
-                                                      fontSize: 18.0,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 8.0),
-                                                    child: BackgroundWidget(
-                                                      background: widget.player.background,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Align(
-                                              alignment: Alignment.bottomLeft,
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(6.0),
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.max,
-                                                  children: [
-                                                    FilledButton(
-                                                      onPressed: widget.player.background.customImage != null
-                                                          ? setCustomImage
-                                                          : setColors,
-                                                      style: const ButtonStyle(
-                                                        padding: WidgetStatePropertyAll(
-                                                            EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        children: [
-                                                          Padding(
-                                                            padding: const EdgeInsets.only(right: 6.0),
-                                                            child: Icon(
-                                                              widget.player.background.customImage != null
-                                                                  ? Icons.image_outlined
-                                                                  : Icons.color_lens_outlined,
-                                                              size: 18.0,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            widget.player.background.customImage != null
-                                                                ? "Change Image"
-                                                                : (widget.player.background.colors?.length ?? 0) > 1
-                                                                    ? "Change Colors"
-                                                                    : "Change Color",
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                const Opacity(
+                                  opacity: 0.7,
+                                  child: Icon(Icons.open_in_new),
                                 ),
-                              const Gap(8.0),
-                              if ((widget.player.card != null && Service.dataLoader.allSetCards != null) &&
-                                  widget.player.cardPartner != null)
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Container(
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 500,
-                                    ),
-                                    child: AspectRatio(
-                                      aspectRatio: 1.1,
-                                      child: cardSelector(Service.dataLoader.allSetCards?.data
-                                          .where((element) => element.name == widget.player.cardPartner?.name)
-                                          .toList()),
-                                    ),
-                                  ),
-                                ),
-                            ],
+                              ],
+                            ),
                           ),
-                        )
-                      : Expanded(
-                          child: LayoutBuilder(
-                            builder: (BuildContext context, BoxConstraints bc) {
-                              var size = min(bc.maxHeight, bc.maxWidth) * 0.5;
-                              return Opacity(
-                                opacity: 0.3,
-                                child: Column(
+                        ),
+                        GestureDetector(
+                          onTap: setCustomImage,
+                          behavior: HitTestBehavior.opaque,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                            child: Row(
+                              children: [
+                                const Opacity(
+                                  opacity: 0.5,
+                                  child: Icon(
+                                    Icons.image_outlined,
+                                    size: 32,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: Opacity(
+                                      opacity: 0.9,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Custom image",
+                                            style: Theme.of(context).textTheme.titleLarge,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                          Text(
+                                            "Select your own custom background image.",
+                                            style: Theme.of(context).textTheme.titleSmall,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Opacity(
+                                  opacity: 0.7,
+                                  child: Icon(Icons.open_in_new),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              Service.settingsService.pref_getScryfallImages =
+                                  !Service.settingsService.pref_getScryfallImages;
+                            });
+                          },
+                          behavior: HitTestBehavior.opaque,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                            child: Row(
+                              children: [
+                                const Opacity(
+                                  opacity: 0.5,
+                                  child: Icon(
+                                    ManaIcons.ms_planeswalker,
+                                    size: 32,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: Opacity(
+                                      opacity: 0.9,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Card images",
+                                            style: Theme.of(context).textTheme.titleLarge,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                          Text(
+                                            "Fetch card images from scryfall.",
+                                            style: Theme.of(context).textTheme.titleSmall,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Switch(
+                                  value: Service.settingsService.pref_getScryfallImages,
+                                  onChanged: (bool value) {
+                                    setState(() {
+                                      Service.settingsService.pref_getScryfallImages = value;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (_searchFieldController.text.isEmpty || (cards?.isEmpty ?? true))
+                  if (widget.player.background.hasBackground)
+                    Expanded(
+                      child: Column(
+                        children: [
+                          if (cards?.isEmpty ?? false)
+                            Opacity(
+                              opacity: 0.3,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
+                                child: Row(
                                   children: [
                                     const Spacer(),
-                                    Icon(
+                                    const Icon(
                                       CustomIcons.cards_outlined,
-                                      size: size,
+                                      size: 34,
                                     ),
+                                    const Gap(8.0),
                                     Text(
-                                      cards?.isEmpty ?? false ? "No results found" : "",
+                                      "No results found",
                                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: size * 0.13,
+                                            fontSize: 24,
                                           ),
                                       textAlign: TextAlign.center,
                                     ),
                                     const Spacer(),
                                   ],
                                 ),
-                              );
-                            },
-                          ),
-                        )
-                else
-                  Expanded(
-                    child: GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 500,
-                        childAspectRatio: 1.1,
-                        mainAxisSpacing: 8,
-                        crossAxisSpacing: 8,
+                              ),
+                            ),
+                          const Gap(16.0),
+                          if (widget.player.card != null && Service.dataLoader.allSetCards != null)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Container(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 500,
+                                ),
+                                child: AspectRatio(
+                                  aspectRatio: 1.1,
+                                  child: cardSelector(
+                                    Service.dataLoader.allSetCards?.data
+                                        .where((element) => element.name == widget.player.card?.name)
+                                        .toList(),
+                                    useSelectedName: true,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (widget.player.background.customImage != null || widget.player.background.colors != null)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Container(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 500,
+                                ),
+                                child: AspectRatio(
+                                  aspectRatio: 1.1,
+                                  child: Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Stack(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
+                                              child: Text(
+                                                widget.player.background.customImage != null
+                                                    ? "Custom Image"
+                                                    : (widget.player.background.colors?.length ?? 0) > 1
+                                                        ? "Color Gradient"
+                                                        : "Color",
+                                                style: const TextStyle(
+                                                  fontSize: 18.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top: 8.0),
+                                                child: BackgroundWidget(
+                                                  background: widget.player.background,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Align(
+                                          alignment: Alignment.bottomLeft,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(6.0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                FilledButton(
+                                                  onPressed: widget.player.background.customImage != null
+                                                      ? setCustomImage
+                                                      : setColors,
+                                                  style: const ButtonStyle(
+                                                    padding: WidgetStatePropertyAll(
+                                                        EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(right: 6.0),
+                                                        child: Icon(
+                                                          widget.player.background.customImage != null
+                                                              ? Icons.image_outlined
+                                                              : Icons.color_lens_outlined,
+                                                          size: 18.0,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        widget.player.background.customImage != null
+                                                            ? "Change Image"
+                                                            : (widget.player.background.colors?.length ?? 0) > 1
+                                                                ? "Change Colors"
+                                                                : "Change Color",
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          const Gap(8.0),
+                          if ((widget.player.card != null && Service.dataLoader.allSetCards != null) &&
+                              widget.player.cardPartner != null)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Container(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 500,
+                                ),
+                                child: AspectRatio(
+                                  aspectRatio: 1.1,
+                                  child: cardSelector(Service.dataLoader.allSetCards?.data
+                                      .where((element) => element.name == widget.player.cardPartner?.name)
+                                      .toList()),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                      padding: const EdgeInsets.all(16.0),
-                      controller: _scrollController,
-                      itemCount: cards?.length ?? 0,
-                      itemBuilder: (BuildContext context, int index) {
-                        var card = cards?[index];
-                        return cardSelector(card?.value);
-                      },
+                    )
+                  else if (Service.settingsService.pref_getScryfallImages)
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints bc) {
+                          var size = min(bc.maxHeight, bc.maxWidth) * 0.5;
+                          return Opacity(
+                            opacity: 0.3,
+                            child: Column(
+                              children: [
+                                const Spacer(),
+                                Icon(
+                                  CustomIcons.cards_outlined,
+                                  size: size,
+                                ),
+                                Text(
+                                  cards?.isEmpty ?? false ? "No results found" : "",
+                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: size * 0.13,
+                                      ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const Spacer(),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  else
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 500,
+                          childAspectRatio: 1.1,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                        ),
+                        padding: const EdgeInsets.all(16.0),
+                        controller: _scrollController,
+                        itemCount: cards?.length ?? 0,
+                        itemBuilder: (BuildContext context, int index) {
+                          var card = cards?[index];
+                          return cardSelector(card?.value);
+                        },
+                      ),
                     ),
-                  ),
               ],
             ),
           );

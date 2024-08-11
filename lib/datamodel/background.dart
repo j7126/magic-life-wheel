@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
 import 'package:magic_life_wheel/serialization/unit_8_list_converter.dart';
+import 'package:magic_life_wheel/static_service.dart';
 
 part 'background.g.dart';
 
@@ -89,7 +90,7 @@ class Background {
     includeFromJson: false,
     includeToJson: false,
   )
-  bool get hasBackground => card != null || customImage != null || colors != null;
+  bool get hasBackground => (card != null && Service.settingsService.pref_getScryfallImages) || customImage != null || colors != null;
 
   void clear() {
     card = null;
