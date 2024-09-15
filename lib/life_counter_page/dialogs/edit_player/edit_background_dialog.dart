@@ -902,25 +902,25 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                           );
                         },
                       ),
-                    )
-                  else
-                    Expanded(
-                      child: GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 500,
-                          childAspectRatio: 1.1,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 8,
-                        ),
-                        padding: const EdgeInsets.all(16.0),
-                        controller: _scrollController,
-                        itemCount: cards?.length ?? 0,
-                        itemBuilder: (BuildContext context, int index) {
-                          var card = cards?[index];
-                          return cardSelector(card?.value);
-                        },
-                      ),
                     ),
+                if (!(_searchFieldController.text.isEmpty || (cards?.isEmpty ?? true)))
+                  Expanded(
+                    child: GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 500,
+                        childAspectRatio: 1.1,
+                        mainAxisSpacing: 8,
+                        crossAxisSpacing: 8,
+                      ),
+                      padding: const EdgeInsets.all(16.0),
+                      controller: _scrollController,
+                      itemCount: cards?.length ?? 0,
+                      itemBuilder: (BuildContext context, int index) {
+                        var card = cards?[index];
+                        return cardSelector(card?.value);
+                      },
+                    ),
+                  ),
               ],
             ),
           );
