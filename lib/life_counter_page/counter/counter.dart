@@ -231,7 +231,7 @@ class _CounterState extends State<Counter> {
           return Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(35),
-              color: const Color.fromARGB(50, 255, 255, 255),
+              color: const Color.fromARGB(255, 50, 50, 50),
             ),
             clipBehavior: Clip.antiAlias,
             width: constraints.maxWidth,

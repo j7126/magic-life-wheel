@@ -228,12 +228,10 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
                       child: card == null
                           ? LayoutBuilder(builder: (context, constraints) {
                               return Center(
-                                child: Opacity(
-                                  opacity: 0.4,
-                                  child: Icon(
-                                    ManaIcons.ms_planeswalker,
-                                    size: min(constraints.maxHeight, constraints.maxWidth) * 0.4,
-                                  ),
+                                child: Icon(
+                                  ManaIcons.ms_planeswalker,
+                                  size: min(constraints.maxHeight, constraints.maxWidth) * 0.4,
+                                  color: const Color.fromARGB(255, 102, 102, 102),
                                 ),
                               );
                             })

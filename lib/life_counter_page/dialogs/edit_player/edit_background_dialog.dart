@@ -459,12 +459,10 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 7.0),
-                            child: Opacity(
-                              opacity: 0.5,
-                              child: Container(
-                                height: 2.0,
-                                color: DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant,
-                              ),
+                            child: Container(
+                              height: 2.0,
+                              color: (DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant)
+                                  .withAlpha(127),
                             ),
                           ),
                           MenuItemButton(
@@ -577,39 +575,38 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                             child: Row(
                               children: [
-                                const Opacity(
-                                  opacity: 0.5,
-                                  child: Icon(
-                                    Icons.palette_outlined,
-                                    size: 32,
-                                  ),
+                                const Icon(
+                                  Icons.palette_outlined,
+                                  size: 32,
+                                  color: Color.fromARGB(255, 127, 127, 127),
                                 ),
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                    child: Opacity(
-                                      opacity: 0.9,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Color background",
-                                            style: Theme.of(context).textTheme.titleLarge,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                          Text(
-                                            "Set a solid color or gradient background.",
-                                            style: Theme.of(context).textTheme.titleSmall,
-                                          ),
-                                        ],
-                                      ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Color background",
+                                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                        Text(
+                                          "Set a solid color or gradient background.",
+                                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                const Opacity(
-                                  opacity: 0.7,
-                                  child: Icon(Icons.open_in_new),
+                                const Icon(
+                                  Icons.open_in_new,
+                                  color: Color.fromARGB(255, 178, 178, 178),
                                 ),
                               ],
                             ),
@@ -622,39 +619,38 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                             child: Row(
                               children: [
-                                const Opacity(
-                                  opacity: 0.5,
-                                  child: Icon(
-                                    Icons.image_outlined,
-                                    size: 32,
-                                  ),
+                                const Icon(
+                                  Icons.image_outlined,
+                                  size: 32,
+                                  color: Color.fromARGB(255, 127, 127, 127),
                                 ),
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                    child: Opacity(
-                                      opacity: 0.9,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Custom image",
-                                            style: Theme.of(context).textTheme.titleLarge,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                          Text(
-                                            "Select your own custom background image.",
-                                            style: Theme.of(context).textTheme.titleSmall,
-                                          ),
-                                        ],
-                                      ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Custom image",
+                                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                        Text(
+                                          "Select your own custom background image.",
+                                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                const Opacity(
-                                  opacity: 0.7,
-                                  child: Icon(Icons.open_in_new),
+                                const Icon(
+                                  Icons.open_in_new,
+                                  color: Color.fromARGB(255, 178, 178, 178),
                                 ),
                               ],
                             ),
@@ -672,33 +668,32 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                             child: Row(
                               children: [
-                                const Opacity(
-                                  opacity: 0.5,
-                                  child: Icon(
-                                    ManaIcons.ms_planeswalker,
-                                    size: 32,
-                                  ),
+                                const Icon(
+                                  ManaIcons.ms_planeswalker,
+                                  size: 32,
+                                  color: Color.fromARGB(255, 127, 127, 127),
                                 ),
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                    child: Opacity(
-                                      opacity: 0.9,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Card images",
-                                            style: Theme.of(context).textTheme.titleLarge,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                          Text(
-                                            "Fetch card images from scryfall.",
-                                            style: Theme.of(context).textTheme.titleSmall,
-                                          ),
-                                        ],
-                                      ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Card images",
+                                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                        Text(
+                                          "Fetch card images from scryfall.",
+                                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -723,29 +718,28 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                       child: Column(
                         children: [
                           if (cards?.isEmpty ?? false)
-                            Opacity(
-                              opacity: 0.3,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
-                                child: Row(
-                                  children: [
-                                    const Spacer(),
-                                    const Icon(
-                                      CustomIcons.cards_outlined,
-                                      size: 34,
-                                    ),
-                                    const Gap(8.0),
-                                    Text(
-                                      "No results found",
-                                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 24,
-                                          ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    const Spacer(),
-                                  ],
-                                ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
+                              child: Row(
+                                children: [
+                                  const Spacer(),
+                                  const Icon(
+                                    CustomIcons.cards_outlined,
+                                    size: 34,
+                                    color: Color.fromARGB(255, 76, 76, 76),
+                                  ),
+                                  const Gap(8.0),
+                                  Text(
+                                    "No results found",
+                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 24,
+                                          color: const Color.fromARGB(255, 76, 76, 76),
+                                        ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const Spacer(),
+                                ],
                               ),
                             ),
                           const Gap(16.0),
@@ -879,26 +873,25 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                       child: LayoutBuilder(
                         builder: (BuildContext context, BoxConstraints bc) {
                           var size = min(bc.maxHeight, bc.maxWidth) * 0.5;
-                          return Opacity(
-                            opacity: 0.3,
-                            child: Column(
-                              children: [
-                                const Spacer(),
-                                Icon(
-                                  CustomIcons.cards_outlined,
-                                  size: size,
-                                ),
-                                Text(
-                                  cards?.isEmpty ?? false ? "No results found" : "",
-                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: size * 0.13,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const Spacer(),
-                              ],
-                            ),
+                          return Column(
+                            children: [
+                              const Spacer(),
+                              Icon(
+                                CustomIcons.cards_outlined,
+                                size: size,
+                                color: const Color.fromARGB(255, 76, 76, 76),
+                              ),
+                              Text(
+                                cards?.isEmpty ?? false ? "No results found" : "",
+                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: size * 0.13,
+                                      color: const Color.fromARGB(255, 76, 76, 76),
+                                    ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const Spacer(),
+                            ],
                           );
                         },
                       ),

@@ -100,33 +100,32 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                         child: Row(
                           children: [
-                            const Opacity(
-                              opacity: 0.5,
-                              child: Icon(
-                                Icons.favorite_outline,
-                                size: 32,
-                              ),
+                            const Icon(
+                              Icons.favorite_outline,
+                              size: 32,
+                              color: Color.fromARGB(255, 127, 127, 127),
                             ),
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                child: Opacity(
-                                  opacity: 0.9,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Starting Life",
-                                        style: Theme.of(context).textTheme.titleLarge,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
-                                      Text(
-                                        "The starting life total for players.",
-                                        style: Theme.of(context).textTheme.titleSmall,
-                                      ),
-                                    ],
-                                  ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Starting Life",
+                                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                    Text(
+                                      "The starting life total for players.",
+                                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -176,33 +175,32 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                           child: Row(
                             children: [
-                              const Opacity(
-                                opacity: 0.5,
-                                child: Icon(
-                                  ManaIcons.ms_planeswalker,
-                                  size: 32,
-                                ),
+                              const Icon(
+                                ManaIcons.ms_planeswalker,
+                                size: 32,
+                                color: Color.fromARGB(255, 127, 127, 127),
                               ),
                               Expanded(
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Opacity(
-                                    opacity: 0.9,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Planechase",
-                                          style: Theme.of(context).textTheme.titleLarge,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                        Text(
-                                          "Enable Planechase",
-                                          style: Theme.of(context).textTheme.titleSmall,
-                                        ),
-                                      ],
-                                    ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Planechase",
+                                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                              color: const Color.fromARGB(255, 229, 229, 229),
+                                            ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                      Text(
+                                        "Enable Planechase",
+                                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                              color: const Color.fromARGB(255, 229, 229, 229),
+                                            ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -230,33 +228,32 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                           padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 12.0, bottom: 0.0),
                           child: Row(
                             children: [
-                              const Opacity(
-                                opacity: 0.5,
-                                child: Icon(
-                                  KeyruneIcons.ss_cmd,
-                                  size: 32,
-                                ),
+                              const Icon(
+                                KeyruneIcons.ss_cmd,
+                                size: 32,
+                                color: Color.fromARGB(255, 127, 127, 127),
                               ),
                               Expanded(
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Opacity(
-                                    opacity: 0.9,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Commander",
-                                          style: Theme.of(context).textTheme.titleLarge,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                        Text(
-                                          "Commander damage tracking.",
-                                          style: Theme.of(context).textTheme.titleSmall,
-                                        ),
-                                      ],
-                                    ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Commander",
+                                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                              color: const Color.fromARGB(255, 229, 229, 229),
+                                            ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                      Text(
+                                        "Commander damage tracking.",
+                                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                              color: const Color.fromARGB(255, 229, 229, 229),
+                                            ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -297,12 +294,11 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: Opacity(
-                                          opacity: 0.9,
-                                          child: Text(
-                                            "Larger + button.",
-                                            style: Theme.of(context).textTheme.titleLarge,
-                                          ),
+                                        child: Text(
+                                          "Larger + button.",
+                                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -337,12 +333,11 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: Opacity(
-                                          opacity: 0.9,
-                                          child: Text(
-                                            "Buttons face player",
-                                            style: Theme.of(context).textTheme.titleLarge,
-                                          ),
+                                        child: Text(
+                                          "Buttons face player",
+                                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -377,12 +372,11 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: Opacity(
-                                          opacity: 0.9,
-                                          child: Text(
-                                            "Mini Grid",
-                                            style: Theme.of(context).textTheme.titleLarge,
-                                          ),
+                                        child: Text(
+                                          "Mini Grid",
+                                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -425,40 +419,39 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                           child: Row(
                             children: [
-                              Opacity(
-                                opacity: 0.7,
-                                child: AnimatedRotation(
-                                  duration: const Duration(milliseconds: 200),
-                                  turns: showAdvanced ? 0.5 : 0,
-                                  child: Transform.scale(
-                                    scale: 1.2,
-                                    child: const Icon(
-                                      Icons.expand_more,
-                                      size: 32,
-                                    ),
+                              AnimatedRotation(
+                                duration: const Duration(milliseconds: 200),
+                                turns: showAdvanced ? 0.5 : 0,
+                                child: Transform.scale(
+                                  scale: 1.2,
+                                  child: const Icon(
+                                    Icons.expand_more,
+                                    size: 32,
+                                    color: Color.fromARGB(255, 178, 178, 178),
                                   ),
                                 ),
                               ),
                               Expanded(
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Opacity(
-                                    opacity: 0.9,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Advanced settings",
-                                          style: Theme.of(context).textTheme.titleLarge,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                        Text(
-                                          showAdvanced ? "Hide" : "Show More",
-                                          style: Theme.of(context).textTheme.titleSmall,
-                                        ),
-                                      ],
-                                    ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Advanced settings",
+                                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                              color: const Color.fromARGB(255, 229, 229, 229),
+                                            ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                      Text(
+                                        showAdvanced ? "Hide" : "Show More",
+                                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                              color: const Color.fromARGB(255, 229, 229, 229),
+                                            ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -485,33 +478,32 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                                 child: Row(
                                   children: [
-                                    const Opacity(
-                                      opacity: 0.5,
-                                      child: Icon(
-                                        Icons.image_outlined,
-                                        size: 32,
-                                      ),
+                                    const Icon(
+                                      Icons.image_outlined,
+                                      size: 32,
+                                      color: Color.fromARGB(255, 127, 127, 127),
                                     ),
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: Opacity(
-                                          opacity: 0.9,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Card images",
-                                                style: Theme.of(context).textTheme.titleLarge,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                              ),
-                                              Text(
-                                                "Fetch card images from scryfall.",
-                                                style: Theme.of(context).textTheme.titleSmall,
-                                              ),
-                                            ],
-                                          ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Card images",
+                                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                    color: const Color.fromARGB(255, 229, 229, 229),
+                                                  ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                            Text(
+                                              "Fetch card images from scryfall.",
+                                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                                    color: const Color.fromARGB(255, 229, 229, 229),
+                                                  ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -540,33 +532,32 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                                 child: Row(
                                   children: [
-                                    const Opacity(
-                                      opacity: 0.5,
-                                      child: Icon(
-                                        Icons.save_outlined,
-                                        size: 32,
-                                      ),
+                                    const Icon(
+                                      Icons.save_outlined,
+                                      size: 32,
+                                      color: Color.fromARGB(255, 127, 127, 127),
                                     ),
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: Opacity(
-                                          opacity: 0.9,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Persistence",
-                                                style: Theme.of(context).textTheme.titleLarge,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                              ),
-                                              Text(
-                                                "Save the state of players.",
-                                                style: Theme.of(context).textTheme.titleSmall,
-                                              ),
-                                            ],
-                                          ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Persistence",
+                                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                    color: const Color.fromARGB(255, 229, 229, 229),
+                                                  ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                            Text(
+                                              "Save the state of players.",
+                                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                                    color: const Color.fromARGB(255, 229, 229, 229),
+                                                  ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -595,33 +586,32 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                                 child: Row(
                                   children: [
-                                    const Opacity(
-                                      opacity: 0.5,
-                                      child: Icon(
-                                        Icons.history_outlined,
-                                        size: 32,
-                                      ),
+                                    const Icon(
+                                      Icons.history_outlined,
+                                      size: 32,
+                                      color: Color.fromARGB(255, 127, 127, 127),
                                     ),
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: Opacity(
-                                          opacity: 0.9,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Show Changed Life",
-                                                style: Theme.of(context).textTheme.titleLarge,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                              ),
-                                              Text(
-                                                "Show the changed life for a short time.",
-                                                style: Theme.of(context).textTheme.titleSmall,
-                                              ),
-                                            ],
-                                          ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Show Changed Life",
+                                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                    color: const Color.fromARGB(255, 229, 229, 229),
+                                                  ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                            Text(
+                                              "Show the changed life for a short time.",
+                                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                                    color: const Color.fromARGB(255, 229, 229, 229),
+                                                  ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -650,33 +640,32 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                                 child: Row(
                                   children: [
-                                    const Opacity(
-                                      opacity: 0.5,
-                                      child: Icon(
-                                        Icons.format_size,
-                                        size: 32,
-                                      ),
+                                    const Icon(
+                                      Icons.format_size,
+                                      size: 32,
+                                      color: Color.fromARGB(255, 127, 127, 127),
                                     ),
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: Opacity(
-                                          opacity: 0.9,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Maximise Font Size",
-                                                style: Theme.of(context).textTheme.titleLarge,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                              ),
-                                              Text(
-                                                "Maximises the font size of the life counters. The font size of all the counters may not be the same.",
-                                                style: Theme.of(context).textTheme.titleSmall,
-                                              ),
-                                            ],
-                                          ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Maximise Font Size",
+                                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                    color: const Color.fromARGB(255, 229, 229, 229),
+                                                  ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                            Text(
+                                              "Maximises the font size of the life counters. The font size of all the counters may not be the same.",
+                                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                                    color: const Color.fromARGB(255, 229, 229, 229),
+                                                  ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),

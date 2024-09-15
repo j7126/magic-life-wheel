@@ -93,14 +93,12 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                       color: Theme.of(context).colorScheme.surface,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Opacity(
-                          opacity: 0.7,
-                          child: Text(
-                            widget.player.dead ? "Dead" : "${widget.player.life} Life",
-                            style: const TextStyle(
-                              fontSize: 26,
-                              height: 1,
-                            ),
+                        child: Text(
+                          widget.player.dead ? "Dead" : "${widget.player.life} Life",
+                          style: const TextStyle(
+                            fontSize: 26,
+                            height: 1,
+                            color: Color.fromARGB(255, 178, 178, 178),
                           ),
                         ),
                       ),
@@ -109,27 +107,26 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                   if (widget.player.damageHistory.isEmpty)
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 24.0),
-                      child: Opacity(
-                        opacity: 0.5,
-                        child: Row(
-                          children: [
-                            const Spacer(),
-                            const Icon(
-                              Icons.history,
-                              size: 34,
-                            ),
-                            const Gap(8.0),
-                            Text(
-                              "No history",
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24,
-                                  ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const Spacer(),
-                          ],
-                        ),
+                      child: Row(
+                        children: [
+                          const Spacer(),
+                          const Icon(
+                            Icons.history,
+                            size: 34,
+                            color: Color.fromARGB(255, 127, 127, 127),
+                          ),
+                          const Gap(8.0),
+                          Text(
+                            "No history",
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                  color: const Color.fromARGB(255, 127, 127, 127),
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const Spacer(),
+                        ],
                       ),
                     ),
                   for (var event in widget.player.damageHistory.reversed) ...[
@@ -252,37 +249,31 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12.0),
-                            child: Opacity(
-                              opacity: 0.5,
-                              child: Container(
-                                height: 2.0,
-                                color: DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant,
-                              ),
+                            child: Container(
+                              height: 2.0,
+                              color: (DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant)
+                                  .withAlpha(127),
                             ),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              "${event.priorLife}",
-                              style: const TextStyle(
-                                fontSize: 18,
-                                height: 1,
-                              ),
+                          child: Text(
+                            "${event.priorLife}",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              height: 1,
+                              color: Color.fromARGB(255, 153, 153, 153),
                             ),
                           ),
                         ),
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12.0),
-                            child: Opacity(
-                              opacity: 0.5,
-                              child: Container(
-                                height: 2.0,
-                                color: DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant,
-                              ),
+                            child: Container(
+                              height: 2.0,
+                              color: (DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant)
+                                  .withAlpha(127),
                             ),
                           ),
                         ),

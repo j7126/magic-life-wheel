@@ -73,12 +73,10 @@ class _CardImageState extends State<CardImage> {
       builder: (BuildContext context, BoxConstraints bc) {
         var size = min(bc.maxHeight, bc.maxWidth) * 0.4;
         return Center(
-          child: Opacity(
-            opacity: 0.3,
-            child: Icon(
-              Icons.broken_image_outlined,
-              size: size,
-            ),
+          child: Icon(
+            Icons.broken_image_outlined,
+            size: size,
+            color: const Color.fromARGB(255, 76, 76, 76),
           ),
         );
       },
@@ -88,12 +86,10 @@ class _CardImageState extends State<CardImage> {
       builder: (BuildContext context, BoxConstraints bc) {
         var size = min(bc.maxHeight, bc.maxWidth) * 0.4;
         return Center(
-          child: Opacity(
-            opacity: 0.3,
-            child: Icon(
-              Icons.image_outlined,
-              size: size,
-            ),
+          child: Icon(
+            Icons.image_outlined,
+            size: size,
+            color: const Color.fromARGB(255, 76, 76, 76),
           ),
         );
       },

@@ -59,21 +59,22 @@ class _AboutPageState extends State<AboutPage> {
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Opacity(
-                              opacity: 0.9,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Magic Life Wheel',
-                                    style: Theme.of(context).textTheme.titleLarge,
-                                  ),
-                                  Text(
-                                    '© 2024 Jefferey Neuffer',
-                                    style: Theme.of(context).textTheme.titleSmall,
-                                  ),
-                                ],
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Magic Life Wheel',
+                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                        color: const Color.fromARGB(255, 229, 229, 229),
+                                      ),
+                                ),
+                                Text(
+                                  '© 2024 Jefferey Neuffer',
+                                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                        color: const Color.fromARGB(255, 229, 229, 229),
+                                      ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -86,31 +87,30 @@ class _AboutPageState extends State<AboutPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                     child: Row(
                       children: [
-                        const Opacity(
-                          opacity: 0.5,
-                          child: Icon(
-                            Icons.info_outline,
-                            size: 32,
-                          ),
+                        const Icon(
+                          Icons.info_outline,
+                          size: 32,
+                          color: Color.fromARGB(255, 127, 127, 127),
                         ),
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Opacity(
-                              opacity: 0.9,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'App Version',
-                                    style: Theme.of(context).textTheme.titleLarge,
-                                  ),
-                                  Text(
-                                    '${packageInfo?.version ?? '-.-.-'} (${packageInfo?.buildNumber ?? ''})',
-                                    style: Theme.of(context).textTheme.titleSmall,
-                                  ),
-                                ],
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'App Version',
+                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                        color: const Color.fromARGB(255, 229, 229, 229),
+                                      ),
+                                ),
+                                Text(
+                                  '${packageInfo?.version ?? '-.-.-'} (${packageInfo?.buildNumber ?? ''})',
+                                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                        color: const Color.fromARGB(255, 229, 229, 229),
+                                      ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -125,31 +125,30 @@ class _AboutPageState extends State<AboutPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                       child: Row(
                         children: [
-                          const Opacity(
-                            opacity: 0.5,
-                            child: Icon(
-                              Icons.home_outlined,
-                              size: 32,
-                            ),
+                          const Icon(
+                            Icons.home_outlined,
+                            size: 32,
+                            color: Color.fromARGB(255, 127, 127, 127),
                           ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Opacity(
-                                opacity: 0.9,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Home Page',
-                                      style: Theme.of(context).textTheme.titleLarge,
-                                    ),
-                                    Text(
-                                      'https://jefferey.dev/projects/magic-life-wheel',
-                                      style: Theme.of(context).textTheme.titleSmall,
-                                    ),
-                                  ],
-                                ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Home Page',
+                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
+                                  ),
+                                  Text(
+                                    'https://jefferey.dev/projects/magic-life-wheel',
+                                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -165,31 +164,30 @@ class _AboutPageState extends State<AboutPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                       child: Row(
                         children: [
-                          const Opacity(
-                            opacity: 0.5,
-                            child: Icon(
-                              Icons.bug_report,
-                              size: 32,
-                            ),
+                          const Icon(
+                            Icons.bug_report,
+                            size: 32,
+                            color: Color.fromARGB(255, 127, 127, 127),
                           ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Opacity(
-                                opacity: 0.9,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Report an issue',
-                                      style: Theme.of(context).textTheme.titleLarge,
-                                    ),
-                                    Text(
-                                      'https://github.com/j7126/magic-life-wheel/issues',
-                                      style: Theme.of(context).textTheme.titleSmall,
-                                    ),
-                                  ],
-                                ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Report an issue',
+                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
+                                  ),
+                                  Text(
+                                    'https://github.com/j7126/magic-life-wheel/issues',
+                                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -205,31 +203,30 @@ class _AboutPageState extends State<AboutPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                       child: Row(
                         children: [
-                          const Opacity(
-                            opacity: 0.5,
-                            child: Icon(
-                              CustomIcons.github_circled,
-                              size: 32,
-                            ),
+                          const Icon(
+                            CustomIcons.github_circled,
+                            size: 32,
+                            color: Color.fromARGB(255, 127, 127, 127),
                           ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Opacity(
-                                opacity: 0.9,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'View on GitHub',
-                                      style: Theme.of(context).textTheme.titleLarge,
-                                    ),
-                                    Text(
-                                      'https://github.com/j7126/magic-life-wheel',
-                                      style: Theme.of(context).textTheme.titleSmall,
-                                    ),
-                                  ],
-                                ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'View on GitHub',
+                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
+                                  ),
+                                  Text(
+                                    'https://github.com/j7126/magic-life-wheel',
+                                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -246,31 +243,30 @@ class _AboutPageState extends State<AboutPage> {
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          const Opacity(
-                            opacity: 0.5,
-                            child: Icon(
-                              Icons.edit_outlined,
-                              size: 32,
-                            ),
+                          const Icon(
+                            Icons.edit_outlined,
+                            size: 32,
+                            color: Color.fromARGB(255, 127, 127, 127),
                           ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Opacity(
-                                opacity: 0.9,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Credits',
-                                      style: Theme.of(context).textTheme.titleLarge,
-                                    ),
-                                    Text(
-                                      'https://github.com/j7126/magic-life-wheel/blob/main/CREDITS.md',
-                                      style: Theme.of(context).textTheme.titleSmall,
-                                    ),
-                                  ],
-                                ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Credits',
+                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
+                                  ),
+                                  Text(
+                                    'https://github.com/j7126/magic-life-wheel/blob/main/CREDITS.md',
+                                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -287,31 +283,30 @@ class _AboutPageState extends State<AboutPage> {
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          const Opacity(
-                            opacity: 0.5,
-                            child: Icon(
-                              Icons.gavel_outlined,
-                              size: 32,
-                            ),
+                          const Icon(
+                            Icons.gavel_outlined,
+                            size: 32,
+                            color: Color.fromARGB(255, 127, 127, 127),
                           ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Opacity(
-                                opacity: 0.9,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'License',
-                                      style: Theme.of(context).textTheme.titleLarge,
-                                    ),
-                                    Text(
-                                      'GNU Affero General Public License',
-                                      style: Theme.of(context).textTheme.titleSmall,
-                                    ),
-                                  ],
-                                ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'License',
+                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
+                                  ),
+                                  Text(
+                                    'GNU Affero General Public License',
+                                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -322,13 +317,11 @@ class _AboutPageState extends State<AboutPage> {
                 ),
                 const Padding(
                   padding: EdgeInsets.all(16.0),
-                  child: Opacity(
-                    opacity: 0.3,
-                    child: Text(
-                      "Magic Life Wheel Copyright (C) 2024 Jefferey Neuffer.\nThis program is free software, licensed under GNU AGPL v3 or any later version.\n\nPortions of this app contains information and images related to Magic: The Gathering. Card metadata is bundled with the app, and card images may be fetched from Scryfall. Wizards of the Coast, Magic: The Gathering, and their logos, in addtion to the literal and graphical information presented about Magic: The Gathering, including card images, names, mana symbols and other associated metadata and images, is copyright Wizards of the Coast, LLC. All rights reserved. This app is not produced by or endorsed by Wizards of the Coast.",
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ),
+                  child: Text(
+                    "Magic Life Wheel Copyright (C) 2024 Jefferey Neuffer.\nThis program is free software, licensed under GNU AGPL v3 or any later version.\n\nPortions of this app contains information and images related to Magic: The Gathering. Card metadata is bundled with the app, and card images may be fetched from Scryfall. Wizards of the Coast, Magic: The Gathering, and their logos, in addtion to the literal and graphical information presented about Magic: The Gathering, including card images, names, mana symbols and other associated metadata and images, is copyright Wizards of the Coast, LLC. All rights reserved. This app is not produced by or endorsed by Wizards of the Coast.",
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      color: Color.fromARGB(255, 76, 76, 76),
                     ),
                   ),
                 ),
