@@ -5,6 +5,9 @@
 
 /android/key.properties
 
+/ios/
+/macos/
+
 # Miscellaneous
 *.class
 *.log

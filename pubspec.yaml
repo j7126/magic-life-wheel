@@ -80,3 +80,9 @@ flutter_launcher_icons:
   macos:
     generate: true
     image_path: "assets/icon/logo.png"
+
+platforms:
+  android:
+  linux:
+  windows:
+  web:
