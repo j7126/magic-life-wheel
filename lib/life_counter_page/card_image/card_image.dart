@@ -102,36 +102,35 @@ class _CardImageState extends State<CardImage> {
     if (Service.settingsService.pref_getScryfallImages && widget.cardSet != null) {
       if (_valid) {
         if (_ready) {
-          return Stack(
+          return Row(
             children: [
-              if (widget.showLoader)
-                Center(
-                  child: Padding(
-                    padding: widget.iconPadding,
-                    child: const CircularProgressIndicator(),
+              Expanded(
+                child: Image.network(
+                  _imageUrl,
+                  fit: BoxFit.cover,
+                  height: double.infinity,
+                  errorBuilder: (context, error, stackTrace) => brokenImage,
+                  loadingBuilder: (context, child, loadingProgress) => loadingProgress != null && widget.showLoader
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : child,
+                ),
+              ),
+              if (_partnerImageUrl != null)
+                Expanded(
+                  child: Image.network(
+                    _partnerImageUrl!,
+                    fit: BoxFit.cover,
+                    height: double.infinity,
+                    errorBuilder: (context, error, stackTrace) => brokenImage,
+                    loadingBuilder: (context, child, loadingProgress) => loadingProgress != null && widget.showLoader
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : child,
                   ),
                 ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Image.network(
-                      _imageUrl,
-                      fit: BoxFit.cover,
-                      height: double.infinity,
-                      errorBuilder: (context, error, stackTrace) => brokenImage,
-                    ),
-                  ),
-                  if (_partnerImageUrl != null)
-                    Expanded(
-                      child: Image.network(
-                        _partnerImageUrl!,
-                        fit: BoxFit.cover,
-                        height: double.infinity,
-                        errorBuilder: (context, error, stackTrace) => brokenImage,
-                      ),
-                    ),
-                ],
-              ),
             ],
           );
         } else {
