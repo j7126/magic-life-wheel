@@ -6,7 +6,7 @@ version: 1.8.1+18
 
 environment:
   sdk: '>=3.3.3 <4.0.0'
-  flutter: '>=3.22.2'
+  flutter: '>=3.24.3'
 
 dependencies:
   flutter:
@@ -24,12 +24,12 @@ dependencies:
   collection: ^1.18.0
   string_normalizer: ^0.3.1
   uuid: ^4.4.0
-  keyrune_icons_flutter: ^0.0.3
+  keyrune_icons_flutter: ^3.15.0
   auto_size_text:
     git:
       url: https://github.com/j7126/auto_size_text.git
       ref: v3.0.x
-  mana_icons_flutter: ^0.0.1
+  mana_icons_flutter: ^1.15.9
   image_picker: ^1.1.2
   image: ^4.2.0
   tab_container: ^3.5.3
