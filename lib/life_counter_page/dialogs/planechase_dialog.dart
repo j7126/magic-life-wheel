@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/static_service.dart';
@@ -13,6 +14,7 @@ class PlanechaseDialog extends StatefulWidget {
 
   static int? planechasePlaneIndex;
   static CardSet? planechasePlane;
+  static CardSet? planechaseNextPlane;
   static List<CardSet>? planechaseDeck;
   static bool rotated = false;
   static bool showInfo = false;
@@ -21,35 +23,87 @@ class PlanechaseDialog extends StatefulWidget {
   State<PlanechaseDialog> createState() => _PlanechaseDialogState();
 }
 
-class _PlanechaseDialogState extends State<PlanechaseDialog> {
+class _PlanechaseDialogState extends State<PlanechaseDialog> with SingleTickerProviderStateMixin {
   final FocusNode _menuButtonFocusNode = FocusNode();
+  late final AnimationController _cardAnimationController = AnimationController(
+    duration: const Duration(milliseconds: 300),
+    vsync: this,
+  );
+  late final Animation<Offset> _cardAnimation = Tween<Offset>(
+    begin: Offset.zero,
+    end: const Offset(1.0, 0.0),
+  ).animate(CurvedAnimation(
+    parent: _cardAnimationController,
+    curve: Curves.easeInOut,
+  ));
+
+  bool _animatingPlaneswalk = false;
 
   void buildDeck() {
-    PlanechaseDialog.planechaseDeck =
-        Service.dataLoader.allSetCards?.data.where((x) => x.types.contains("Plane")).toList();
+    if (Service.dataLoader.allSetCards == null) {
+      return;
+    }
+
+    PlanechaseDialog.planechaseDeck = groupBy(
+            Service.dataLoader.allSetCards!.data.where((x) => x.types.contains("Plane")),
+            (card) => card.name.trim().toLowerCase())
+        .entries
+        .map((cardsWithSameName) => cardsWithSameName.value.length == 1 || Service.dataLoader.sets == null
+            ? cardsWithSameName.value.first
+            : cardsWithSameName.value
+                .sortedBy(
+                    (card) => Service.dataLoader.sets!.data.firstWhere((set) => set.code == card.setCode).releaseDate)
+                .last)
+        .toList();
     PlanechaseDialog.planechaseDeck?.shuffle();
     setState(() {
       PlanechaseDialog.planechasePlaneIndex = null;
     });
   }
 
-  void planeswalk() {
-    if (PlanechaseDialog.planechaseDeck?.isEmpty ?? true) {
-      buildDeck();
-    }
+  void setPlaneCard() {
+    PlanechaseDialog.planechasePlane = PlanechaseDialog
+        .planechaseDeck?[PlanechaseDialog.planechasePlaneIndex! % PlanechaseDialog.planechaseDeck!.length];
+    PlanechaseDialog.planechaseNextPlane = PlanechaseDialog
+        .planechaseDeck?[(PlanechaseDialog.planechasePlaneIndex! + 1) % PlanechaseDialog.planechaseDeck!.length];
+  }
 
+  void planeswalkAnimationComplete() {
     setState(() {
+      _animatingPlaneswalk = false;
       PlanechaseDialog.planechasePlaneIndex = (PlanechaseDialog.planechasePlaneIndex ?? -1) + 1;
-      PlanechaseDialog.planechasePlane = PlanechaseDialog
-          .planechaseDeck?[PlanechaseDialog.planechasePlaneIndex! % PlanechaseDialog.planechaseDeck!.length];
+      setPlaneCard();
     });
   }
 
+  void planeswalk() {
+    if (_animatingPlaneswalk) {
+      return;
+    }
+
+    if (PlanechaseDialog.planechaseDeck?.isEmpty ?? true) {
+      buildDeck();
+      planeswalkAnimationComplete();
+    } else {
+      if (PlanechaseDialog.showInfo || PlanechaseDialog.planechasePlane == null) {
+        planeswalkAnimationComplete();
+      } else {
+        setState(() {
+          _cardAnimationController.forward();
+          _animatingPlaneswalk = true;
+        });
+      }
+    }
+  }
+
   void back() {
+    if (_animatingPlaneswalk) {
+      return;
+    }
+
     setState(() {
       PlanechaseDialog.planechasePlaneIndex = PlanechaseDialog.planechasePlaneIndex! - 1;
-      PlanechaseDialog.planechasePlane = PlanechaseDialog
-          .planechaseDeck?[PlanechaseDialog.planechasePlaneIndex! % PlanechaseDialog.planechaseDeck!.length];
+      setPlaneCard();
     });
   }
 
@@ -114,6 +168,13 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
 
   @override
   void initState() {
+    _cardAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed && _animatingPlaneswalk) {
+        _cardAnimationController.reset();
+        planeswalkAnimationComplete();
+      }
+    });
+
     DialogService.register(context);
     super.initState();
   }
@@ -121,12 +182,14 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
   @override
   void dispose() {
     DialogService.deregister(context);
+    _cardAnimationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var card = PlanechaseDialog.planechasePlane;
+    var nextCard = PlanechaseDialog.planechaseNextPlane;
 
     var barButtonStyle = ButtonStyle(
       shape: WidgetStateProperty.all<RoundedRectangleBorder>(
@@ -152,7 +215,7 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
     return AlertDialog(
       insetPadding: EdgeInsets.symmetric(horizontal: isLandscape ? 64.0 : 0.0, vertical: isLandscape ? 0.0 : 64.0),
       titlePadding: EdgeInsets.only(top: isLandscape ? 8.0 : 12.0, left: 20.0, right: 12.0),
-      contentPadding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0, top: 8.0),
+      contentPadding: EdgeInsets.zero,
       title: Row(
         children: [
           const Text("Planechase"),
@@ -237,92 +300,161 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
                             })
                           : LayoutBuilder(builder: (context, constraints) {
                               return PlanechaseDialog.showInfo
-                                  ? Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(bottom: 8.0),
-                                          child: Text(
-                                            card.name,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: min(constraints.maxHeight, constraints.maxWidth) * 0.12,
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 8.0),
+                                            child: Text(
+                                              card.name,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: min(constraints.maxHeight, constraints.maxWidth) * 0.12,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Expanded(
-                                          child: Builder(builder: (context) {
-                                            var spans = RegExp(r'({)([^}]*)(})|([^{]*)')
-                                                .allMatches(card.text?.replaceAll("\n", "\n\n") ?? "")
-                                                .where((element) => element.group(0) != null);
-                                            return AutoSizeText.rich(
-                                              TextSpan(
-                                                children: [
-                                                  for (var span in spans)
-                                                    span.groupCount > 1 &&
-                                                            ManaIcons.icons.containsKey(mapSymbolCode(span.group(2)))
-                                                        ? WidgetSpan(
-                                                            child: Padding(
-                                                              padding: EdgeInsets.symmetric(
-                                                                  horizontal: (IconTheme.of(context).size ?? 1) * 0.1),
-                                                              child: Container(
-                                                                decoration: BoxDecoration(
-                                                                  borderRadius: BorderRadius.circular(
-                                                                      (IconTheme.of(context).size ?? 1) * 0.5),
-                                                                  color: mapSymbolBackgroundColor(span.group(2)),
-                                                                ),
-                                                                clipBehavior: Clip.hardEdge,
-                                                                child: Padding(
-                                                                  padding: EdgeInsets.all(
-                                                                      (IconTheme.of(context).size ?? 1) * 0.1),
-                                                                  child: Icon(
-                                                                    ManaIcons.icons[mapSymbolCode(span.group(2))],
-                                                                    color: mapSymbolForegroundColor(span.group(2)),
-                                                                    size: (IconTheme.of(context).size ?? 1) * 0.8,
+                                          Expanded(
+                                            child: Builder(builder: (context) {
+                                              var spans = RegExp(r'({)([^}]*)(})|([^{]*)')
+                                                  .allMatches(card.text?.replaceAll("\n", "\n\n") ?? "")
+                                                  .where((element) => element.group(0) != null);
+                                              return AutoSizeText.rich(
+                                                TextSpan(
+                                                  children: [
+                                                    for (var span in spans)
+                                                      span.groupCount > 1 &&
+                                                              ManaIcons.icons.containsKey(mapSymbolCode(span.group(2)))
+                                                          ? WidgetSpan(
+                                                              child: Padding(
+                                                                padding: EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        (IconTheme.of(context).size ?? 1) * 0.1),
+                                                                child: Container(
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.circular(
+                                                                        (IconTheme.of(context).size ?? 1) * 0.5),
+                                                                    color: mapSymbolBackgroundColor(span.group(2)),
+                                                                  ),
+                                                                  clipBehavior: Clip.hardEdge,
+                                                                  child: Padding(
+                                                                    padding: EdgeInsets.all(
+                                                                        (IconTheme.of(context).size ?? 1) * 0.1),
+                                                                    child: Icon(
+                                                                      ManaIcons.icons[mapSymbolCode(span.group(2))],
+                                                                      color: mapSymbolForegroundColor(span.group(2)),
+                                                                      size: (IconTheme.of(context).size ?? 1) * 0.8,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),
+                                                            )
+                                                          : TextSpan(
+                                                              text: span.group(0),
                                                             ),
-                                                          )
-                                                        : TextSpan(
-                                                            text: span.group(0),
-                                                          ),
+                                                  ],
+                                                ),
+                                                placeholderDimensions: [
+                                                  for (var span in spans)
+                                                    if (span.groupCount > 1 &&
+                                                        ManaIcons.icons.containsKey(mapSymbolCode(span.group(2))))
+                                                      PlaceholderDimensions(
+                                                        size: Size(
+                                                          (IconTheme.of(context).size ?? 0) * 1.2,
+                                                          (IconTheme.of(context).size ?? 0),
+                                                        ),
+                                                        alignment: PlaceholderAlignment.baseline,
+                                                      )
                                                 ],
-                                              ),
-                                              placeholderDimensions: [
-                                                for (var span in spans)
-                                                  if (span.groupCount > 1 &&
-                                                      ManaIcons.icons.containsKey(mapSymbolCode(span.group(2))))
-                                                    PlaceholderDimensions(
-                                                      size: Size(
-                                                        (IconTheme.of(context).size ?? 0) * 1.2,
-                                                        (IconTheme.of(context).size ?? 0),
-                                                      ),
-                                                      alignment: PlaceholderAlignment.baseline,
-                                                    )
-                                              ],
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: min(constraints.maxHeight, constraints.maxWidth) * 0.08,
-                                              ),
-                                            );
-                                          }),
-                                        ),
-                                      ],
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: min(constraints.maxHeight, constraints.maxWidth) * 0.08,
+                                                ),
+                                              );
+                                            }),
+                                          ),
+                                        ],
+                                      ),
                                     )
                                   : RotatedBox(
                                       quarterTurns: (isLandscape ? 1 : 0) + (PlanechaseDialog.rotated ? 2 : 0),
                                       child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            min(constraints.maxHeight, constraints.maxWidth) * 0.05,
+                                        decoration: const BoxDecoration(),
+                                        clipBehavior: Clip.hardEdge,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Stack(
+                                            children: [
+                                              if (nextCard != null)
+                                                Stack(
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(
+                                                          min(constraints.maxHeight, constraints.maxWidth) * 0.05,
+                                                        ),
+                                                      ),
+                                                      clipBehavior: Clip.antiAlias,
+                                                      child: Opacity(
+                                                        opacity: _animatingPlaneswalk ? 1 : 0,
+                                                        child: CardImage(
+                                                          key: Key(nextCard.uuid),
+                                                          cardSet: nextCard,
+                                                          fullCard: true,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(
+                                                          min(constraints.maxHeight, constraints.maxWidth) * 0.05,
+                                                        ),
+                                                        border: Border.all(
+                                                          color: Theme.of(context).colorScheme.surface,
+                                                          width:
+                                                              min(constraints.maxHeight, constraints.maxWidth) * 0.005,
+                                                          strokeAlign: BorderSide.strokeAlignCenter,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              SlideTransition(
+                                                position: _cardAnimation,
+                                                child: Stack(
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(
+                                                          min(constraints.maxHeight, constraints.maxWidth) * 0.05,
+                                                        ),
+                                                      ),
+                                                      clipBehavior: Clip.antiAlias,
+                                                      child: CardImage(
+                                                        key: Key(card.uuid),
+                                                        cardSet: card,
+                                                        fullCard: true,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(
+                                                          min(constraints.maxHeight, constraints.maxWidth) * 0.05,
+                                                        ),
+                                                        border: Border.all(
+                                                          color: Theme.of(context).colorScheme.surface,
+                                                          width:
+                                                              min(constraints.maxHeight, constraints.maxWidth) * 0.005,
+                                                          strokeAlign: BorderSide.strokeAlignCenter,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        clipBehavior: Clip.antiAlias,
-                                        child: CardImage(
-                                          key: Key(card.uuid),
-                                          cardSet: card,
-                                          fullCard: true,
                                         ),
                                       ),
                                     );
@@ -330,17 +462,14 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0),
-                  child: Divider(
-                    height: 2,
-                  ),
+                const Divider(
+                  height: 2,
                 ),
                 Container(
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(16),
-                      bottomRight: Radius.circular(16),
+                      bottomLeft: Radius.circular(26),
+                      bottomRight: Radius.circular(26),
                     ),
                   ),
                   clipBehavior: Clip.hardEdge,
@@ -406,7 +535,7 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> {
               ],
             )
           : Padding(
-              padding: const EdgeInsets.only(bottom: 58.0),
+              padding: const EdgeInsets.only(bottom: 50.0),
               child: Flexible(
                 child: AspectRatio(
                   aspectRatio: imgw / imgh,
