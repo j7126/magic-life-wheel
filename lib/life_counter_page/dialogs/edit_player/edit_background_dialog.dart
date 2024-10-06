@@ -724,7 +724,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                 children: [
                                   const Spacer(),
                                   const Icon(
-                                    CustomIcons.cards_outlined,
+                                    CustomIcons.cardsOutlined,
                                     size: 34,
                                     color: Color.fromARGB(255, 76, 76, 76),
                                   ),
@@ -877,7 +877,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             children: [
                               const Spacer(),
                               Icon(
-                                CustomIcons.cards_outlined,
+                                CustomIcons.cardsOutlined,
                                 size: size,
                                 color: const Color.fromARGB(255, 76, 76, 76),
                               ),

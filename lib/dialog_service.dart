@@ -19,8 +19,8 @@ class DialogService {
         var context = _dialogContexts[0];
         if (context.mounted) {
           Navigator.of(context).pop();
+          _dialogContexts.remove(context);
         }
-        _dialogContexts.remove(context);
       }
     }
   }

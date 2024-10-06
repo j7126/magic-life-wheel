@@ -178,9 +178,10 @@ class _EditPlayerDialogState extends State<EditPlayerDialog> {
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               onChanged: (text) {
                 setState(() {
-                  try {
-                    widget.player.life = int.parse(text);
-                  } catch (e) {}
+                  var num = int.tryParse(text);
+                  if (num != null) {
+                    widget.player.life = num;
+                  }
                 });
               },
             ),

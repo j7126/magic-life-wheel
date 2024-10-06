@@ -204,7 +204,7 @@ class _AboutPageState extends State<AboutPage> {
                       child: Row(
                         children: [
                           const Icon(
-                            CustomIcons.github_circled,
+                            CustomIcons.githubCircled,
                             size: 32,
                             color: Color.fromARGB(255, 127, 127, 127),
                           ),
