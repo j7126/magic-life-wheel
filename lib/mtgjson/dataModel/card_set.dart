@@ -21,6 +21,7 @@ class CardSet {
     this.text,
     required this.cardSearchString,
     required this.cardSearchStringWords,
+    this.isFunny,
   });
 
   String name;
@@ -35,6 +36,7 @@ class CardSet {
   List<String>? keywords;
   String? text;
   String? flavorName;
+  bool? isFunny;
 
   String cardSearchString;
   List<String> cardSearchStringWords;

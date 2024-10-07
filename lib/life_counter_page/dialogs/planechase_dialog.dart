@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
@@ -45,7 +46,7 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with SingleTickerPr
     }
 
     PlanechaseDialog.planechaseDeck = groupBy(
-            Service.dataLoader.allSetCards!.data.where((x) => x.types.contains("Plane")),
+            Service.dataLoader.allSetCards!.data.where((x) => x.types.contains("Plane") && (Service.settingsService.pref_planechaseEnableFunny || x.isFunny != true)),
             (card) => card.name.trim().toLowerCase())
         .entries
         .map((cardsWithSameName) => cardsWithSameName.value.length == 1 || Service.dataLoader.sets == null
@@ -237,9 +238,11 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with SingleTickerPr
             menuChildren: <Widget>[
               MenuItemButton(
                 onPressed: () {
-                  buildDeck();
                   setState(() {
+                    PlanechaseDialog.planechaseDeck = null;
                     PlanechaseDialog.planechasePlane = null;
+                    PlanechaseDialog.planechaseNextPlane = null;
+                    PlanechaseDialog.planechasePlaneIndex = null;
                   });
                 },
                 leadingIcon: const Icon(Icons.shuffle),
@@ -290,12 +293,88 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with SingleTickerPr
                       height: imgh,
                       child: card == null
                           ? LayoutBuilder(builder: (context, constraints) {
-                              return Center(
-                                child: Icon(
-                                  ManaIcons.ms_planeswalker,
-                                  size: min(constraints.maxHeight, constraints.maxWidth) * 0.4,
-                                  color: const Color.fromARGB(255, 102, 102, 102),
-                                ),
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        Service.settingsService.pref_planechaseEnableFunny =
+                                            !Service.settingsService.pref_planechaseEnableFunny;
+                                      });
+                                    },
+                                    behavior: HitTestBehavior.opaque,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            ManaIcons.ms_planeswalker,
+                                            size: 32,
+                                            color: Color.fromARGB(255, 127, 127, 127),
+                                          ),
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Enable Unsanctioned / Playtest",
+                                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                                        ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                  ),
+                                                  Text(
+                                                    "These cards from not usually legal for play",
+                                                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Switch(
+                                            value: Service.settingsService.pref_planechaseEnableFunny,
+                                            onChanged: (bool value) {
+                                              setState(() {
+                                                Service.settingsService.pref_planechaseEnableFunny = value;
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: FilledButton(
+                                      onPressed: planeswalk,
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              ManaIcons.ms_planeswalker,
+                                              size: 36,
+                                            ),
+                                            Gap(12.0),
+                                            Text(
+                                              "Planeswalk",
+                                              style: TextStyle(
+                                                fontSize: 26.0,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               );
                             })
                           : LayoutBuilder(builder: (context, constraints) {

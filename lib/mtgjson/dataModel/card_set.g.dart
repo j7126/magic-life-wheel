@@ -31,6 +31,7 @@ CardSet _$CardSetFromJson(Map<String, dynamic> json) => CardSet(
       cardSearchStringWords: (json['cardSearchStringWords'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
+      isFunny: json['isFunny'] as bool?,
     )
       ..flavorName = json['flavorName'] as String?
       ..cardSearchStringAlt = json['cardSearchStringAlt'] as String?
@@ -52,6 +53,7 @@ Map<String, dynamic> _$CardSetToJson(CardSet instance) => <String, dynamic>{
       'keywords': instance.keywords,
       'text': instance.text,
       'flavorName': instance.flavorName,
+      'isFunny': instance.isFunny,
       'cardSearchString': instance.cardSearchString,
       'cardSearchStringWords': instance.cardSearchStringWords,
       'cardSearchStringAlt': instance.cardSearchStringAlt,

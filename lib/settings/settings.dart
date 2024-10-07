@@ -76,6 +76,11 @@ class SettingsService {
     if (layout != null) {
       _conf_layout = layout;
     }
+
+    var planechaseEnableFunny = prefs.getBool('planechaseEnableFunny');
+    if (planechaseEnableFunny != null) {
+      _pref_planechaseEnableFunny = planechaseEnableFunny;
+    }
   }
 
   bool _pref_getScryfallImages = true;
@@ -105,7 +110,6 @@ class SettingsService {
     _pref_asymmetricalCommanderDamageButtons = val;
     prefs.setBool('symmetricalCommanderDamageButtons', val);
   }
-
 
   bool _pref_commanderDamageButtonsFacePlayer = true;
   bool get pref_commanderDamageButtonsFacePlayer => _pref_commanderDamageButtonsFacePlayer;
@@ -169,5 +173,12 @@ class SettingsService {
       _conf_layout = val;
       prefs.setInt('layout', val);
     }
+  }
+
+  bool _pref_planechaseEnableFunny = false;
+  bool get pref_planechaseEnableFunny => _pref_planechaseEnableFunny;
+  set pref_planechaseEnableFunny(bool val) {
+    _pref_planechaseEnableFunny = val;
+    prefs.setBool('planechaseEnableFunny', val);
   }
 }
