@@ -345,13 +345,11 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                 Padding(
                   padding: const EdgeInsets.only(top: 12.0),
                   child: FilledButton(
-                    onPressed: !(layout?.symetrical ?? true)
-                        ? () {
-                            setState(() {
-                              switchRotated();
-                            });
-                          }
-                        : null,
+                    onPressed: () {
+                      setState(() {
+                        switchRotated();
+                      });
+                    },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

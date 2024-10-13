@@ -4,7 +4,6 @@ import 'package:magic_life_wheel/datamodel/player.dart';
 
 class Layout {
   int get players => 0;
-  bool get symetrical => true;
 
   bool rotated = false;
 

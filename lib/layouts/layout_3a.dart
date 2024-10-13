@@ -8,9 +8,6 @@ class Layout3a extends Layout {
   int get players => 3;
 
   @override
-  bool get symetrical => false;
-
-  @override
   Widget build(
     BuildContext context,
     List<Player> players,
