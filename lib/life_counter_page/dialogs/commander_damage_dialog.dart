@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
@@ -18,6 +20,25 @@ class CommanderDamageDialog extends StatefulWidget {
 }
 
 class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
+  Timer? lifeChangedTimer;
+  String? lastChanged;
+
+  void changeLife(String cmdid, int x) {
+    setState(() {
+      lastChanged = cmdid;
+      widget.player.dealCommander(cmdid, x);
+    });
+    lifeChangedTimer?.cancel();
+    lifeChangedTimer = Timer(
+      const Duration(milliseconds: 5001),
+      () {
+        setState(() {});
+        lifeChangedTimer?.cancel();
+        lifeChangedTimer = null;
+      },
+    );
+  }
+
   @override
   void initState() {
     DialogService.register(context);
@@ -27,6 +48,8 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
   @override
   void dispose() {
     DialogService.deregister(context);
+    lifeChangedTimer?.cancel();
+    lifeChangedTimer = null;
     super.dispose();
   }
 
@@ -90,6 +113,14 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                   var card = partner ? player.cardPartner : player.card;
                   var cmdid = partner ? "${player.uuid}_partner" : player.uuid;
                   var dmg = (widget.player.commanderDamage[cmdid] ?? 0);
+                  var changedLife = widget.player.damageHistory.isNotEmpty &&
+                          widget.player.damageHistory.last.fromCommander == cmdid &&
+                          lastChanged == cmdid &&
+                          DateTime.now().millisecondsSinceEpoch -
+                                  widget.player.damageHistory.last.time.millisecondsSinceEpoch <
+                              5000
+                      ? widget.player.damageHistory.last.change * -1
+                      : 0;
 
                   return RotatedBox(
                     quarterTurns: Service.settingsService.pref_commanderDamageButtonsFacePlayer
@@ -137,6 +168,28 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                               ],
                             ),
                           ),
+                          if (changedLife != 0)
+                            Positioned.fill(
+                              child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 64.0, top: 2.0),
+                                  child: Text(
+                                    changedLife > 0 ? "+$changedLife" : changedLife.toString(),
+                                    style: TextStyle(
+                                        shadows: card != null || (!partner && player.background.hasBackground)
+                                            ? [
+                                                const Shadow(
+                                                  offset: Offset(0.5, 0.5),
+                                                  blurRadius: 10.0,
+                                                  color: Colors.black,
+                                                ),
+                                              ]
+                                            : null),
+                                  ),
+                                ),
+                              ),
+                            ),
                           Positioned.fill(
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
@@ -156,14 +209,10 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        widget.player.dealCommander(cmdid, 1);
-                                      });
+                                      changeLife(cmdid, 1);
                                     },
                                     onLongPress: () {
-                                      setState(() {
-                                        widget.player.dealCommander(cmdid, 10);
-                                      });
+                                      changeLife(cmdid, 10);
                                     },
                                     child: SizedBox(
                                       height: double.infinity,
@@ -194,14 +243,10 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        widget.player.dealCommander(cmdid, -1);
-                                      });
+                                      changeLife(cmdid, -1);
                                     },
                                     onLongPress: () {
-                                      setState(() {
-                                        widget.player.dealCommander(cmdid, -10);
-                                      });
+                                      changeLife(cmdid, -10);
                                     },
                                     child: SizedBox(
                                       height: double.infinity,
@@ -231,24 +276,22 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                   child: SizedBox(
                     width: double.infinity,
                     height: double.infinity,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return Flex(
-                          direction: constraints.maxWidth > constraints.maxHeight ? Axis.horizontal : Axis.vertical,
-                          children: [
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      return Flex(
+                        direction: constraints.maxWidth > constraints.maxHeight ? Axis.horizontal : Axis.vertical,
+                        children: [
+                          Expanded(
+                            child: counter(),
+                          ),
+                          if (player.cardPartner != null)
                             Expanded(
-                              child: counter(),
-                            ),
-                            if (player.cardPartner != null)
-                              Expanded(
-                                child: counter(
-                                  partner: true,
-                                ),
+                              child: counter(
+                                partner: true,
                               ),
-                          ],
-                        );
-                      }
-                    ),
+                            ),
+                        ],
+                      );
+                    }),
                   ),
                 );
               },
