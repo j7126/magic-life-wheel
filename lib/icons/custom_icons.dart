@@ -16,6 +16,10 @@
 ///         Author:    Sam Collins
 ///         License:   MIT (http://opensource.org/licenses/mit-license.php)
 ///         Homepage:  http://zocial.smcllns.com/
+/// * Font Awesome 5, Copyright (C) 2016 by Dave Gandy
+///         Author:    Dave Gandy
+///         License:   SIL (https://github.com/FortAwesome/Font-Awesome/blob/master/LICENSE.txt)
+///         Homepage:  http://fortawesome.github.com/Font-Awesome/
 ///
 import 'package:flutter/widgets.dart';
 
@@ -28,4 +32,5 @@ class CustomIcons {
   static const IconData cardsOutlined = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData cardsFilled = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData githubCircled = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData diceD6 = IconData(0xf6d1, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

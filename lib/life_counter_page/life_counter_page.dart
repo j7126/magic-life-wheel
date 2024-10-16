@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/dialogs/message_dialog.dart';
 import 'package:magic_life_wheel/dialogs/warning_dialog.dart';
+import 'package:magic_life_wheel/life_counter_page/dialogs/planar_dice_dialog.dart';
 import 'package:magic_life_wheel/transfer_game/transfer_game_page.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/layouts/layout_2a.dart';
@@ -926,6 +927,20 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                             Expanded(
                               child: TextButton(
                                 onPressed: _showPlanechase,
+                                onLongPress: () async {
+                                  if (PlanechaseDialog.planechasePlane != null) {
+                                    var result = await showDialog<bool>(
+                                      context: context,
+                                      builder: (BuildContext context) => const PlanarDiceDialog(),
+                                    );
+                                    if (result == true) {
+                                      PlanechaseDialog.planeForward();
+                                      _showPlanechase();
+                                    }
+                                  } else {
+                                    _showPlanechase();
+                                  }
+                                },
                                 style: barButtonStyle,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 12.0),

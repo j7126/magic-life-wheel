@@ -5,11 +5,13 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
+import 'package:magic_life_wheel/life_counter_page/dialogs/planar_dice_dialog.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/set.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 import 'package:mana_icons_flutter/mana_icons_flutter.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
+import 'package:magic_life_wheel/icons/custom_icons.dart';
 
 class PlanechaseDialog extends StatefulWidget {
   const PlanechaseDialog({super.key});
@@ -24,6 +26,46 @@ class PlanechaseDialog extends StatefulWidget {
 
   @override
   State<PlanechaseDialog> createState() => _PlanechaseDialogState();
+
+  static void buildDeck() {
+    if (Service.dataLoader.allSetCards == null) {
+      return;
+    }
+
+    planechaseDeck = groupBy(
+            Service.dataLoader.allSetCards!.data.where((x) =>
+                x.types.contains("Plane") &&
+                !Service.settingsService.pref_planechaseDisabledSets.contains(x.setCode) &&
+                (Service.settingsService.pref_planechaseEnableFunny || x.isFunny != true)),
+            (card) => card.name.trim().toLowerCase())
+        .entries
+        .map((cardsWithSameName) => cardsWithSameName.value.length == 1 || Service.dataLoader.sets == null
+            ? cardsWithSameName.value.first
+            : cardsWithSameName.value
+                .sortedBy(
+                    (card) => Service.dataLoader.sets!.data.firstWhere((set) => set.code == card.setCode).releaseDate)
+                .last)
+        .toList();
+    planechaseDeck?.shuffle();
+    planechasePlaneIndex = null;
+  }
+
+  static void setPlaneCard() {
+    PlanechaseDialog.planechasePlane = PlanechaseDialog
+        .planechaseDeck?[PlanechaseDialog.planechasePlaneIndex! % PlanechaseDialog.planechaseDeck!.length];
+    PlanechaseDialog.planechaseNextPlane = PlanechaseDialog
+        .planechaseDeck?[(PlanechaseDialog.planechasePlaneIndex! + 1) % PlanechaseDialog.planechaseDeck!.length];
+  }
+
+  static void planeForward() {
+    PlanechaseDialog.planechasePlaneIndex = (PlanechaseDialog.planechasePlaneIndex ?? -1) + 1;
+    PlanechaseDialog.setPlaneCard();
+  }
+
+  static void planeReverse() {
+    PlanechaseDialog.planechasePlaneIndex = PlanechaseDialog.planechasePlaneIndex! - 1;
+    PlanechaseDialog.setPlaneCard();
+  }
 }
 
 class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProviderStateMixin {
@@ -74,43 +116,10 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
     });
   }
 
-  void buildDeck() {
-    if (Service.dataLoader.allSetCards == null) {
-      return;
-    }
-
-    PlanechaseDialog.planechaseDeck = groupBy(
-            Service.dataLoader.allSetCards!.data.where((x) =>
-                x.types.contains("Plane") &&
-                !Service.settingsService.pref_planechaseDisabledSets.contains(x.setCode) &&
-                (Service.settingsService.pref_planechaseEnableFunny || x.isFunny != true)),
-            (card) => card.name.trim().toLowerCase())
-        .entries
-        .map((cardsWithSameName) => cardsWithSameName.value.length == 1 || Service.dataLoader.sets == null
-            ? cardsWithSameName.value.first
-            : cardsWithSameName.value
-                .sortedBy(
-                    (card) => Service.dataLoader.sets!.data.firstWhere((set) => set.code == card.setCode).releaseDate)
-                .last)
-        .toList();
-    PlanechaseDialog.planechaseDeck?.shuffle();
-    setState(() {
-      PlanechaseDialog.planechasePlaneIndex = null;
-    });
-  }
-
-  void setPlaneCard() {
-    PlanechaseDialog.planechasePlane = PlanechaseDialog
-        .planechaseDeck?[PlanechaseDialog.planechasePlaneIndex! % PlanechaseDialog.planechaseDeck!.length];
-    PlanechaseDialog.planechaseNextPlane = PlanechaseDialog
-        .planechaseDeck?[(PlanechaseDialog.planechasePlaneIndex! + 1) % PlanechaseDialog.planechaseDeck!.length];
-  }
-
   void planeswalkAnimationComplete() {
     setState(() {
       _animatingPlaneswalk = false;
-      PlanechaseDialog.planechasePlaneIndex = (PlanechaseDialog.planechasePlaneIndex ?? -1) + 1;
-      setPlaneCard();
+      PlanechaseDialog.planeForward();
     });
   }
 
@@ -122,7 +131,9 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
     showSetsSelector = false;
 
     if (PlanechaseDialog.planechaseDeck?.isEmpty ?? true) {
-      buildDeck();
+      setState(() {
+        PlanechaseDialog.buildDeck();
+      });
       planeswalkAnimationComplete();
     } else {
       if (PlanechaseDialog.showInfo || PlanechaseDialog.planechasePlane == null) {
@@ -142,8 +153,7 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
     }
 
     setState(() {
-      PlanechaseDialog.planechasePlaneIndex = PlanechaseDialog.planechasePlaneIndex! - 1;
-      setPlaneCard();
+      PlanechaseDialog.planeReverse();
     });
   }
 
@@ -739,6 +749,29 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
                                 ManaIcons.ms_planeswalker,
                                 size: 24,
                               ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: card != null
+                              ? () async {
+                                  var result = await showDialog<bool>(
+                                    context: context,
+                                    builder: (BuildContext context) => const PlanarDiceDialog(),
+                                  );
+                                  if (result == true) {
+                                    planeswalk();
+                                  }
+                                }
+                              : null,
+                          style: barButtonStyle,
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12.0),
+                            child: Icon(
+                              CustomIcons.diceD6,
+                              size: 24,
                             ),
                           ),
                         ),
