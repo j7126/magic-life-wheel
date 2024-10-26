@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
 import 'package:gap/gap.dart';
-import 'package:magic_life_wheel/datamodel/player.dart';
+import 'package:magic_life_wheel/datamodel/game.dart';
 import 'package:magic_life_wheel/dialogs/warning_dialog.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/transfer_game/transfer_url_service.dart';
@@ -15,14 +15,9 @@ import 'package:system_info2/system_info2.dart';
 import 'package:tab_container/tab_container.dart';
 
 class TransferGamePage extends StatefulWidget {
-  const TransferGamePage({
-    super.key,
-    required this.players,
-    required this.layoutId,
-  });
+  const TransferGamePage({super.key, required this.game});
 
-  final List<Player> players;
-  final int layoutId;
+  final Game game;
 
   @override
   State<TransferGamePage> createState() => _TransferGamePageState();
@@ -56,7 +51,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
   }
 
   void buildQrData() async {
-    data = await TransferUrlService.buildUrl(widget.players, widget.layoutId);
+    data = await TransferUrlService.buildUrl(widget.game.players, widget.game.layoutId);
     setState(() {
       ready = true;
     });
@@ -80,7 +75,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
     if (result == null) {
       dataError();
     } else {
-      if (!widget.players.any((x) => !x.isReset) || await _showResetWarning(result.$1.length)) {
+      if (!widget.game.players.any((x) => !x.isReset) || await _showResetWarning(result.$1.length)) {
         if (mounted) {
           setState(() {
             finalising = true;
@@ -181,7 +176,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
       buildQrData();
     }
 
-    var hasCustomImage = widget.players.any((x) => x.background.customImage != null);
+    var hasCustomImage = widget.game.players.any((x) => x.background.customImage != null);
 
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;

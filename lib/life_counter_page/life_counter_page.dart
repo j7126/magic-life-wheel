@@ -1,16 +1,14 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_fullscreen/flutter_fullscreen.dart';
 import 'package:gap/gap.dart';
+import 'package:magic_life_wheel/datamodel/game.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/dialogs/message_dialog.dart';
 import 'package:magic_life_wheel/dialogs/warning_dialog.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/planar_dice_dialog.dart';
 import 'package:magic_life_wheel/transfer_game/transfer_game_page.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
-import 'package:magic_life_wheel/layouts/layout_2a.dart';
 import 'package:magic_life_wheel/layouts/layouts.dart';
 import 'package:magic_life_wheel/about/about_page.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
@@ -39,10 +37,8 @@ class LifeCounterPage extends StatefulWidget {
 }
 
 class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListener {
-  Layout? layout;
-  List<Player> players = [];
-  int numPlayers = 0;
-  int layoutId = 0;
+  late Game game;
+
   double rotatedAnimate = 0.0;
   int? highlightedPlayer;
   int highlightedPlayerKey = 0;
@@ -67,110 +63,17 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
     }
   }
 
-  bool get rotated => layout?.rotated ?? false;
-  set rotated(bool val) => layout?.rotated = val;
-
-  bool get isGameReset => !players.any((x) => !x.isGameReset);
-
-  bool get isPlayersReset => !players.any((x) => !x.isReset);
-
-  void save() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    Service.settingsService.conf_layout = layoutId;
-    Service.settingsService.conf_players = await compute(
-      (p) => p.map((e) => jsonEncode(e)).toList(),
-      players,
-    );
-  }
-
   void switchLayout() {
     setState(() {
-      rotated = false;
-      var layouts = Layouts.layoutsBySize[numPlayers];
-      if (layouts == null) return;
-      layoutId++;
-      if (layoutId >= layouts.length) layoutId = 0;
-      layout = layouts[layoutId];
-      save();
+      game.switchLayout();
     });
   }
 
   void switchRotated() {
     setState(() {
-      rotated = !rotated;
-      rotatedAnimate += rotated ? 0.5 : -0.5;
+      game.rotated = !game.rotated;
+      rotatedAnimate += game.rotated ? 0.5 : -0.5;
     });
-  }
-
-  void setPlayers(int players, {int layoutId = 0, bool reset = true}) {
-    setState(() {
-      numPlayers = players;
-      layout = null;
-      this.layoutId = layoutId;
-      var layouts = Layouts.layoutsBySize[numPlayers];
-      if (layouts != null) {
-        if (layouts.length <= this.layoutId) {
-          this.layoutId = 0;
-        }
-        layout = layouts[this.layoutId];
-      }
-      setupPlayers(reset: reset);
-    });
-  }
-
-  void resetGame() {
-    setState(() {
-      for (var player in players) {
-        player.resetGame();
-      }
-      save();
-    });
-  }
-
-  void resetPlayers() {
-    setState(() {
-      players.clear();
-      setupPlayers();
-    });
-  }
-
-  void setupPlayers({bool reset = true}) {
-    setState(() {
-      if (numPlayers > players.length) {
-        for (var i = players.length; i < numPlayers; i++) {
-          players.add(
-            Player(
-              name: "",
-            ),
-          );
-        }
-      } else {
-        var diff = players.length - numPlayers;
-        for (var i = 0; i < diff; i++) {
-          players.removeLast();
-        }
-      }
-
-      if (reset) {
-        resetGame();
-      }
-
-      save();
-    });
-  }
-
-  void deletePlayer(int i) {
-    if (numPlayers > 2) {
-      setState(() {
-        players.removeAt(i);
-        numPlayers = players.length;
-        var layouts = Layouts.layoutsBySize[numPlayers]!;
-        if (layouts.length <= layoutId) {
-          layoutId = 0;
-        }
-        layout = layouts[layoutId];
-      });
-    }
   }
 
   void _showReset() async {
@@ -187,7 +90,11 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
     );
     if (result == null) return null;
     if (result < 0) _showResetPlayers();
-    if (result == 1) resetGame();
+    if (result == 1) {
+      setState(() {
+        game.resetGame();
+      });
+    }
   }
 
   void _showResetPlayers() async {
@@ -201,11 +108,15 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
         );
       },
     );
-    if (result == 1) resetPlayers();
+    if (result == 1) {
+      setState(() {
+        game.resetPlayers();
+      });
+    }
   }
 
   Future _showSwitchPlayersDialog(int players) async {
-    var result = isGameReset ||
+    var result = game.isGameReset ||
         (1 ==
             await showDialog<int>(
               context: context,
@@ -218,7 +129,11 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
               },
             ));
 
-    if (result) setPlayers(players);
+    if (result) {
+      setState(() {
+        game.setPlayers(players);
+      });
+    }
   }
 
   void _showPlanechase() {
@@ -232,10 +147,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
   void _showTransferGamePage() async {
     var result = await Navigator.of(context).push<(List<Player> players, int layoutId)>(
       MaterialPageRoute(
-        builder: (context) => TransferGamePage(
-          players: players,
-          layoutId: layoutId,
-        ),
+        builder: (context) => TransferGamePage(game: game),
       ),
     );
     if (result != null) {
@@ -248,15 +160,15 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
     var key = DateTime.now().millisecondsSinceEpoch;
     highlightedPlayerKey = key;
     highlightedPlayer = null;
-    var player = key % players.length;
+    var player = key % game.players.length;
 
-    for (var i = -2 * players.length; i < 0; i++) {
+    for (var i = -2 * game.players.length; i < 0; i++) {
       setState(() {
-        highlightedPlayerAnimation = (player + i) % players.length;
+        highlightedPlayerAnimation = (player + i) % game.players.length;
       });
       await Future.delayed(
         Duration(
-          milliseconds: (((2 * players.length + i + 1) / (2 * players.length)) * 400).round(),
+          milliseconds: (((2 * game.players.length + i + 1) / (2 * game.players.length)) * 400).round(),
         ),
       );
     }
@@ -303,7 +215,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                         label: Text(i.toString()),
                       ),
                   ],
-                  selected: {numPlayers},
+                  selected: {game.players.length},
                   onSelectionChanged: (Set<int> newSelection) async {
                     await _showSwitchPlayersDialog(newSelection.first);
                     setState(() {});
@@ -316,10 +228,10 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
-                if (Layouts.layoutsBySize[numPlayers] != null)
+                if (Layouts.layoutsBySize[game.players.length] != null)
                   SegmentedButton<String>(
                     segments: <ButtonSegment<String>>[
-                      for (Layout l in Layouts.layoutsBySize[numPlayers] ?? [])
+                      for (Layout l in Layouts.layoutsBySize[game.players.length] ?? [])
                         ButtonSegment<String>(
                           value: l.runtimeType.toString(),
                           label: Padding(
@@ -328,15 +240,15 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                               height: 48,
                               width: 48,
                               child: RotatedBox(
-                                quarterTurns:
-                                    (rotated && l.runtimeType == layout.runtimeType ? 2 : 0) + layoutRotationOffset,
+                                quarterTurns: (game.rotated && l.runtimeType == game.layout.runtimeType ? 2 : 0) +
+                                    layoutRotationOffset,
                                 child: l.buildPreview(context),
                               ),
                             ),
                           ),
                         ),
                     ],
-                    selected: {layout.runtimeType.toString()},
+                    selected: {game.layout.runtimeType.toString()},
                     onSelectionChanged: (Set<String> newSelection) async {
                       setState(() {
                         switchLayout();
@@ -472,12 +384,9 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
   }
 
   void importGame(List<Player> players, int layoutId) {
-    this.players = players;
-    setPlayers(
-      this.players.length,
-      layoutId: layoutId,
-      reset: false,
-    );
+    setState(() {
+      game = Game.fromPlayerList(players, layoutId);
+    });
   }
 
   Future<bool> _showImportWarning(int numPlayers) async {
@@ -510,7 +419,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
     if (result == null) {
       dataError();
     } else {
-      if (isPlayersReset || await _showImportWarning(result.$1.length)) {
+      if (game.isPlayersReset || await _showImportWarning(result.$1.length)) {
         if (mounted) {
           await DialogService.closeAllDialogs();
           importGame(result.$1, result.$2);
@@ -544,26 +453,9 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
     FullScreen.addListener(this);
     isFullScreen = FullScreen.isFullScreen;
     isFullScreenForced = FullScreen.isFullScreenForced;
-    if (Service.settingsService.conf_players.length < 2 || Service.settingsService.conf_players.length > 6) {
-      setPlayers(3);
-    } else {
-      for (var playerString in Service.settingsService.conf_players) {
-        Player player;
-        try {
-          player = Player.fromJson(jsonDecode(playerString));
-        } catch (_) {
-          player = Player(
-            name: "",
-          );
-        }
-        players.add(player);
-      }
-      setPlayers(
-        players.length,
-        layoutId: Service.settingsService.conf_layout,
-        reset: false,
-      );
-    }
+
+    game = Game(Service.settingsService.conf_players, Service.settingsService.conf_layout);
+
     super.initState();
   }
 
@@ -589,7 +481,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
 
   @override
   Widget build(BuildContext context) {
-    counterFontSizeGroup.setNumPlayers(players.length);
+    counterFontSizeGroup.setNumPlayers(game.players.length);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (triggerReRender) {
@@ -641,116 +533,119 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                     padding: EdgeInsets.all(rearrangeMode ? 8 : 0),
                     duration: const Duration(milliseconds: 200),
                     child: RotatedBox(
-                      quarterTurns: (rotated ? 2 : 0) + layoutRotationOffset,
-                      child: layout?.build(
-                            context,
-                            players,
-                            (int i, _) {
-                              const padding = 16.0;
-                              return Stack(
-                                children: [
-                                  AnimatedPadding(
-                                    padding: EdgeInsets.all(rearrangeMode ? padding : 0),
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.ease,
-                                    child: Counter(
-                                      key: ValueKey(players[i].uuid),
-                                      i: i,
-                                      layout: layout ?? Layout2a(),
-                                      players: players,
-                                      counterFontSizeGroup: counterFontSizeGroup,
-                                      triggerReRender: () {
-                                        triggerReRender = true;
-                                      },
-                                      stateChanged: () => save(),
-                                      highlighted: highlightedPlayer == i,
-                                      highlightedInstant: highlightedPlayerAnimation == i,
-                                    ),
-                                  ),
-                                  if (rearrangeMode)
-                                    DragTarget<int>(
-                                      builder: (
-                                        BuildContext context,
-                                        List<dynamic> candidateData,
-                                        List<dynamic> rejectedData,
-                                      ) {
-                                        return Stack(
-                                          children: [
-                                            Draggable<int>(
-                                              data: i,
-                                              dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
-                                              maxSimultaneousDrags: 1,
-                                              onDragStarted: () {
-                                                setState(() {
-                                                  dragging++;
-                                                });
-                                              },
-                                              onDragEnd: (_) {
-                                                setState(() {
-                                                  dragging--;
-                                                });
-                                              },
-                                              feedback: Card(
-                                                clipBehavior: Clip.antiAlias,
-                                                child: SizedBox(
-                                                  width: 100,
-                                                  height: 100,
-                                                  child: BackgroundWidget(
-                                                    background: players[i].background,
-                                                    forceShowNoImageIcon: true,
-                                                  ),
-                                                ),
-                                              ),
-                                              childWhenDragging: Padding(
-                                                padding: const EdgeInsets.all(padding),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(35),
-                                                    color: const Color.fromARGB(100, 0, 0, 0),
-                                                  ),
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(padding),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(35),
-                                                    color: const Color.fromARGB(0, 0, 0, 0),
-                                                  ),
-                                                ),
+                      quarterTurns: (game.rotated ? 2 : 0) + layoutRotationOffset,
+                      child: game.layout.build(
+                        context,
+                        game.players,
+                        (int i, _) {
+                          const padding = 16.0;
+                          return Stack(
+                            children: [
+                              AnimatedPadding(
+                                padding: EdgeInsets.all(rearrangeMode ? padding : 0),
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.ease,
+                                child: Counter(
+                                  key: ValueKey(game.players[i].uuid),
+                                  i: i,
+                                  layout: game.layout,
+                                  players: game.players,
+                                  counterFontSizeGroup: counterFontSizeGroup,
+                                  triggerReRender: () {
+                                    triggerReRender = true;
+                                  },
+                                  stateChanged: () {
+                                    setState(() {
+                                      game.save();
+                                    });
+                                  },
+                                  highlighted: highlightedPlayer == i,
+                                  highlightedInstant: highlightedPlayerAnimation == i,
+                                ),
+                              ),
+                              if (rearrangeMode)
+                                DragTarget<int>(
+                                  builder: (
+                                    BuildContext context,
+                                    List<dynamic> candidateData,
+                                    List<dynamic> rejectedData,
+                                  ) {
+                                    return Stack(
+                                      children: [
+                                        Draggable<int>(
+                                          data: i,
+                                          dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
+                                          maxSimultaneousDrags: 1,
+                                          onDragStarted: () {
+                                            setState(() {
+                                              dragging++;
+                                            });
+                                          },
+                                          onDragEnd: (_) {
+                                            setState(() {
+                                              dragging--;
+                                            });
+                                          },
+                                          feedback: Card(
+                                            clipBehavior: Clip.antiAlias,
+                                            child: SizedBox(
+                                              width: 100,
+                                              height: 100,
+                                              child: BackgroundWidget(
+                                                background: game.players[i].background,
+                                                forceShowNoImageIcon: true,
                                               ),
                                             ),
-                                            if (candidateData.isNotEmpty)
-                                              Padding(
-                                                padding: const EdgeInsets.all(padding),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(35),
-                                                    color: const Color.fromARGB(45, 48, 150, 63),
-                                                  ),
-                                                ),
-                                              )
-                                          ],
-                                        );
-                                      },
-                                      onAcceptWithDetails: (DragTargetDetails<int> details) {
-                                        var data = details.data;
-                                        setState(() {
-                                          if (i != data) {
-                                            var temp = players[data];
-                                            players[data] = players[i];
-                                            players[i] = temp;
-                                          }
-                                        });
-                                      },
-                                      onWillAcceptWithDetails: (DragTargetDetails<int?> details) =>
-                                          details.data != null && i != details.data,
-                                    ),
-                                ],
-                              );
-                            },
-                          ) ??
-                          Container(),
+                                          ),
+                                          childWhenDragging: Padding(
+                                            padding: const EdgeInsets.all(padding),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(35),
+                                                color: const Color.fromARGB(100, 0, 0, 0),
+                                              ),
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(padding),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(35),
+                                                color: const Color.fromARGB(0, 0, 0, 0),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        if (candidateData.isNotEmpty)
+                                          Padding(
+                                            padding: const EdgeInsets.all(padding),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(35),
+                                                color: const Color.fromARGB(45, 48, 150, 63),
+                                              ),
+                                            ),
+                                          )
+                                      ],
+                                    );
+                                  },
+                                  onAcceptWithDetails: (DragTargetDetails<int> details) {
+                                    var data = details.data;
+                                    setState(() {
+                                      if (i != data) {
+                                        var temp = game.players[data];
+                                        game.players[data] = game.players[i];
+                                        game.players[i] = temp;
+                                      }
+                                    });
+                                  },
+                                  onWillAcceptWithDetails: (DragTargetDetails<int?> details) =>
+                                      details.data != null && i != details.data,
+                                ),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -776,7 +671,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                                   onPressed: dragging > 0
                                       ? null
                                       : () {
-                                          players = oldPlayers ?? [];
+                                          game.players = oldPlayers ?? [];
                                           oldPlayers = null;
                                           setState(() {
                                             rearrangeMode = false;
@@ -798,7 +693,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                                       ? null
                                       : () {
                                           setState(() {
-                                            players.shuffle();
+                                            game.players.shuffle();
                                           });
                                         },
                                   style: barButtonStyle,
@@ -818,7 +713,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                                       : () {
                                           setState(() {
                                             rearrangeMode = false;
-                                            save();
+                                            game.save();
                                           });
                                         },
                                   style: barButtonStyle,
@@ -833,7 +728,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                             ],
                           ),
                           // draging
-                          if (dragging > 0 && numPlayers > 2)
+                          if (dragging > 0 && game.players.length > 2)
                             Row(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -876,7 +771,9 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                                   },
                                   onAcceptWithDetails: (DragTargetDetails<int> details) {
                                     var data = details.data;
-                                    deletePlayer(data);
+                                    setState(() {
+                                      game.deletePlayer(data);
+                                    });
                                   },
                                   onWillAcceptWithDetails: (DragTargetDetails<int?> details) => details.data != null,
                                 ),
@@ -908,18 +805,14 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                               style: barButtonStyle,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                child: layout != null
-                                    ? SizedBox(
-                                        height: 24,
-                                        width: 24,
-                                        child: RotatedBox(
-                                          quarterTurns: (rotated ? 2 : 0) + layoutRotationOffset,
-                                          child: layout?.buildPreview(context),
-                                        ),
-                                      )
-                                    : const Icon(
-                                        Icons.grid_view,
-                                      ),
+                                child: SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: RotatedBox(
+                                    quarterTurns: (game.rotated ? 2 : 0) + layoutRotationOffset,
+                                    child: game.layout.buildPreview(context),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -958,7 +851,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                           Expanded(
                             child: TextButton(
                               onPressed: () {
-                                oldPlayers = List.from(players);
+                                oldPlayers = List.from(game.players);
                                 setState(() {
                                   rearrangeMode = true;
                                 });
