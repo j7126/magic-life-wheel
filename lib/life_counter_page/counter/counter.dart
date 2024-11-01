@@ -111,6 +111,7 @@ class _CounterState extends State<Counter> {
     setState(() {
       changeLife(direction * 10);
       longPressDirection = direction;
+      longPressTimer?.cancel();
       longPressTimer = Timer(
         Duration(milliseconds: i == 0 ? 650 : 500),
         () => handleLongPressInterval(direction, i: i + 1),
@@ -129,6 +130,7 @@ class _CounterState extends State<Counter> {
   @override
   void dispose() {
     lifeChangedTimer?.cancel();
+    longPressTimer?.cancel();
     super.dispose();
   }
 
@@ -241,12 +243,13 @@ class _CounterState extends State<Counter> {
                 BackgroundWidget(
                   background: widget.player.background,
                 ),
-                if (!widget.player.dead)
-                  Positioned(
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+                Positioned(
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Opacity(
+                    opacity: widget.player.dead ? 0 : 1,
                     child: Padding(
                       padding: EdgeInsets.only(
                         top: Service.settingsService.pref_enableCommanderDamage &&
@@ -281,6 +284,7 @@ class _CounterState extends State<Counter> {
                       ),
                     ),
                   ),
+                ),
                 Positioned(
                   top: 0,
                   bottom: 0,
