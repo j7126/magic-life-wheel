@@ -6,13 +6,19 @@ class WarningDialog extends StatefulWidget {
   const WarningDialog({
     super.key,
     required this.message,
+    this.subtitle,
     this.confirmMessage = "Confirm",
     this.secondaryMessage,
+    this.confirmButtonColor = Colors.red,
+    this.confirmButtonForegroundColor = Colors.white,
   });
 
   final String message;
+  final String? subtitle;
   final String confirmMessage;
   final String? secondaryMessage;
+  final Color confirmButtonColor;
+  final Color confirmButtonForegroundColor;
 
   @override
   State<WarningDialog> createState() => _WarningDialogState();
@@ -37,6 +43,14 @@ class _WarningDialogState extends State<WarningDialog> {
       title: Column(
         children: [
           Text(widget.message),
+          if (widget.subtitle != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                widget.subtitle!,
+                style: const TextStyle(fontSize: 18),
+              ),
+            ),
           const Gap(16.0),
           Row(
             children: [
@@ -57,12 +71,12 @@ class _WarningDialogState extends State<WarningDialog> {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: FilledButton(
-                  style: const ButtonStyle(
-                    padding: WidgetStatePropertyAll(
+                  style: ButtonStyle(
+                    padding: const WidgetStatePropertyAll(
                       EdgeInsets.symmetric(horizontal: 16.0),
                     ),
-                    backgroundColor: WidgetStatePropertyAll(Colors.red),
-                    foregroundColor: WidgetStatePropertyAll(Colors.white),
+                    backgroundColor: WidgetStatePropertyAll(widget.confirmButtonColor),
+                    foregroundColor: WidgetStatePropertyAll(widget.confirmButtonForegroundColor),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop(1);

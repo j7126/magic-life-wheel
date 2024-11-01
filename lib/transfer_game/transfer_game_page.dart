@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/game.dart';
+import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/dialogs/warning_dialog.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/transfer_game/transfer_url_service.dart';
@@ -32,7 +33,13 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
   bool cameraReady = false;
   bool showLowPerformanceWarning = false;
   bool finalising = false;
+  int split = 0;
+  int splitCurrent = 0;
+  Timer? splitTimer;
   late String data;
+  List<String> splitData = [];
+  Map<int, String> scannedSplit = {};
+  int scannedNumSplit = 0;
 
   late final TabController _tabController;
 
@@ -57,7 +64,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
     });
   }
 
-  void useData(String? url) async {
+  void useUrl(String? url) async {
     setState(() {
       importingData = true;
     });
@@ -75,18 +82,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
     if (result == null) {
       dataError();
     } else {
-      if (!widget.game.players.any((x) => !x.isReset) || await _showResetWarning(result.$1.length)) {
-        if (mounted) {
-          setState(() {
-            finalising = true;
-          });
-          // delay needed to prevent widget dispose race condition
-          await Future.delayed(const Duration(milliseconds: 1000));
-          if (mounted) {
-            Navigator.of(context).pop(result);
-          }
-        }
-      }
+      useData(result.$1, result.$2);
     }
 
     if (mounted) {
@@ -96,8 +92,55 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
     }
   }
 
+  void useBase64Data(String? data) async {
+    setState(() {
+      importingData = true;
+    });
+
+    if (data == null) {
+      dataError();
+      await Future.delayed(const Duration(milliseconds: 1000));
+      setState(() {
+        importingData = false;
+      });
+      return;
+    }
+
+    var result = await TransferUrlService.parseBase64Data(data);
+    if (result == null) {
+      dataError();
+    } else {
+      useData(result.$1, result.$2);
+    }
+
+    if (mounted) {
+      setState(() {
+        importingData = false;
+      });
+    }
+  }
+
+  void useData(List<Player> players, int layoutId) async {
+    if (!widget.game.players.any((x) => !x.isReset) || await _showResetWarning(players.length)) {
+      if (mounted) {
+        setState(() {
+          finalising = true;
+        });
+        // delay needed to prevent widget dispose race condition
+        await Future.delayed(const Duration(milliseconds: 1000));
+        if (mounted) {
+          Navigator.of(context).pop((players, layoutId));
+        }
+      }
+    }
+  }
+
   void dataError() {
     if (mounted) {
+      setState(() {
+        scannedNumSplit = 0;
+        scannedSplit.clear();
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('The game data was not valid!'),
@@ -105,6 +148,64 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
           margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 58.0),
         ),
       );
+    }
+  }
+
+  void _split() async {
+    if (split > 1) {
+      setState(() {
+        split = 1;
+        splitCurrent = 0;
+        splitTimer?.cancel();
+        splitTimer = null;
+      });
+      return;
+    }
+    if (split > 0 ||
+        1 ==
+            await showDialog<int>(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return WarningDialog(
+                  message: 'Split the QR code into multiple parts.',
+                  subtitle:
+                      "This can help if the QR code is too dense and you have trouble scanning it.\nNote: split codes must be scanned using the import tab, not another qr scanner app.",
+                  confirmMessage: 'Split',
+                  confirmButtonColor: Theme.of(context).colorScheme.primary,
+                  confirmButtonForegroundColor: Theme.of(context).colorScheme.onPrimary,
+                );
+              },
+            )) {
+      setState(() {
+        ready = false;
+      });
+      split = 8;
+      splitData = await TransferUrlService.buildSplitStrings(widget.game.players, widget.game.layoutId, split);
+      if (splitData.length < split) {
+        split = splitData.length;
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Maximum split reached!'),
+              behavior: SnackBarBehavior.floating,
+              margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 58.0),
+            ),
+          );
+        }
+      }
+      splitCurrent = 0;
+      splitTimer ??= Timer.periodic(const Duration(milliseconds: 500), (timer) {
+        setState(() {
+          splitCurrent++;
+          if (splitCurrent >= split) {
+            splitCurrent = 0;
+          }
+        });
+      });
+      setState(() {
+        ready = true;
+      });
     }
   }
 
@@ -135,7 +236,44 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
 
   _onScanSuccess(Code? code) {
     if (code != null) {
-      useData(code.text);
+      var text = code.text;
+      if (text != null && text.length > 3 && text[0] == ',') {
+        // handle multipart qr
+        var i = int.tryParse(text[1]);
+        var num = int.tryParse(text[2]);
+        if (i != null && num != null && num > 1 && i >= 0 && i < num) {
+          setState(() {
+            var dataSegment = text.substring(3, text.length);
+            if (num != scannedNumSplit || scannedSplit[i] != null && scannedSplit[i] != dataSegment) {
+              scannedSplit.clear();
+            }
+            scannedNumSplit = num;
+            scannedSplit[i] = dataSegment;
+            if (scannedSplit.length == scannedNumSplit) {
+              String? base64String = "";
+              for (var i = 0; i < scannedNumSplit; i++) {
+                var segment = scannedSplit[i];
+                if (segment == null) {
+                  base64String = null;
+                  break;
+                } else {
+                  base64String = "$base64String$segment";
+                }
+              }
+              useBase64Data(base64String);
+              scannedNumSplit = 0;
+              scannedSplit.clear();
+            }
+          });
+        }
+      } else {
+        // handle single qr
+        setState(() {
+          scannedNumSplit = 0;
+          scannedSplit.clear();
+          useUrl(text);
+        });
+      }
     }
   }
 
@@ -166,6 +304,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
 
   @override
   Future<void> dispose() async {
+    splitTimer?.cancel();
     super.dispose();
   }
 
@@ -364,7 +503,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                               child: ready
                                   ? BarcodeWidget(
                                       barcode: Barcode.qrCode(),
-                                      data: data,
+                                      data: split <= 1 ? data : splitData[splitCurrent],
                                       backgroundColor: Colors.white,
                                       padding: EdgeInsets.zero,
                                     )
@@ -377,40 +516,69 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                               child: ready
                                   ? SizedBox(
                                       height: 38,
-                                      child: FilledButton(
-                                        style: const ButtonStyle(
-                                          padding: WidgetStatePropertyAll(
-                                            EdgeInsets.symmetric(
-                                              vertical: 2.0,
-                                              horizontal: 20.0,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          FilledButton(
+                                            style: const ButtonStyle(
+                                              padding: WidgetStatePropertyAll(
+                                                EdgeInsets.symmetric(
+                                                  vertical: 2.0,
+                                                  horizontal: 20.0,
+                                                ),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Clipboard.setData(
+                                                ClipboardData(
+                                                  text: data,
+                                                ),
+                                              );
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text('Game data copied to clipboard!'),
+                                                  behavior: SnackBarBehavior.floating,
+                                                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 58.0),
+                                                ),
+                                              );
+                                            },
+                                            child: const Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.copy,
+                                                  size: 20,
+                                                ),
+                                                Gap(8.0),
+                                                Text("Copy"),
+                                              ],
                                             ),
                                           ),
-                                        ),
-                                        onPressed: () {
-                                          Clipboard.setData(
-                                            ClipboardData(
-                                              text: data,
+                                          const Gap(16.0),
+                                          FilledButton(
+                                            style: const ButtonStyle(
+                                              padding: WidgetStatePropertyAll(
+                                                EdgeInsets.symmetric(
+                                                  vertical: 2.0,
+                                                  horizontal: 20.0,
+                                                ),
+                                              ),
                                             ),
-                                          );
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(
-                                              content: Text('Game data copied to clipboard!'),
-                                              behavior: SnackBarBehavior.floating,
-                                              margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 58.0),
+                                            onPressed: _split,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Icon(
+                                                  Icons.grid_view_outlined,
+                                                  size: 20,
+                                                ),
+                                                const Gap(8.0),
+                                                split <= 1 ? const Text("Split") : const Text("Un-Split")
+                                              ],
                                             ),
-                                          );
-                                        },
-                                        child: const Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(
-                                              Icons.copy,
-                                              size: 20,
-                                            ),
-                                            Gap(8.0),
-                                            Text("Copy"),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     )
                                   : null,
@@ -523,29 +691,44 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                                                                 decoration: BoxDecoration(
                                                                   borderRadius: BorderRadius.circular(16),
                                                                 ),
-                                                                child: ReaderWidget(
-                                                                  codeFormat: Format.qrCode,
-                                                                  onScan: _onScanSuccess,
-                                                                  onScanFailure: _onScanFailure,
-                                                                  onControllerCreated: _onControllerCreated,
-                                                                  scanDelay: const Duration(milliseconds: 100),
-                                                                  scanDelaySuccess: const Duration(milliseconds: 1000),
-                                                                  allowPinchZoom: true,
-                                                                  isMultiScan: false,
-                                                                  showGallery: false,
-                                                                  showFlashlight: false,
-                                                                  showToggleCamera: true,
-                                                                  actionButtonsAlignment: Alignment.bottomRight,
-                                                                  resolution: ResolutionPreset.high,
-                                                                  lensDirection: CameraLensDirection.back,
-                                                                  toggleCameraIcon: const Icon(Icons.cameraswitch),
-                                                                  showScannerOverlay: false,
-                                                                  cropPercent: 1,
-                                                                  actionButtonsBackgroundBorderRadius:
-                                                                      BorderRadius.circular(16),
-                                                                  actionButtonsBackgroundColor:
-                                                                      Colors.black.withOpacity(0.4),
-                                                                  tryHarder: false,
+                                                                child: Stack(
+                                                                  children: [
+                                                                    ReaderWidget(
+                                                                      codeFormat: Format.qrCode,
+                                                                      onScan: _onScanSuccess,
+                                                                      onScanFailure: _onScanFailure,
+                                                                      onControllerCreated: _onControllerCreated,
+                                                                      scanDelay: const Duration(milliseconds: 100),
+                                                                      scanDelaySuccess:
+                                                                          const Duration(milliseconds: 500),
+                                                                      allowPinchZoom: true,
+                                                                      isMultiScan: false,
+                                                                      showGallery: false,
+                                                                      showFlashlight: false,
+                                                                      showToggleCamera: true,
+                                                                      actionButtonsAlignment: Alignment.bottomRight,
+                                                                      resolution: ResolutionPreset.high,
+                                                                      lensDirection: CameraLensDirection.back,
+                                                                      toggleCameraIcon: const Icon(Icons.cameraswitch),
+                                                                      showScannerOverlay: false,
+                                                                      cropPercent: 1,
+                                                                      actionButtonsBackgroundBorderRadius:
+                                                                          BorderRadius.circular(16),
+                                                                      actionButtonsBackgroundColor:
+                                                                          Colors.black.withOpacity(0.4),
+                                                                      tryHarder: false,
+                                                                    ),
+                                                                    if (cameraReady && scannedNumSplit > 1)
+                                                                      Positioned(
+                                                                        left: -1,
+                                                                        right: -1,
+                                                                        top: 0,
+                                                                        child: LinearProgressIndicator(
+                                                                          value: scannedSplit.length / scannedNumSplit,
+                                                                          minHeight: 16,
+                                                                        ),
+                                                                      ),
+                                                                  ],
                                                                 ),
                                                               ),
                                                             ),
@@ -599,7 +782,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                                           importingData = true;
                                         });
                                         var data = await Clipboard.getData("text/plain");
-                                        useData(data?.text);
+                                        useUrl(data?.text);
                                       },
                                       child: const Row(
                                         mainAxisSize: MainAxisSize.min,
