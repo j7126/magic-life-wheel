@@ -266,18 +266,20 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
     var card = PlanechaseDialog.planechasePlane;
     var nextCard = PlanechaseDialog.planechaseNextPlane;
 
+    var barButtonForegroundColor = WidgetStateProperty.resolveWith<Color?>(
+      (Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return null;
+        }
+        return Theme.of(context).colorScheme.onSurface;
+      },
+    );
     var barButtonStyle = ButtonStyle(
       shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       ),
-      foregroundColor: WidgetStateProperty.resolveWith<Color?>(
-        (Set<WidgetState> states) {
-          if (states.contains(WidgetState.disabled)) {
-            return null;
-          }
-          return Theme.of(context).colorScheme.onSurface;
-        },
-      ),
+      foregroundColor: barButtonForegroundColor,
+      iconColor: barButtonForegroundColor,
       overlayColor: WidgetStateProperty.all<Color>(
         Theme.of(context).colorScheme.onSurface.withAlpha(20),
       ),

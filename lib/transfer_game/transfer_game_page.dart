@@ -353,6 +353,9 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                           foregroundColor: WidgetStatePropertyAll(
                             HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.4).toColor(),
                           ),
+                          iconColor: WidgetStatePropertyAll(
+                            HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.4).toColor(),
+                          ),
                         ),
                         onPressed: retry,
                         child: const Row(
@@ -629,6 +632,12 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                                                           TextButton(
                                                             style: ButtonStyle(
                                                               foregroundColor: WidgetStatePropertyAll(
+                                                                HSLColor.fromColor(
+                                                                        Theme.of(context).colorScheme.primary)
+                                                                    .withLightness(0.4)
+                                                                    .toColor(),
+                                                              ),
+                                                              iconColor: WidgetStatePropertyAll(
                                                                 HSLColor.fromColor(
                                                                         Theme.of(context).colorScheme.primary)
                                                                     .withLightness(0.4)

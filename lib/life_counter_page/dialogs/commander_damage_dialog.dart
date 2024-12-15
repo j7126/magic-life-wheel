@@ -204,6 +204,9 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                       foregroundColor: WidgetStateProperty.all<Color>(
                                         Theme.of(context).colorScheme.onSurface,
                                       ),
+                                      iconColor: WidgetStateProperty.all<Color>(
+                                        Theme.of(context).colorScheme.onSurface,
+                                      ),
                                       overlayColor: WidgetStateProperty.all<Color>(
                                         Theme.of(context).colorScheme.onSurface.withAlpha(30),
                                       ),
@@ -236,6 +239,9 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                         const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                                       ),
                                       foregroundColor: WidgetStateProperty.all<Color>(
+                                        Theme.of(context).colorScheme.onSurface,
+                                      ),
+                                      iconColor: WidgetStateProperty.all<Color>(
                                         Theme.of(context).colorScheme.onSurface,
                                       ),
                                       overlayColor: WidgetStateProperty.all<Color>(

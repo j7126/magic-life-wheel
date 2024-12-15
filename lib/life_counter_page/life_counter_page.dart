@@ -293,15 +293,17 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
   }
 
   void _showMenu() {
+    var menuButtonForegroundColor = WidgetStateProperty.resolveWith<Color?>(
+      (Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return null;
+        }
+        return Theme.of(context).colorScheme.onSurface;
+      },
+    );
     var menuButtonStyle = ButtonStyle(
-      foregroundColor: WidgetStateProperty.resolveWith<Color?>(
-        (Set<WidgetState> states) {
-          if (states.contains(WidgetState.disabled)) {
-            return null;
-          }
-          return Theme.of(context).colorScheme.onSurface;
-        },
-      ),
+      foregroundColor: menuButtonForegroundColor,
+      iconColor: menuButtonForegroundColor,
       overlayColor: WidgetStateProperty.all<Color>(
         Theme.of(context).colorScheme.onSurface.withAlpha(20),
       ),
@@ -502,18 +504,20 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
       }
     });
 
+    var barButtonForegroundColor = WidgetStateProperty.resolveWith<Color?>(
+      (Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return null;
+        }
+        return Theme.of(context).colorScheme.onSurface;
+      },
+    );
     var barButtonStyle = ButtonStyle(
       shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       ),
-      foregroundColor: WidgetStateProperty.resolveWith<Color?>(
-        (Set<WidgetState> states) {
-          if (states.contains(WidgetState.disabled)) {
-            return null;
-          }
-          return Theme.of(context).colorScheme.onSurface;
-        },
-      ),
+      foregroundColor: barButtonForegroundColor,
+      iconColor: barButtonForegroundColor,
       overlayColor: WidgetStateProperty.all<Color>(
         Theme.of(context).colorScheme.onSurface.withAlpha(20),
       ),
@@ -682,6 +686,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                                     padding: EdgeInsets.symmetric(vertical: 12.0),
                                     child: Icon(
                                       Icons.close,
+                                      size: 24.0,
                                     ),
                                   ),
                                 ),
@@ -701,6 +706,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                                     padding: EdgeInsets.symmetric(vertical: 12.0),
                                     child: Icon(
                                       Icons.shuffle_outlined,
+                                      size: 24.0,
                                     ),
                                   ),
                                 ),
@@ -721,6 +727,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                                     padding: EdgeInsets.symmetric(vertical: 12.0),
                                     child: Icon(
                                       Icons.done,
+                                      size: 24.0,
                                     ),
                                   ),
                                 ),
@@ -791,10 +798,11 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                             child: TextButton(
                               onPressed: () => _showMenu(),
                               style: barButtonStyle,
-                              child: const Padding(
+                              child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 12.0),
                                 child: Icon(
                                   Icons.more_vert,
+                                  size: 24.0,
                                 ),
                               ),
                             ),
@@ -861,6 +869,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                                 padding: EdgeInsets.symmetric(vertical: 12.0),
                                 child: Icon(
                                   Icons.swap_horiz_outlined,
+                                  size: 24.0,
                                 ),
                               ),
                             ),
@@ -874,6 +883,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                                   : null,
                               icon: Icon(
                                 (isFullScreen || isFullScreenForced) ? Icons.fullscreen_exit : Icons.fullscreen,
+                                size: 24.0,
                               ),
                             ),
                         ],

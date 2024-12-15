@@ -306,6 +306,9 @@ class _CounterState extends State<Counter> {
                               foregroundColor: WidgetStateProperty.all<Color>(
                                 Theme.of(context).colorScheme.onSurface,
                               ),
+                              iconColor: WidgetStateProperty.all<Color>(
+                                Theme.of(context).colorScheme.onSurface,
+                              ),
                               overlayColor: WidgetStateProperty.all<Color>(
                                 longPressDirection == -1
                                     ? Colors.transparent
@@ -348,6 +351,9 @@ class _CounterState extends State<Counter> {
                                 const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                               ),
                               foregroundColor: WidgetStateProperty.all<Color>(
+                                Theme.of(context).colorScheme.onSurface,
+                              ),
+                              iconColor: WidgetStateProperty.all<Color>(
                                 Theme.of(context).colorScheme.onSurface,
                               ),
                               overlayColor: WidgetStateProperty.all<Color>(

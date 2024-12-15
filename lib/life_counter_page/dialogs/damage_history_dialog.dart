@@ -89,17 +89,14 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(bottom: 24.0, top: 16.0),
-                    child: Container(
-                      color: Theme.of(context).colorScheme.surface,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Text(
-                          widget.player.dead ? "Dead" : "${widget.player.life} Life",
-                          style: const TextStyle(
-                            fontSize: 26,
-                            height: 1,
-                            color: Color.fromARGB(255, 178, 178, 178),
-                          ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Text(
+                        widget.player.dead ? "Dead" : "${widget.player.life} Life",
+                        style: const TextStyle(
+                          fontSize: 26,
+                          height: 1,
+                          color: Color.fromARGB(255, 178, 178, 178),
                         ),
                       ),
                     ),

@@ -8,6 +8,7 @@ import 'package:magic_life_wheel/life_counter_page/life_counter_page.dart';
 import 'package:magic_life_wheel/settings/settings.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/platform_util/web/index.dart';
+import 'package:magic_life_wheel/util/color/darken.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,13 +65,27 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+        var seedColor = darkDynamic?.primary ?? Colors.green;
+        var baseColorScheme = ColorScheme.fromSeed(
+          seedColor: seedColor,
+          brightness: Brightness.dark,
+          dynamicSchemeVariant: DynamicSchemeVariant.tonalSpot,
+        );
+        var colorScheme = ColorScheme.fromSeed(
+          seedColor: seedColor,
+          brightness: Brightness.dark,
+          dynamicSchemeVariant: DynamicSchemeVariant.tonalSpot,
+          surface: baseColorScheme.surface.darken(0.01),
+          surfaceContainerLow: baseColorScheme.surfaceContainerLow.darken(0.01),
+          surfaceContainerLowest: baseColorScheme.surfaceContainerLowest.darken(0.01),
+          surfaceContainer: baseColorScheme.surfaceContainer.darken(0.01),
+          surfaceContainerHigh: baseColorScheme.surfaceContainerHigh.darken(0.09),
+          surfaceContainerHighest: baseColorScheme.surfaceContainerHighest.darken(0.01),
+        );
         return MaterialApp(
           title: Service.appName,
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: darkDynamic?.primary ?? Colors.green,
-              brightness: Brightness.dark,
-            ),
+            colorScheme: colorScheme,
             useMaterial3: true,
           ),
           home: ready
