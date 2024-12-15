@@ -13,8 +13,9 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMixin {
-  final TextEditingController startingLifeController =
-      TextEditingController(text: Service.settingsService.pref_startingLife.toString());
+  final TextEditingController startingLifeController = TextEditingController();
+  final int initialLife = Service.settingsService.pref_startingLife;
+  final List<int> options = [20, 30, 40, 60];
 
   late final AnimationController _advancedAnimationController = AnimationController(
     duration: const Duration(milliseconds: 200),
@@ -65,8 +66,11 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
 
   @override
   void initState() {
+    if (!options.contains(initialLife)) {
+      options.add(initialLife);
+      options.sort();
+    }
     startingLifeController.addListener(onStartingLifeTextChanged);
-
     super.initState();
   }
 
@@ -130,9 +134,11 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                               ),
                             ),
                             DropdownMenu<int>(
+                              initialSelection: initialLife,
                               controller: startingLifeController,
                               enableFilter: false,
                               requestFocusOnTap: true,
+                              keyboardType: TextInputType.number,
                               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                               inputDecorationTheme: const InputDecorationTheme(
                                 filled: false,
@@ -143,14 +149,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 fontSize: 24,
                               ),
                               width: 94,
-                              onSelected: (int? val) {
-                                setState(() {
-                                  if (val != null) {
-                                    Service.settingsService.pref_startingLife = val;
-                                  }
-                                });
-                              },
-                              dropdownMenuEntries: [20, 30, 40, 60]
+                              dropdownMenuEntries: options
                                   .map(
                                     (e) => DropdownMenuEntry<int>(
                                       value: e,
