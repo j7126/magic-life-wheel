@@ -672,7 +672,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                               Expanded(
                                 child: TextButton(
                                   key: const ValueKey("rearrangeCancelButton"),
-                                  onPressed: dragging > 0
+                                  onPressed: dragging > 0 || oldPlayers?.length != game.players.length
                                       ? null
                                       : () {
                                           game.players = oldPlayers ?? [];
