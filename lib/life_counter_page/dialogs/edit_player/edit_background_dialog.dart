@@ -36,6 +36,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
   List<MapEntry<String, List<CardSet>>>? cards;
 
   bool commanderOnly = true;
+  bool enableFunny = false;
 
   final FocusNode _menuButtonFocusNode = FocusNode();
 
@@ -56,6 +57,9 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
     var cards = Service.dataLoader.allSetCards?.data.where(
       (card) {
         if (commanderOnly && !(card.leadershipSkills?.commander ?? false)) {
+          return false;
+        }
+        if (!enableFunny && card.isFunny == true) {
           return false;
         }
         if (card.cardSearchStringAlt != null && card.cardSearchStringAlt!.contains(finalSearchStr)) {
@@ -498,6 +502,29 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                               ),
                             ),
                             child: const Text("Commander Only"),
+                          ),
+                          MenuItemButton(
+                            onPressed: () {
+                              setState(() {
+                                enableFunny = !enableFunny;
+                              });
+                              searchCards(_searchFieldController.text);
+                            },
+                            closeOnActivate: false,
+                            leadingIcon: SizedBox(
+                              width: IconTheme.of(context).size,
+                              height: IconTheme.of(context).size,
+                              child: Checkbox(
+                                value: enableFunny,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    enableFunny = value ?? false;
+                                  });
+                                  searchCards(_searchFieldController.text);
+                                },
+                              ),
+                            ),
+                            child: const Text("Enable Unset Cards"),
                           ),
                           MenuItemButton(
                             onPressed: () {
