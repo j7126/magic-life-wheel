@@ -75,7 +75,20 @@ class CardSet {
     return i;
   }
 
-  bool get isPartner => keywords?.contains("Partner") ?? false;
+  bool canPartner(CardSet other) {
+    // partner
+    return ((keywords?.contains("Partner") ?? false) && (other.keywords?.contains("Partner") ?? false)) ||
+        // friends forever
+        ((keywords?.contains("Friends forever") ?? false) && (other.keywords?.contains("Friends forever") ?? false)) ||
+        // doctor's companion
+        ((keywords?.contains("Doctor's companion") ?? false) &&
+            (other.subtypes.length == 2 && other.subtypes[0] == "Time Lord" && other.subtypes[1] == "Doctor")) ||
+        ((subtypes.length == 2 && subtypes[0] == "Time Lord" && subtypes[1] == "Doctor") &&
+            (other.keywords?.contains("Doctor's companion") ?? false)) ||
+        // choose a background
+        ((keywords?.contains("Choose a background") ?? false) && other.subtypes.contains("Background")) ||
+        (subtypes.contains("Background") && (other.keywords?.contains("Choose a background") ?? false));
+  }
 
   String get displayName => flavorName ?? name;
 }

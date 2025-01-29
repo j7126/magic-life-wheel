@@ -160,7 +160,7 @@ class _CardsVariantDialogState extends State<CardsVariantDialog> {
                     if (widget.player.card?.name != card.name &&
                         widget.player.cardPartner?.uuid != card.uuid &&
                         (widget.player.forcePartner ||
-                            (widget.player.card != null && widget.player.card!.isPartner && card.isPartner)))
+                            (widget.player.card != null && widget.player.card!.canPartner(card))))
                       FilledButton(
                         onPressed: () {
                           setState(() {

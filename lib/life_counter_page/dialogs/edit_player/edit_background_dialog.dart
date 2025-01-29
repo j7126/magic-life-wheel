@@ -56,7 +56,10 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
     var searchStrWords = finalSearchStr.split(' ');
     var cards = Service.dataLoader.allSetCards?.data.where(
       (card) {
-        if (commanderOnly && !(card.leadershipSkills?.commander ?? false)) {
+        if (commanderOnly &&
+            !((card.leadershipSkills?.commander ?? false) ||
+                ((widget.player.card?.keywords?.contains("Choose a background") ?? false) &&
+                    card.subtypes.contains("Background")))) {
           return false;
         }
         if (!enableFunny && card.isFunny == true) {
@@ -316,56 +319,80 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    FilledButton(
-                      onPressed: () {
-                        setState(() {
-                          if (widget.player.card?.name == selectedCard!.name) {
-                            widget.player.card = widget.player.cardPartner;
-                            widget.player.cardPartner = null;
-                          } else if (widget.player.cardPartner?.name == selectedCard.name) {
-                            widget.player.cardPartner = null;
-                          } else {
-                            widget.player.card = selectedCard;
-                            if (widget.player.cardPartner?.name == selectedCard.name) {
+                    if (!commanderOnly ||
+                        (selectedCard.leadershipSkills?.commander ?? false) ||
+                        widget.player.cardPartner?.name == selectedCard.name)
+                      FilledButton(
+                        onPressed: () {
+                          setState(() {
+                            if (widget.player.card?.name == selectedCard!.name) {
+                              // if the card is already selected, deselect it.
+                              if (widget.player.card != null &&
+                                  widget.player.cardPartner != null &&
+                                  widget.player.cardPartner!.subtypes.contains("Background") &&
+                                  widget.player.card!.canPartner(widget.player.cardPartner!)) {
+                                // if the partner is a legal background, remove it
+                                widget.player.cardPartner = null;
+                              }
+                              widget.player.card = widget.player.cardPartner;
                               widget.player.cardPartner = null;
+                            } else if (widget.player.cardPartner?.name == selectedCard.name) {
+                              // if the card is already partner, deselect it.
+                              widget.player.cardPartner = null;
+                            } else {
+                              // select the card.
+                              widget.player.card = selectedCard;
+                              if (widget.player.cardPartner?.name == selectedCard.name) {
+                                // if the card was partner, remove it.
+                                widget.player.cardPartner = null;
+                              }
+                              if (widget.player.card != null &&
+                                  widget.player.cardPartner != null &&
+                                  !widget.player.forcePartner &&
+                                  !widget.player.card!.canPartner(widget.player.cardPartner!)) {
+                                // if the new selection cannot be partners with the existing partner, remove it.
+                                widget.player.cardPartner = null;
+                              }
                             }
-                          }
-                          Navigator.of(context).pop();
-                        });
-                      },
-                      style: ButtonStyle(
-                        padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
-                        backgroundColor: widget.player.cardPartner?.name == selectedCard.name
-                            ? WidgetStatePropertyAll(Theme.of(context).colorScheme.inversePrimary)
-                            : null,
-                        foregroundColor: widget.player.cardPartner?.name == selectedCard.name
-                            ? WidgetStatePropertyAll(Theme.of(context).colorScheme.inverseSurface)
-                            : null,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (widget.player.card?.name == selectedCard.name ||
-                              widget.player.cardPartner?.name == selectedCard.name)
-                            const Padding(
-                              padding: EdgeInsets.only(right: 6.0),
-                              child: Icon(
-                                Icons.check,
-                                size: 18.0,
+                            Navigator.of(context).pop();
+                          });
+                        },
+                        style: ButtonStyle(
+                          padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                          backgroundColor: widget.player.cardPartner?.name == selectedCard.name
+                              ? WidgetStatePropertyAll(Theme.of(context).colorScheme.inversePrimary)
+                              : null,
+                          foregroundColor: widget.player.cardPartner?.name == selectedCard.name
+                              ? WidgetStatePropertyAll(Theme.of(context).colorScheme.inverseSurface)
+                              : null,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (widget.player.card?.name == selectedCard.name ||
+                                widget.player.cardPartner?.name == selectedCard.name)
+                              Padding(
+                                padding: EdgeInsets.only(right: 6.0),
+                                child: Icon(
+                                  Icons.check,
+                                  size: 18.0,
+                                  color: widget.player.cardPartner?.name == selectedCard.name
+                                      ? Theme.of(context).colorScheme.inverseSurface
+                                      : null,
+                                ),
                               ),
-                            ),
-                          Text(widget.player.card?.name == selectedCard.name
-                              ? "Selected"
-                              : widget.player.cardPartner?.name == selectedCard.name
-                                  ? "Partnered"
-                                  : "Select"),
-                        ],
+                            Text(widget.player.card?.name == selectedCard.name
+                                ? "Selected"
+                                : widget.player.cardPartner?.name == selectedCard.name
+                                    ? "Partnered"
+                                    : "Select"),
+                          ],
+                        ),
                       ),
-                    ),
                     if (widget.player.card?.name != selectedCard.name &&
                         widget.player.cardPartner?.name != selectedCard.name &&
                         (widget.player.forcePartner ||
-                            (widget.player.card != null && widget.player.card!.isPartner && selectedCard.isPartner)))
+                            (widget.player.card != null && widget.player.card!.canPartner(selectedCard))))
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: FilledButton(
