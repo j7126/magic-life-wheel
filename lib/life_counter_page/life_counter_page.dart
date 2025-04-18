@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_fullscreen/flutter_fullscreen.dart';
 import 'package:gap/gap.dart';
+import 'package:magic_life_wheel/card_search_page/card_search_page.dart';
 import 'package:magic_life_wheel/datamodel/game.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/dialogs/message_dialog.dart';
@@ -332,6 +333,19 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
         },
         Icons.settings,
         "Settings",
+      ),
+      (
+        Service.settingsService.pref_getScryfallImages
+            ? () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const CardSearchPage(),
+                  ),
+                );
+              }
+            : null,
+        Icons.search,
+        "Search Cards",
       ),
       (
         _showTransferGamePage,
