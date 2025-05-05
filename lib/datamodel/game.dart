@@ -19,7 +19,7 @@ class Game {
   Game.fromPlayerList(this.players, int layout) {
     setPlayers(
       players.length,
-      layoutId: layoutId,
+      layoutId: layout,
       reset: false,
     );
   }
