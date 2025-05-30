@@ -34,7 +34,7 @@ dependencies:
   image: ^4.2.0
   tab_container: ^3.5.3
   barcode_widget: ^2.0.4
-  flutter_zxing: ^1.7.0
+  flutter_zxing: ^2.1.0
   camera: ^0.11.0+1
   system_info2: ^4.0.0
   app_links: ^6.1.3
