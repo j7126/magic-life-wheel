@@ -205,271 +205,299 @@ class _CounterState extends State<Counter> {
             onPressed: commanderDamage,
           );
 
-    return Opacity(
-      opacity: widget.player.dead ? 0.2 : 1,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          var fontSize = max(
-            min(
-              min(
-                constraints.maxHeight -
-                    (Service.settingsService.pref_enableCommanderDamage
-                        ? Service.settingsService.pref_commanderDamageMiniGrid
-                            ? 102
-                            : 82
-                        : 20),
-                (constraints.maxWidth - 144.0) * 0.9,
-              ),
-              128.0,
-            ),
-            1.0,
-          );
-          var before = widget.counterFontSizeGroup.minSize;
-          widget.counterFontSizeGroup.setSize(widget.i, fontSize);
-          if (widget.triggerReRender != null && before != widget.counterFontSizeGroup.minSize) {
-            widget.triggerReRender!();
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        int sensitivity = 8;
+        if (details.delta.dx > sensitivity) {
+          // right swipe
+          if (Service.settingsService.pref_enableCommanderDamage) {
+            commanderDamage();
           }
+        } else if (details.delta.dx < -sensitivity) {
+          // left swipe
+          if (Service.settingsService.pref_enableCommanderDamage) {
+            commanderDamage();
+          }
+        }
+      },
+      onVerticalDragUpdate: (details) {
+        int sensitivity = 8;
+        if (details.delta.dy > sensitivity) {
+          // down swipe
+          editPlayer();
+        } else if (details.delta.dy < -sensitivity) {
+          // up swipe
+          if (Service.settingsService.pref_enableCommanderDamage) {
+            commanderDamage();
+          }
+        }
+      },
+      child: Opacity(
+        opacity: widget.player.dead ? 0.2 : 1,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            var fontSize = max(
+              min(
+                min(
+                  constraints.maxHeight -
+                      (Service.settingsService.pref_enableCommanderDamage
+                          ? Service.settingsService.pref_commanderDamageMiniGrid
+                              ? 102
+                              : 82
+                          : 20),
+                  (constraints.maxWidth - 144.0) * 0.9,
+                ),
+                128.0,
+              ),
+              1.0,
+            );
+            var before = widget.counterFontSizeGroup.minSize;
+            widget.counterFontSizeGroup.setSize(widget.i, fontSize);
+            if (widget.triggerReRender != null && before != widget.counterFontSizeGroup.minSize) {
+              widget.triggerReRender!();
+            }
 
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(35),
-              color: const Color.fromARGB(255, 50, 50, 50),
-            ),
-            clipBehavior: Clip.antiAlias,
-            width: constraints.maxWidth,
-            height: constraints.maxHeight,
-            child: Stack(
-              children: [
-                BackgroundWidget(
-                  background: widget.player.background,
-                ),
-                Positioned(
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Opacity(
-                    opacity: widget.player.dead ? 0 : 1,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        top: Service.settingsService.pref_enableCommanderDamage &&
-                                Service.settingsService.pref_commanderDamageMiniGrid
-                            ? 16
-                            : 32,
-                        bottom: Service.settingsService.pref_enableCommanderDamage
-                            ? Service.settingsService.pref_commanderDamageMiniGrid
-                                ? 48
-                                : 32
-                            : 16,
-                        left: 72.0,
-                        right: 72.0,
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(35),
+                color: const Color.fromARGB(255, 50, 50, 50),
+              ),
+              clipBehavior: Clip.antiAlias,
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+              child: Stack(
+                children: [
+                  BackgroundWidget(
+                    background: widget.player.background,
+                  ),
+                  Positioned(
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Opacity(
+                      opacity: widget.player.dead ? 0 : 1,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: Service.settingsService.pref_enableCommanderDamage &&
+                                  Service.settingsService.pref_commanderDamageMiniGrid
+                              ? 16
+                              : 32,
+                          bottom: Service.settingsService.pref_enableCommanderDamage
+                              ? Service.settingsService.pref_commanderDamageMiniGrid
+                                  ? 48
+                                  : 32
+                              : 16,
+                          left: 72.0,
+                          right: 72.0,
+                        ),
+                        child: Center(
+                          child: FittedBox(
+                            fit: Service.settingsService.pref_maximiseFontSize ? BoxFit.contain : BoxFit.none,
+                            child: Text(
+                              widget.player.life.toString(),
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: Service.settingsService.pref_maximiseFontSize
+                                    ? min(
+                                        constraints.maxHeight,
+                                        constraints.maxWidth,
+                                      )
+                                    : widget.counterFontSizeGroup.minSize,
+                                shadows: onBackgroundShadow,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      child: Center(
-                        child: FittedBox(
-                          fit: Service.settingsService.pref_maximiseFontSize ? BoxFit.contain : BoxFit.none,
-                          child: Text(
-                            widget.player.life.toString(),
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontSize: Service.settingsService.pref_maximiseFontSize
-                                  ? min(
-                                      constraints.maxHeight,
-                                      constraints.maxWidth,
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onLongPressStart: (e) => handleLongPressInterval(-1),
+                            onLongPressEnd: (e) => handleLongPressEnd(),
+                            child: TextButton(
+                              style: ButtonStyle(
+                                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                                  const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                ),
+                                foregroundColor: WidgetStateProperty.all<Color>(
+                                  Theme.of(context).colorScheme.onSurface,
+                                ),
+                                iconColor: WidgetStateProperty.all<Color>(
+                                  Theme.of(context).colorScheme.onSurface,
+                                ),
+                                overlayColor: WidgetStateProperty.all<Color>(
+                                  longPressDirection == -1
+                                      ? Colors.transparent
+                                      : Theme.of(context).colorScheme.onSurface.withAlpha(30),
+                                ),
+                                backgroundColor: WidgetStateProperty.all<Color>(
+                                  longPressDirection == -1
+                                      ? Theme.of(context).colorScheme.onSurface.withAlpha(30)
+                                      : Colors.transparent,
+                                ),
+                              ),
+                              onPressed: !showMinusButton ? null : () => changeLife(-1),
+                              child: showMinusButton
+                                  ? SizedBox(
+                                      height: double.infinity,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                            child: Icon(
+                                              Icons.remove,
+                                              shadows: onBackgroundShadow,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     )
-                                  : widget.counterFontSizeGroup.minSize,
-                              shadows: onBackgroundShadow,
+                                  : Container(),
                             ),
                           ),
                         ),
-                      ),
+                        Expanded(
+                          child: GestureDetector(
+                            onLongPressStart: (e) => handleLongPressInterval(1),
+                            onLongPressEnd: (e) => handleLongPressEnd(),
+                            child: TextButton(
+                              style: ButtonStyle(
+                                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                                  const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                ),
+                                foregroundColor: WidgetStateProperty.all<Color>(
+                                  Theme.of(context).colorScheme.onSurface,
+                                ),
+                                iconColor: WidgetStateProperty.all<Color>(
+                                  Theme.of(context).colorScheme.onSurface,
+                                ),
+                                overlayColor: WidgetStateProperty.all<Color>(
+                                  longPressDirection == 1
+                                      ? Colors.transparent
+                                      : Theme.of(context).colorScheme.onSurface.withAlpha(30),
+                                ),
+                                backgroundColor: WidgetStateProperty.all<Color>(
+                                  longPressDirection == 1
+                                      ? Theme.of(context).colorScheme.onSurface.withAlpha(30)
+                                      : Colors.transparent,
+                                ),
+                              ),
+                              onPressed: !showPlusButton ? null : () => changeLife(1),
+                              child: showPlusButton
+                                  ? SizedBox(
+                                      height: double.infinity,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                            child: Icon(
+                                              Icons.add,
+                                              shadows: onBackgroundShadow,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : Container(),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                Positioned(
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onLongPressStart: (e) => handleLongPressInterval(-1),
-                          onLongPressEnd: (e) => handleLongPressEnd(),
-                          child: TextButton(
-                            style: ButtonStyle(
-                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                                const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                              ),
-                              foregroundColor: WidgetStateProperty.all<Color>(
-                                Theme.of(context).colorScheme.onSurface,
-                              ),
-                              iconColor: WidgetStateProperty.all<Color>(
-                                Theme.of(context).colorScheme.onSurface,
-                              ),
-                              overlayColor: WidgetStateProperty.all<Color>(
-                                longPressDirection == -1
-                                    ? Colors.transparent
-                                    : Theme.of(context).colorScheme.onSurface.withAlpha(30),
-                              ),
-                              backgroundColor: WidgetStateProperty.all<Color>(
-                                longPressDirection == -1
-                                    ? Theme.of(context).colorScheme.onSurface.withAlpha(30)
-                                    : Colors.transparent,
-                              ),
-                            ),
-                            onPressed: !showMinusButton ? null : () => changeLife(-1),
-                            child: showMinusButton
-                                ? SizedBox(
-                                    height: double.infinity,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                          child: Icon(
-                                            Icons.remove,
-                                            shadows: onBackgroundShadow,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : Container(),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onLongPressStart: (e) => handleLongPressInterval(1),
-                          onLongPressEnd: (e) => handleLongPressEnd(),
-                          child: TextButton(
-                            style: ButtonStyle(
-                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                                const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                              ),
-                              foregroundColor: WidgetStateProperty.all<Color>(
-                                Theme.of(context).colorScheme.onSurface,
-                              ),
-                              iconColor: WidgetStateProperty.all<Color>(
-                                Theme.of(context).colorScheme.onSurface,
-                              ),
-                              overlayColor: WidgetStateProperty.all<Color>(
-                                longPressDirection == 1
-                                    ? Colors.transparent
-                                    : Theme.of(context).colorScheme.onSurface.withAlpha(30),
-                              ),
-                              backgroundColor: WidgetStateProperty.all<Color>(
-                                longPressDirection == 1
-                                    ? Theme.of(context).colorScheme.onSurface.withAlpha(30)
-                                    : Colors.transparent,
-                              ),
-                            ),
-                            onPressed: !showPlusButton ? null : () => changeLife(1),
-                            child: showPlusButton
-                                ? SizedBox(
-                                    height: double.infinity,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                          child: Icon(
-                                            Icons.add,
-                                            shadows: onBackgroundShadow,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : Container(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: LayoutBuilder(builder: (context, constraints) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Service.settingsService.pref_showChangingLife && changedLife < 0
-                              ? Container(
-                                  constraints: const BoxConstraints(minWidth: 38),
-                                  child: Text(
-                                    changedLife.toString(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      shadows: onBackgroundShadow,
-                                    ),
-                                    maxLines: 1,
-                                  ),
-                                )
-                              : const SizedBox(width: 38, height: 0),
-                          Flexible(
-                            fit: FlexFit.loose,
-                            child: playerNameBtn,
-                          ),
-                          Service.settingsService.pref_showChangingLife && changedLife > 0
-                              ? Container(
-                                  constraints: const BoxConstraints(minWidth: 38),
-                                  child: Text(
-                                    "+$changedLife",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      shadows: onBackgroundShadow,
-                                    ),
-                                    maxLines: 1,
-                                  ),
-                                )
-                              : const SizedBox(width: 38, height: 0),
-                        ],
-                      );
-                    }),
-                  ),
-                ),
-                if (Service.settingsService.pref_enableCommanderDamage)
                   Align(
-                    alignment: Alignment.bottomCenter,
-                    child: commanderButton,
-                  ),
-                IgnorePointer(
-                  child: AnimatedFade(
-                    reverseDuration: const Duration(seconds: 2),
-                    visible: widget.highlighted,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(35),
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 8.0,
-                        ),
-                      ),
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: LayoutBuilder(builder: (context, constraints) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Service.settingsService.pref_showChangingLife && changedLife < 0
+                                ? Container(
+                                    constraints: const BoxConstraints(minWidth: 38),
+                                    child: Text(
+                                      changedLife.toString(),
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        shadows: onBackgroundShadow,
+                                      ),
+                                      maxLines: 1,
+                                    ),
+                                  )
+                                : const SizedBox(width: 38, height: 0),
+                            Flexible(
+                              fit: FlexFit.loose,
+                              child: playerNameBtn,
+                            ),
+                            Service.settingsService.pref_showChangingLife && changedLife > 0
+                                ? Container(
+                                    constraints: const BoxConstraints(minWidth: 38),
+                                    child: Text(
+                                      "+$changedLife",
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        shadows: onBackgroundShadow,
+                                      ),
+                                      maxLines: 1,
+                                    ),
+                                  )
+                                : const SizedBox(width: 38, height: 0),
+                          ],
+                        );
+                      }),
                     ),
                   ),
-                ),
-                if (widget.highlightedInstant)
+                  if (Service.settingsService.pref_enableCommanderDamage)
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: commanderButton,
+                    ),
                   IgnorePointer(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(35),
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 4.0,
+                    child: AnimatedFade(
+                      reverseDuration: const Duration(seconds: 2),
+                      visible: widget.highlighted,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(35),
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 8.0,
+                          ),
                         ),
                       ),
                     ),
                   ),
-              ],
-            ),
-          );
-        },
+                  if (widget.highlightedInstant)
+                    IgnorePointer(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(35),
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 4.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
