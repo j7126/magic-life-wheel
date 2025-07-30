@@ -15,7 +15,6 @@ class CardSet {
     required this.artist,
     required this.types,
     required this.subtypes,
-    required this.supertypes,
     this.leadershipSkills,
     this.keywords,
     this.text,
@@ -31,7 +30,6 @@ class CardSet {
   Identifiers identifiers;
   List<String> types;
   List<String> subtypes;
-  List<String> supertypes;
   LeadershipSkills? leadershipSkills;
   List<String>? keywords;
   String? text;
