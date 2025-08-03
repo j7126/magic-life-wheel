@@ -3,7 +3,8 @@ import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/dialogs/card_full_dialog.dart';
-import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
+import 'package:magic_life_wheel/mtgjson/extension/card_set.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel_protobuf/card_set.pb.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 
@@ -71,7 +72,7 @@ class _CardsVariantDialogState extends State<CardsVariantDialog> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Text(
-                      "Artist: ${card.artist ?? "Unknown"}",
+                      "Artist: ${card.hasArtist() ? card.artist : "Unknown"}",
                       style: const TextStyle(
                         fontSize: 14.0,
                       ),

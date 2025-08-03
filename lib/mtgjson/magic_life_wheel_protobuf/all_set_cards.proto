@@ -1,0 +1,8 @@
+syntax = "proto3";
+package mtgjson_converter_dart;
+
+import "card_set.proto";
+
+message ProtobufAllSetCards {
+  repeated CardSet data = 1;
+}

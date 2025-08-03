@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:magic_life_wheel/icons/custom_icons.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/cards_variant_dialog.dart';
-import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
+import 'package:magic_life_wheel/mtgjson/extension/card_set.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel_protobuf/card_set.pb.dart';
 import 'package:magic_life_wheel/static_service.dart';
 
 class CardSearchPage extends StatefulWidget {
@@ -33,11 +34,11 @@ class _CardSearchPageState extends State<CardSearchPage> {
     if (Service.dataLoader.allSetCards == null) {
       return;
     }
-    var finalSearchStr = CardSet.filterStringForSearch(searchStr.trim());
+    var finalSearchStr = CardSetExtension.filterStringForSearch(searchStr.trim());
     var searchStrWords = finalSearchStr.split(' ');
     var cards = Service.dataLoader.allSetCards?.data.where(
       (card) {
-        if (card.cardSearchStringAlt != null && card.cardSearchStringAlt!.contains(finalSearchStr)) {
+        if (card.hasCardSearchStringAlt() && card.cardSearchStringAlt.contains(finalSearchStr)) {
           return true;
         }
         return card.cardSearchString.contains(finalSearchStr);

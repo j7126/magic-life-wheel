@@ -14,7 +14,6 @@ dependencies:
   
   wakelock_plus: ^1.2.5
   gap: ^3.0.1
-  cupertino_icons: ^1.0.8
   dynamic_color: ^1.7.0
   package_info_plus: ^8.0.0
   flutter_svg: ^2.0.10
@@ -40,6 +39,7 @@ dependencies:
   app_links: ^6.1.3
   web: ^1.1.0
   flutter_fullscreen: ^1.2.0
+  protobuf: ^4.1.1
 
 dev_dependencies:
   flutter_lints: ^6.0.0
@@ -52,7 +52,7 @@ flutter:
 
   assets:
     - assets/icon/logo.svg
-    - data/all_cards.json
+    - data/all_cards.bin
     - data/set_list.json
 
   fonts:

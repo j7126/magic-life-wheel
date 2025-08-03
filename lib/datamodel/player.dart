@@ -1,7 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:magic_life_wheel/datamodel/background.dart';
 import 'package:magic_life_wheel/datamodel/damage_event.dart';
-import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
+import 'package:magic_life_wheel/mtgjson/extension/card_set.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel_protobuf/card_set.pb.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:uuid/uuid.dart';
 

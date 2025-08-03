@@ -1,0 +1,25 @@
+syntax = "proto3";
+package mtgjson_converter_dart;
+
+message CardSet {
+  string uuid = 1;
+  string name = 2;
+  string setCode = 3;
+  optional string scryfallId = 4;
+  optional bool commander = 5;
+  string cardSearchString = 6;
+  repeated string cardSearchStringWords = 7;
+  optional string cardSearchStringAlt = 8;
+  repeated string cardSearchStringWordsAlt = 9;
+  optional string artist = 10;
+  optional string text = 11;
+  optional string flavorName = 12;
+  optional bool isFunny = 13;
+  optional bool keywordPartner = 14;
+  optional bool keywordFriendsForever = 15;
+  optional bool keywordDoctorsCompanion = 16;
+  optional bool keywordChooseBackground = 17;
+  optional bool subtypeBackground = 18;
+  optional bool subtypeTimeLordDoctor = 19;
+  optional bool typePlane = 20;
+}

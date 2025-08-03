@@ -11,7 +11,8 @@ import 'package:magic_life_wheel/dialogs/card_full_dialog.dart';
 import 'package:magic_life_wheel/dialogs/message_dialog.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/set_colors_dialog.dart';
 import 'package:magic_life_wheel/icons/custom_icons.dart';
-import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
+import 'package:magic_life_wheel/mtgjson/extension/card_set.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel_protobuf/card_set.pb.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/cards_variant_dialog.dart';
@@ -52,20 +53,20 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
     if (Service.dataLoader.allSetCards == null) {
       return;
     }
-    var finalSearchStr = CardSet.filterStringForSearch(searchStr.trim());
+    var finalSearchStr = CardSetExtension.filterStringForSearch(searchStr.trim());
     var searchStrWords = finalSearchStr.split(' ');
     var cards = Service.dataLoader.allSetCards?.data.where(
       (card) {
         if (commanderOnly &&
-            !((card.leadershipSkills?.commander ?? false) ||
-                ((widget.player.card?.keywords?.contains("Choose a background") ?? false) &&
-                    card.subtypes.contains("Background")))) {
+            !(card.hasCommander() ||
+                ((widget.player.card?.hasKeywordChooseBackground() ?? false) &&
+                    card.hasSubtypeBackground()))) {
           return false;
         }
         if (!enableFunny && card.isFunny == true) {
           return false;
         }
-        if (card.cardSearchStringAlt != null && card.cardSearchStringAlt!.contains(finalSearchStr)) {
+        if (card.hasCardSearchStringAlt() && card.cardSearchStringAlt.contains(finalSearchStr)) {
           return true;
         }
         return card.cardSearchString.contains(finalSearchStr);
@@ -268,7 +269,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Text(
-                    "Artist: ${selectedCard.artist ?? "Unknown"}",
+                    "Artist: ${selectedCard.hasArtist() ? selectedCard.artist : "Unknown"}",
                     style: const TextStyle(
                       fontSize: 14.0,
                     ),
@@ -320,7 +321,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     if (!commanderOnly ||
-                        (selectedCard.leadershipSkills?.commander ?? false) ||
+                        selectedCard.hasCommander() ||
                         widget.player.cardPartner?.name == selectedCard.name)
                       FilledButton(
                         onPressed: () {
@@ -329,7 +330,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                               // if the card is already selected, deselect it.
                               if (widget.player.card != null &&
                                   widget.player.cardPartner != null &&
-                                  widget.player.cardPartner!.subtypes.contains("Background") &&
+                                  widget.player.cardPartner!.hasSubtypeBackground() &&
                                   widget.player.card!.canPartner(widget.player.cardPartner!)) {
                                 // if the partner is a legal background, remove it
                                 widget.player.cardPartner = null;

@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel_protobuf/card_set.pb.dart';
 import 'package:magic_life_wheel/serialization/unit_8_list_converter.dart';
 import 'package:magic_life_wheel/static_service.dart';
 
@@ -12,8 +12,8 @@ class Background {
   Background();
 
   @JsonKey(
-    includeFromJson: true,
-    includeToJson: true,
+    includeFromJson: false,
+    includeToJson: false,
   )
   CardSet? _card;
   @JsonKey(
@@ -28,10 +28,19 @@ class Background {
       colors = null;
     }
   }
-
   @JsonKey(
     includeFromJson: true,
     includeToJson: true,
+  )
+  @Uint8ListConverter()
+  Uint8List? get cardProtobuf => _card?.writeToBuffer();
+  set cardProtobuf(Uint8List? value) {
+    _card = value == null ? null : CardSet.fromBuffer(value);
+  }
+
+  @JsonKey(
+    includeFromJson: false,
+    includeToJson: false,
   )
   CardSet? _cardPartner;
   @JsonKey(
@@ -45,6 +54,15 @@ class Background {
       customImage = null;
       colors = null;
     }
+  }
+  @JsonKey(
+    includeFromJson: true,
+    includeToJson: true,
+  )
+  @Uint8ListConverter()
+  Uint8List? get cardPartnerProtobuf => _cardPartner?.writeToBuffer();
+  set cardPartnerProtobuf(Uint8List? value) {
+    _cardPartner = value == null ? null : CardSet.fromBuffer(value);
   }
 
   @JsonKey(

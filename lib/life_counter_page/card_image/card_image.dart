@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel_protobuf/card_set.pb.dart';
 import 'package:magic_life_wheel/static_service.dart';
 
 class CardImage extends StatefulWidget {
@@ -31,7 +31,7 @@ class _CardImageState extends State<CardImage> {
   String? _partnerImageUrl;
 
   String? getImage(CardSet? card) {
-    String? id = card?.identifiers.scryfallId;
+    String? id = (card == null || !card.hasScryfallId()) ? null : card.scryfallId;
     if (id == null) {
       return null;
     }

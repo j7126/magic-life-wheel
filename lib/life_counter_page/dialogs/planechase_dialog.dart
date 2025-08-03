@@ -10,7 +10,7 @@ import 'package:magic_life_wheel/mtgjson/dataModel/set.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 import 'package:mana_icons_flutter/mana_icons_flutter.dart';
-import 'package:magic_life_wheel/mtgjson/dataModel/card_set.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel_protobuf/card_set.pb.dart';
 import 'package:magic_life_wheel/icons/custom_icons.dart';
 
 class PlanechaseDialog extends StatefulWidget {
@@ -34,7 +34,7 @@ class PlanechaseDialog extends StatefulWidget {
 
     planechaseDeck = groupBy(
             Service.dataLoader.allSetCards!.data.where((x) =>
-                x.types.contains("Plane") &&
+                x.hasTypePlane() &&
                 !Service.settingsService.pref_planechaseDisabledSets.contains(x.setCode) &&
                 (Service.settingsService.pref_planechaseEnableFunny || x.isFunny != true)),
             (card) => card.name.trim().toLowerCase())
@@ -164,7 +164,7 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
         Service.dataLoader.allSetCards != null) {
       PlanechaseDialog.availableSets = [];
       for (var card in Service.dataLoader.allSetCards!.data) {
-        if (card.types.contains("Plane") && !PlanechaseDialog.availableSets.any((x) => x.code == card.setCode)) {
+        if (card.hasTypePlane() && !PlanechaseDialog.availableSets.any((x) => x.code == card.setCode)) {
           var set = Service.dataLoader.sets!.data.firstWhereOrNull((x) => x.code == card.setCode);
           if (set != null) {
             PlanechaseDialog.availableSets.add(set);
@@ -563,7 +563,7 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
                                           Expanded(
                                             child: Builder(builder: (context) {
                                               var spans = RegExp(r'({)([^}]*)(})|([^{]*)')
-                                                  .allMatches(card.text?.replaceAll("\n", "\n\n") ?? "")
+                                                  .allMatches(card.hasText() ? card.text.replaceAll("\n", "\n\n") : "")
                                                   .where((element) => element.group(0) != null);
                                               return AutoSizeText.rich(
                                                 TextSpan(

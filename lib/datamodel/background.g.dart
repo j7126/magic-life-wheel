@@ -7,12 +7,10 @@ part of 'background.dart';
 // **************************************************************************
 
 Background _$BackgroundFromJson(Map<String, dynamic> json) => Background()
-  .._card = json['_card'] == null
-      ? null
-      : CardSet.fromJson(json['_card'] as Map<String, dynamic>)
-  .._cardPartner = json['_cardPartner'] == null
-      ? null
-      : CardSet.fromJson(json['_cardPartner'] as Map<String, dynamic>)
+  ..cardProtobuf =
+      const Uint8ListConverter().fromJson(json['cardProtobuf'] as String?)
+  ..cardPartnerProtobuf = const Uint8ListConverter()
+      .fromJson(json['cardPartnerProtobuf'] as String?)
   .._customImage =
       const Uint8ListConverter().fromJson(json['_customImage'] as String?)
   .._colors = (json['_colors'] as List<dynamic>?)
@@ -21,8 +19,9 @@ Background _$BackgroundFromJson(Map<String, dynamic> json) => Background()
 
 Map<String, dynamic> _$BackgroundToJson(Background instance) =>
     <String, dynamic>{
-      '_card': instance._card?.toJson(),
-      '_cardPartner': instance._cardPartner?.toJson(),
+      'cardProtobuf': const Uint8ListConverter().toJson(instance.cardProtobuf),
+      'cardPartnerProtobuf':
+          const Uint8ListConverter().toJson(instance.cardPartnerProtobuf),
       '_customImage': const Uint8ListConverter().toJson(instance._customImage),
       '_colors': instance._colors,
     };

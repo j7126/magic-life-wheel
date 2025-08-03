@@ -110,11 +110,11 @@ class TransferUrlService {
               if (cardUuid != null) {
                 var card = Service.dataLoader.allSetCards?.data.firstWhereOrNull((element) => element.uuid == cardUuid);
                 if (card != null) {
-                  player.background.card = card;
+                  //player.background.card = card;
                   if (cardPartnerUuid != null) {
                     var cardPartner = Service.dataLoader.allSetCards?.data
                         .firstWhereOrNull((element) => element.uuid == cardPartnerUuid);
-                    player.background.cardPartner = cardPartner;
+                    //player.background.cardPartner = cardPartner;
                   }
                 }
               }
