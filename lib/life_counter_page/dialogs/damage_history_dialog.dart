@@ -88,22 +88,76 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 24.0, top: 16.0),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Text(
-                        widget.player.dead ? "Dead" : "${widget.player.life} Life",
-                        style: const TextStyle(
-                          fontSize: 26,
-                          height: 1,
-                          color: Color.fromARGB(255, 178, 178, 178),
-                        ),
+                    padding: const EdgeInsets.only(bottom: 16.0, top: 16.0, left: 12.0, right: 12.0),
+                    child: Text(
+                      widget.player.dead ? "Dead" : "${widget.player.life} Life",
+                      style: const TextStyle(
+                        fontSize: 26,
+                        height: 1,
+                        color: Color.fromARGB(255, 178, 178, 178),
                       ),
                     ),
                   ),
+                  if (widget.player.damageHistory.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 24.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  widget.player.damageHistory.where((x) => x.change < 0).map((x) => x.change).sum.abs().toString(),
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    height: 1,
+                                    color: Color.fromARGB(255, 178, 178, 178),
+                                  ),
+                                ),
+                                Text(
+                                  "Life Lost",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    height: 1,
+                                    color: Color.fromARGB(255, 178, 178, 178),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  widget.player.damageHistory.where((x) => x.change > 0).map((x) => x.change).sum.abs().toString(),
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    height: 1,
+                                    color: Color.fromARGB(255, 178, 178, 178),
+                                  ),
+                                ),
+                                Text(
+                                  "Life Gained",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    height: 1,
+                                    color: Color.fromARGB(255, 178, 178, 178),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   if (widget.player.damageHistory.isEmpty)
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 24.0),
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 24.0, top: 12.0),
                       child: Row(
                         children: [
                           const Spacer(),
@@ -146,8 +200,7 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                                   Widget? bg;
                                   if (event.fromCommander != null) {
                                     if (event.fromCommander!.endsWith("_partner")) {
-                                      var player = widget.players
-                                          .firstWhereOrNull((x) => "${x.uuid}_partner" == event.fromCommander);
+                                      var player = widget.players.firstWhereOrNull((x) => "${x.uuid}_partner" == event.fromCommander);
                                       if (player != null && player.cardPartner != null) {
                                         bg = CardImage(
                                           key: Key(player.cardPartner!.uuid),
@@ -155,8 +208,7 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                                         );
                                       }
                                     } else {
-                                      var player =
-                                          widget.players.firstWhereOrNull((x) => x.uuid == event.fromCommander);
+                                      var player = widget.players.firstWhereOrNull((x) => x.uuid == event.fromCommander);
                                       if (player != null) {
                                         bg = player.card != null
                                             ? CardImage(
@@ -248,8 +300,7 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                             padding: const EdgeInsets.symmetric(vertical: 12.0),
                             child: Container(
                               height: 2.0,
-                              color: (DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant)
-                                  .withAlpha(127),
+                              color: (DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant).withAlpha(127),
                             ),
                           ),
                         ),
@@ -269,8 +320,7 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                             padding: const EdgeInsets.symmetric(vertical: 12.0),
                             child: Container(
                               height: 2.0,
-                              color: (DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant)
-                                  .withAlpha(127),
+                              color: (DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant).withAlpha(127),
                             ),
                           ),
                         ),
