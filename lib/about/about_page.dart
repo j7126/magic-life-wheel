@@ -69,7 +69,7 @@ class _AboutPageState extends State<AboutPage> {
                                       ),
                                 ),
                                 Text(
-                                  '© 2024 Jefferey Neuffer',
+                                  '© 2025 Jefferey Neuffer',
                                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                         color: const Color.fromARGB(255, 229, 229, 229),
                                       ),
@@ -318,7 +318,7 @@ class _AboutPageState extends State<AboutPage> {
                 const Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Text(
-                    "Magic Life Wheel Copyright (C) 2024 Jefferey Neuffer.\nThis program is free software, licensed under GNU AGPL v3 or any later version.\n\nPortions of this app contains information and images related to Magic: The Gathering. Card metadata is bundled with the app, and card images may be fetched from Scryfall. Wizards of the Coast, Magic: The Gathering, and their logos, in addtion to the literal and graphical information presented about Magic: The Gathering, including card images, names, mana symbols and other associated metadata and images, is copyright Wizards of the Coast, LLC. All rights reserved. This app is not produced by or endorsed by Wizards of the Coast.",
+                    "Magic Life Wheel Copyright (C) 2025 Jefferey Neuffer.\nThis program is free software, licensed under GNU AGPL v3 or any later version.\n\nPortions of this app contains information and images related to Magic: The Gathering. Card metadata is bundled with the app, and card images may be fetched from Scryfall. Wizards of the Coast, Magic: The Gathering, and their logos, in addtion to the literal and graphical information presented about Magic: The Gathering, including card images, names, mana symbols and other associated metadata and images, is copyright Wizards of the Coast, LLC. All rights reserved. This app is not produced by or endorsed by Wizards of the Coast.",
                     style: TextStyle(
                       fontSize: 12.0,
                       color: Color.fromARGB(255, 76, 76, 76),

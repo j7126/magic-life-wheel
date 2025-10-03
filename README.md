@@ -56,7 +56,7 @@ Build and run with `flutter run`
 
 ## License
 
-Copyright © 2024 Jefferey Neuffer.
+Copyright © 2025 Jefferey Neuffer.
 
 This program is free software: licensed under the terms of the GNU Affero General Public License.
 
