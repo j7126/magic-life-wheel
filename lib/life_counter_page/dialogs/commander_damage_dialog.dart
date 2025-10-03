@@ -164,7 +164,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                               ],
                             ),
                           ),
-                          if (changedLife != 0)
+                          if (changedLife != 0 && Service.settingsService.pref_showChangingLife)
                             Positioned.fill(
                               child: FittedBox(
                                 fit: BoxFit.contain,
