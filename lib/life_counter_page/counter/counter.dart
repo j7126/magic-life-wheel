@@ -12,6 +12,7 @@ import 'package:magic_life_wheel/widgets/animated_fade.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/commander_damage_dialog.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/background_widget.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/edit_player_dialog.dart';
+import 'package:magic_life_wheel/widgets/animated_scale_on_change.dart';
 
 class Counter extends StatefulWidget {
   const Counter({
@@ -267,9 +268,11 @@ class _CounterState extends State<Counter> {
               height: constraints.maxHeight,
               child: Stack(
                 children: [
+                  // background
                   BackgroundWidget(
                     background: widget.player.background,
                   ),
+                  // life number
                   Positioned(
                     top: 0,
                     bottom: 0,
@@ -279,10 +282,7 @@ class _CounterState extends State<Counter> {
                       opacity: widget.player.dead ? 0 : 1,
                       child: Padding(
                         padding: EdgeInsets.only(
-                          top: Service.settingsService.pref_enableCommanderDamage &&
-                                  Service.settingsService.pref_commanderDamageMiniGrid
-                              ? 16
-                              : 32,
+                          top: Service.settingsService.pref_enableCommanderDamage && Service.settingsService.pref_commanderDamageMiniGrid ? 16 : 32,
                           bottom: Service.settingsService.pref_enableCommanderDamage
                               ? Service.settingsService.pref_commanderDamageMiniGrid
                                   ? 48
@@ -293,9 +293,9 @@ class _CounterState extends State<Counter> {
                         ),
                         child: Center(
                           child: FittedBox(
-                            fit: Service.settingsService.pref_maximiseFontSize ? BoxFit.contain : BoxFit.none,
+                            fit: BoxFit.contain,
                             child: Text(
-                              widget.player.life.toString(),
+                              widget.player.life > 999999 ? widget.player.life.toStringAsExponential(0) : widget.player.life.toString(),
                               maxLines: 1,
                               style: TextStyle(
                                 fontSize: Service.settingsService.pref_maximiseFontSize
@@ -312,6 +312,7 @@ class _CounterState extends State<Counter> {
                       ),
                     ),
                   ),
+                  // action buttons
                   Positioned(
                     top: 0,
                     bottom: 0,
@@ -321,6 +322,7 @@ class _CounterState extends State<Counter> {
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        // minus button
                         Expanded(
                           child: GestureDetector(
                             onLongPressStart: (e) => handleLongPressInterval(-1),
@@ -337,14 +339,10 @@ class _CounterState extends State<Counter> {
                                   Theme.of(context).colorScheme.onSurface,
                                 ),
                                 overlayColor: WidgetStateProperty.all<Color>(
-                                  longPressDirection == -1
-                                      ? Colors.transparent
-                                      : Theme.of(context).colorScheme.onSurface.withAlpha(30),
+                                  longPressDirection == -1 ? Colors.transparent : Theme.of(context).colorScheme.onSurface.withAlpha(30),
                                 ),
                                 backgroundColor: WidgetStateProperty.all<Color>(
-                                  longPressDirection == -1
-                                      ? Theme.of(context).colorScheme.onSurface.withAlpha(30)
-                                      : Colors.transparent,
+                                  longPressDirection == -1 ? Theme.of(context).colorScheme.onSurface.withAlpha(30) : Colors.transparent,
                                 ),
                               ),
                               onPressed: !showMinusButton ? null : () => changeLife(-1),
@@ -356,10 +354,33 @@ class _CounterState extends State<Counter> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                            child: Icon(
-                                              Icons.remove,
-                                              shadows: onBackgroundShadow,
-                                            ),
+                                            child: Service.settingsService.pref_showChangingLife && changedLife < 0
+                                                ? AnimatedScaleOnChange(
+                                                    value: changedLife,
+                                                    duration: Duration(milliseconds: 400),
+                                                    alignment: Alignment.centerLeft,
+                                                    filter: (prev, next) => next < prev,
+                                                    scale: 1.4,
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          color: ColorScheme.of(context).surfaceContainer, borderRadius: BorderRadius.circular(16.0)),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                                        child: Text(
+                                                          changedLife.toString(),
+                                                          style: TextStyle(
+                                                            fontSize: min(34.0, widget.counterFontSizeGroup.minSize * 0.8),
+                                                          ),
+                                                          maxLines: 1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Icon(
+                                                    Icons.remove,
+                                                    shadows: onBackgroundShadow,
+                                                    size: 28,
+                                                  ),
                                           ),
                                         ],
                                       ),
@@ -368,6 +389,7 @@ class _CounterState extends State<Counter> {
                             ),
                           ),
                         ),
+                        // plus button
                         Expanded(
                           child: GestureDetector(
                             onLongPressStart: (e) => handleLongPressInterval(1),
@@ -384,14 +406,10 @@ class _CounterState extends State<Counter> {
                                   Theme.of(context).colorScheme.onSurface,
                                 ),
                                 overlayColor: WidgetStateProperty.all<Color>(
-                                  longPressDirection == 1
-                                      ? Colors.transparent
-                                      : Theme.of(context).colorScheme.onSurface.withAlpha(30),
+                                  longPressDirection == 1 ? Colors.transparent : Theme.of(context).colorScheme.onSurface.withAlpha(30),
                                 ),
                                 backgroundColor: WidgetStateProperty.all<Color>(
-                                  longPressDirection == 1
-                                      ? Theme.of(context).colorScheme.onSurface.withAlpha(30)
-                                      : Colors.transparent,
+                                  longPressDirection == 1 ? Theme.of(context).colorScheme.onSurface.withAlpha(30) : Colors.transparent,
                                 ),
                               ),
                               onPressed: !showPlusButton ? null : () => changeLife(1),
@@ -403,10 +421,33 @@ class _CounterState extends State<Counter> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                            child: Icon(
-                                              Icons.add,
-                                              shadows: onBackgroundShadow,
-                                            ),
+                                            child: Service.settingsService.pref_showChangingLife && changedLife > 0
+                                                ? AnimatedScaleOnChange(
+                                                    value: changedLife,
+                                                    duration: Duration(milliseconds: 400),
+                                                    alignment: Alignment.centerRight,
+                                                    filter: (prev, next) => next > prev,
+                                                    scale: 1.4,
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          color: ColorScheme.of(context).surfaceContainer, borderRadius: BorderRadius.circular(16.0)),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                                        child: Text(
+                                                          "+$changedLife",
+                                                          style: TextStyle(
+                                                            fontSize: min(34.0, widget.counterFontSizeGroup.minSize * 0.8),
+                                                          ),
+                                                          maxLines: 1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Icon(
+                                                    Icons.add,
+                                                    shadows: onBackgroundShadow,
+                                                    size: 28,
+                                                  ),
                                           ),
                                         ],
                                       ),
@@ -418,54 +459,21 @@ class _CounterState extends State<Counter> {
                       ],
                     ),
                   ),
+                  // player name button
                   Align(
                     alignment: Alignment.topCenter,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: LayoutBuilder(builder: (context, constraints) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Service.settingsService.pref_showChangingLife && changedLife < 0
-                                ? Container(
-                                    constraints: const BoxConstraints(minWidth: 38),
-                                    child: Text(
-                                      changedLife.toString(),
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        shadows: onBackgroundShadow,
-                                      ),
-                                      maxLines: 1,
-                                    ),
-                                  )
-                                : const SizedBox(width: 38, height: 0),
-                            Flexible(
-                              fit: FlexFit.loose,
-                              child: playerNameBtn,
-                            ),
-                            Service.settingsService.pref_showChangingLife && changedLife > 0
-                                ? Container(
-                                    constraints: const BoxConstraints(minWidth: 38),
-                                    child: Text(
-                                      "+$changedLife",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        shadows: onBackgroundShadow,
-                                      ),
-                                      maxLines: 1,
-                                    ),
-                                  )
-                                : const SizedBox(width: 38, height: 0),
-                          ],
-                        );
-                      }),
+                      child: playerNameBtn,
                     ),
                   ),
+                  // commander damage button
                   if (Service.settingsService.pref_enableCommanderDamage)
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: commanderButton,
                     ),
+                  // highlighted counter border
                   IgnorePointer(
                     child: AnimatedFade(
                       reverseDuration: const Duration(seconds: 2),
@@ -481,6 +489,7 @@ class _CounterState extends State<Counter> {
                       ),
                     ),
                   ),
+                  // highlighted counter border
                   if (widget.highlightedInstant)
                     IgnorePointer(
                       child: Container(
