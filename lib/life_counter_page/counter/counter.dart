@@ -365,11 +365,12 @@ class _CounterState extends State<Counter> {
                                                       decoration: BoxDecoration(
                                                           color: ColorScheme.of(context).surfaceContainer, borderRadius: BorderRadius.circular(16.0)),
                                                       child: Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                                        padding: const EdgeInsets.symmetric(horizontal: 14.0),
                                                         child: Text(
                                                           changedLife.toString(),
                                                           style: TextStyle(
                                                             fontSize: min(34.0, widget.counterFontSizeGroup.minSize * 0.8),
+                                                            fontWeight: FontWeight.bold,
                                                           ),
                                                           maxLines: 1,
                                                         ),
@@ -432,11 +433,12 @@ class _CounterState extends State<Counter> {
                                                       decoration: BoxDecoration(
                                                           color: ColorScheme.of(context).surfaceContainer, borderRadius: BorderRadius.circular(16.0)),
                                                       child: Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                                        padding: const EdgeInsets.symmetric(horizontal: 14.0),
                                                         child: Text(
                                                           "+$changedLife",
                                                           style: TextStyle(
                                                             fontSize: min(34.0, widget.counterFontSizeGroup.minSize * 0.8),
+                                                            fontWeight: FontWeight.bold,
                                                           ),
                                                           maxLines: 1,
                                                         ),

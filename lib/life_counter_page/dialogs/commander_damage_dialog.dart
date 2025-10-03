@@ -7,6 +7,7 @@ import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/background_widget.dart';
+import 'package:magic_life_wheel/widgets/animated_scale_on_change.dart';
 
 class CommanderDamageDialog extends StatefulWidget {
   const CommanderDamageDialog({super.key, required this.player, required this.layout, required this.players});
@@ -101,8 +102,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: RotatedBox(
-            quarterTurns:
-                (widget.layout.rotated ? 2 : 0) + (MediaQuery.of(context).orientation == Orientation.landscape ? 1 : 0),
+            quarterTurns: (widget.layout.rotated ? 2 : 0) + (MediaQuery.of(context).orientation == Orientation.landscape ? 1 : 0),
             child: widget.layout.build(
               context,
               widget.players,
@@ -116,16 +116,12 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                   var changedLife = widget.player.damageHistory.isNotEmpty &&
                           widget.player.damageHistory.last.fromCommander == cmdid &&
                           lastChanged == cmdid &&
-                          DateTime.now().millisecondsSinceEpoch -
-                                  widget.player.damageHistory.last.time.millisecondsSinceEpoch <
-                              5000
+                          DateTime.now().millisecondsSinceEpoch - widget.player.damageHistory.last.time.millisecondsSinceEpoch < 5000
                       ? widget.player.damageHistory.last.change * -1
                       : 0;
 
                   return RotatedBox(
-                    quarterTurns: Service.settingsService.pref_commanderDamageButtonsFacePlayer
-                        ? widget.layout.getTurnsInPosition(myIndex) + -1 * turns
-                        : 0,
+                    quarterTurns: Service.settingsService.pref_commanderDamageButtonsFacePlayer ? widget.layout.getTurnsInPosition(myIndex) + -1 * turns : 0,
                     child: Card(
                       clipBehavior: Clip.antiAlias,
                       margin: const EdgeInsets.all(1.0),
@@ -174,18 +170,29 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                 fit: BoxFit.contain,
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 64.0, top: 2.0),
-                                  child: Text(
-                                    changedLife > 0 ? "+$changedLife" : changedLife.toString(),
-                                    style: TextStyle(
-                                        shadows: card != null || (!partner && player.background.hasBackground)
-                                            ? [
-                                                const Shadow(
-                                                  offset: Offset(0.5, 0.5),
-                                                  blurRadius: 10.0,
-                                                  color: Colors.black,
-                                                ),
-                                              ]
-                                            : null),
+                                  child: AnimatedScaleOnChange(
+                                    value: changedLife,
+                                    duration: Duration(milliseconds: 400),
+                                    alignment: Alignment.center,
+                                    scale: 1.4,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                      child: Text(
+                                        changedLife > 0 ? "+$changedLife" : changedLife.toString(),
+                                        style: TextStyle(
+                                          shadows: card != null || (!partner && player.background.hasBackground)
+                                              ? [
+                                                  const Shadow(
+                                                    offset: Offset(0.5, 0.5),
+                                                    blurRadius: 10.0,
+                                                    color: Colors.black,
+                                                  ),
+                                                ]
+                                              : null,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -225,6 +232,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                           Icon(
                                             Icons.remove,
                                             shadows: onBackgroundShadow,
+                                            size: 28,
                                           ),
                                         ],
                                       ),
@@ -262,6 +270,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                           Icon(
                                             Icons.add,
                                             shadows: onBackgroundShadow,
+                                            size: 28,
                                           ),
                                         ],
                                       ),
