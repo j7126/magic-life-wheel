@@ -7,6 +7,7 @@ import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/life_counter_page/counter/commander_damage_grid.dart';
 import 'package:magic_life_wheel/life_counter_page/counter/counter_font_size_group.dart';
+import 'package:magic_life_wheel/life_counter_page/dialogs/damage_history_dialog.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/widgets/animated_fade.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/commander_damage_dialog.dart';
@@ -166,6 +167,15 @@ class _CounterState extends State<Counter> {
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
           onTap: editPlayer,
+          onLongPress: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) => DamageHistoryDialog(
+                player: widget.player,
+                players: widget.players,
+              ),
+            );
+          },
           child: Card(
             color: widget.player.background.hasBackground ? const Color.fromARGB(140, 0, 0, 0) : null,
             child: Padding(
