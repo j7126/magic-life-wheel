@@ -23,7 +23,7 @@ dependencies:
   collection: ^1.18.0
   string_normalizer: ^0.3.1
   uuid: ^4.4.0
-  keyrune_icons_flutter: ^3.16.1
+  keyrune_icons_flutter: ^3.17.1
   auto_size_text:
     git:
       url: https://github.com/j7126/auto_size_text.git
