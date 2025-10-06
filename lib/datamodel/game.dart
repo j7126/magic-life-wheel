@@ -36,7 +36,7 @@ class Game {
   bool get isPlayersReset => !players.any((x) => !x.isReset);
 
   void setupNew() {
-    setPlayers(3);
+    setPlayers(4);
   }
 
   void import(List<String> playerStrings, int layout) {
