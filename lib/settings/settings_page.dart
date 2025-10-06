@@ -395,6 +395,60 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                         ),
                       ),
                       const Gap(12.0),
+                      const Divider(),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            Service.settingsService.pref_disableAnimations =
+                                !Service.settingsService.pref_disableAnimations;
+                          });
+                        },
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.animation,
+                                size: 32,
+                                color: Color.fromARGB(255, 127, 127, 127),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Reduce Motion",
+                                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                              color: const Color.fromARGB(255, 229, 229, 229),
+                                            ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                      Text(
+                                        "Disables some animations",
+                                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                              color: const Color.fromARGB(255, 229, 229, 229),
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Switch(
+                                value: Service.settingsService.pref_disableAnimations,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    Service.settingsService.pref_disableAnimations = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

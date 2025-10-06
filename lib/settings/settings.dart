@@ -86,6 +86,11 @@ class SettingsService {
     if (planechaseDisabledSets != null) {
       _pref_planechaseDisabledSets = planechaseDisabledSets.toSet();
     }
+
+    var disableAnimations = prefs.getBool('disableAnimations');
+    if (disableAnimations != null) {
+      _pref_disableAnimations = disableAnimations;
+    }
   }
 
   bool _pref_getScryfallImages = true;
@@ -192,5 +197,12 @@ class SettingsService {
   set pref_planechaseDisabledSets(Set<String> val) {
     _pref_planechaseDisabledSets = val;
     prefs.setStringList("planechaseDisabledSets", val.toList());
+  }
+
+  bool _pref_disableAnimations = false;
+  bool get pref_disableAnimations => _pref_disableAnimations;
+  set pref_disableAnimations(bool val) {
+    _pref_disableAnimations = val;
+    prefs.setBool('disableAnimations', val);
   }
 }

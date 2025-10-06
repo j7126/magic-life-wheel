@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magic_life_wheel/static_service.dart';
 
 class AnimatedScaleOnChange extends StatefulWidget {
   const AnimatedScaleOnChange({
@@ -34,7 +35,8 @@ class _AnimatedScaleOnChangeState extends State<AnimatedScaleOnChange> with Tick
       weight: 1,
     ),
     TweenSequenceItem<double>(
-      tween: Tween<double>(begin: widget.scale, end: 1.0 + (widget.scale - 1.0) * 0.95).chain(CurveTween(curve: Curves.easeIn)),
+      tween: Tween<double>(begin: widget.scale, end: 1.0 + (widget.scale - 1.0) * 0.95)
+          .chain(CurveTween(curve: Curves.easeIn)),
       weight: 4,
     ),
     TweenSequenceItem<double>(
@@ -48,7 +50,9 @@ class _AnimatedScaleOnChangeState extends State<AnimatedScaleOnChange> with Tick
   @override
   void initState() {
     last = widget.value;
-    _controller.forward();
+    if (!Service.settingsService.pref_disableAnimations) {
+      _controller.forward();
+    }
     super.initState();
   }
 
@@ -60,7 +64,7 @@ class _AnimatedScaleOnChangeState extends State<AnimatedScaleOnChange> with Tick
 
   @override
   Widget build(BuildContext context) {
-    if (last != widget.value) {
+    if (last != widget.value && !Service.settingsService.pref_disableAnimations) {
       if (widget.filter == null || widget.filter!(last, widget.value)) {
         _controller.forward(from: _controller.isCompleted ? 0 : 0.2);
       }

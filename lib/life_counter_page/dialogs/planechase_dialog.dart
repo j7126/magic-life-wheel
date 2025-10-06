@@ -136,7 +136,9 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
       });
       planeswalkAnimationComplete();
     } else {
-      if (PlanechaseDialog.showInfo || PlanechaseDialog.planechasePlane == null) {
+      if (PlanechaseDialog.showInfo ||
+          PlanechaseDialog.planechasePlane == null ||
+          Service.settingsService.pref_disableAnimations) {
         planeswalkAnimationComplete();
       } else {
         setState(() {
