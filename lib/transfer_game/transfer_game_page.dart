@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:camera/camera.dart';
@@ -297,7 +298,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
         }
       });
     });
-    if (!kIsWeb && SysInfo.getTotalPhysicalMemory() < 3500000000) {
+    if (!kIsWeb && !Platform.isIOS && SysInfo.getTotalPhysicalMemory() < 3500000000) {
       showLowPerformanceWarning = true;
     }
   }
