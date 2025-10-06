@@ -91,6 +91,11 @@ class SettingsService {
     if (disableAnimations != null) {
       _pref_disableAnimations = disableAnimations;
     }
+
+    var defaultBackground = prefs.getInt('defaultBackground');
+    if (defaultBackground != null) {
+      _pref_defaultBackground = defaultBackground;
+    }
   }
 
   bool _pref_getScryfallImages = true;
@@ -204,5 +209,12 @@ class SettingsService {
   set pref_disableAnimations(bool val) {
     _pref_disableAnimations = val;
     prefs.setBool('disableAnimations', val);
+  }
+
+  int _pref_defaultBackground = 1;
+  int get pref_defaultBackground => _pref_defaultBackground;
+  set pref_defaultBackground(int val) {
+    _pref_defaultBackground = val;
+    prefs.setInt('defaultBackground', val);
   }
 }

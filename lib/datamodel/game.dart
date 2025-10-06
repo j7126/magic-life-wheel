@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:magic_life_wheel/datamodel/background.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/layouts/layout.dart';
 import 'package:magic_life_wheel/layouts/layout_2a.dart';
@@ -23,6 +25,33 @@ class Game {
       reset: false,
     );
   }
+
+  static const List<List<Color>> defaultGradientColors = [
+    [
+      Color.fromARGB(255, 127, 175, 145),
+      Colors.green,
+    ],
+    [
+      Color.fromARGB(255, 221, 128, 101),
+      Colors.red,
+    ],
+    [
+      Color.fromARGB(255, 141, 186, 208),
+      Colors.blue,
+    ],
+    [
+      Colors.white,
+      Color.fromARGB(255, 233, 227, 176),
+    ],
+    [
+      Colors.green,
+      Color.fromARGB(255, 10, 10, 10),
+    ],
+    [
+      Colors.red,
+      Colors.blue,
+    ],
+  ];
 
   late Layout layout;
   List<Player> players = [];
@@ -74,9 +103,14 @@ class Game {
   void setupPlayers({bool reset = true}) {
     if (layout.players > players.length) {
       for (var i = players.length; i < layout.players; i++) {
+        var bg = Background();
+        if (Service.settingsService.pref_defaultBackground == 1) {
+          bg.colors = defaultGradientColors[i];
+        }
         players.add(
           Player(
             name: "",
+            background: bg,
           ),
         );
       }

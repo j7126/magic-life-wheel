@@ -124,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                       maxLines: 1,
                                     ),
                                     Text(
-                                      "The starting life total for players.",
+                                      "The starting life total for players",
                                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                             color: const Color.fromARGB(255, 229, 229, 229),
                                           ),
@@ -247,7 +247,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                         maxLines: 1,
                                       ),
                                       Text(
-                                        "Commander damage tracking.",
+                                        "Commander damage tracking",
                                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                               color: const Color.fromARGB(255, 229, 229, 229),
                                             ),
@@ -294,7 +294,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                         child: Text(
-                                          "Larger + button.",
+                                          "Larger + button",
                                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                                 color: const Color.fromARGB(255, 229, 229, 229),
                                               ),
@@ -449,6 +449,63 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                           ),
                         ),
                       ),
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.image_outlined,
+                              size: 32,
+                              color: Color.fromARGB(255, 127, 127, 127),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Background",
+                                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                    Text(
+                                      "The default background",
+                                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            DropdownMenu<int>(
+                              initialSelection: Service.settingsService.pref_defaultBackground,
+                              requestFocusOnTap: false,
+                              inputDecorationTheme: const InputDecorationTheme(
+                                filled: false,
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(vertical: 2.0),
+                              ),
+                              textAlign: TextAlign.right,
+                              width: 120,
+                              onSelected: (int? value) {
+                                setState(() {
+                                  Service.settingsService.pref_defaultBackground = value!;
+                                });
+                              },
+                              dropdownMenuEntries: [
+                                DropdownMenuEntry<int>(value: 0, label: "None"),
+                                DropdownMenuEntry<int>(value: 1, label: "Gradient"),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -551,7 +608,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                               maxLines: 1,
                                             ),
                                             Text(
-                                              "Fetch card images from scryfall.",
+                                              "Fetch card images from scryfall",
                                               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                                     color: const Color.fromARGB(255, 229, 229, 229),
                                                   ),
@@ -605,7 +662,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                               maxLines: 1,
                                             ),
                                             Text(
-                                              "Save the state of players.",
+                                              "Save the state of players",
                                               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                                     color: const Color.fromARGB(255, 229, 229, 229),
                                                   ),
@@ -659,7 +716,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                               maxLines: 1,
                                             ),
                                             Text(
-                                              "Show the changed life for a short time.",
+                                              "Show the changed life for a short time",
                                               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                                     color: const Color.fromARGB(255, 229, 229, 229),
                                                   ),
@@ -713,7 +770,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                               maxLines: 1,
                                             ),
                                             Text(
-                                              "Maximises the font size of the life counters. The font size of all the counters may not be the same.",
+                                              "Maximises the font size of the life counters. The font size of all the counters may not be the same",
                                               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                                     color: const Color.fromARGB(255, 229, 229, 229),
                                                   ),

@@ -12,9 +12,13 @@ part 'player.g.dart';
 class Player {
   Player({
     required this.name,
+    Background? background,
   }) {
     uuid = (const Uuid()).v4();
     life = Service.settingsService.pref_startingLife;
+    if (background != null) {
+      this.background = background;
+    }
   }
 
   late String uuid;
