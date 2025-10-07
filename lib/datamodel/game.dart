@@ -42,8 +42,8 @@ class Game {
       Colors.blue,
     ],
     [
-      Colors.white,
-      Color.fromARGB(255, 233, 227, 176),
+      Color.fromARGB(255, 109, 2, 202),
+      Color.fromARGB(255, 191, 16, 183),
     ],
     [
       Colors.green,
@@ -55,6 +55,10 @@ class Game {
     ],
     [
       Colors.blue,
+      Color.fromARGB(255, 10, 10, 10),
+    ],
+    [
+      Colors.yellow,
       Color.fromARGB(255, 10, 10, 10),
     ],
   ];
@@ -110,11 +114,8 @@ class Game {
     List<List<Color>> availableDefaultGradientColors = [];
     if (Service.settingsService.pref_defaultBackground == 1) {
       var random = Random(DateTime.now().hashCode);
-      if (layout.players < 4 && players.isEmpty) {
+      if (layout.players <= 4 && players.isEmpty) {
         randomDefaultGradientColorsDarkFirst = random.nextBool();
-      }
-      if (layout.players == 4) {
-        randomDefaultGradientColorsDarkFirst = false;
       }
       var df = randomDefaultGradientColorsDarkFirst;
       availableDefaultGradientColors.addAll(defaultGradientColors.sublist(df ? 4 : 0, df ? defaultGradientColors.length : 4).shuffled(random));

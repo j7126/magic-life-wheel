@@ -41,6 +41,13 @@ class _SetColorsDialogState extends State<SetColorsDialog> {
       (Color.fromARGB(255, 126, 0, 0), false),
       (Color.fromARGB(255, 0, 118, 53), false),
     ],
+    [
+      (Colors.yellow, false),
+      (Color.fromARGB(255, 109, 2, 202), false),
+      (Color.fromARGB(255, 191, 16, 183), false),
+      (Color.fromARGB(255, 2, 2, 168), false),
+      (Color.fromARGB(255, 0, 144, 29), false),
+    ],
   ];
 
   @override
