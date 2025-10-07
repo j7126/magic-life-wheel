@@ -113,6 +113,9 @@ class Game {
       if (layout.players < 4 && players.isEmpty) {
         randomDefaultGradientColorsDarkFirst = random.nextBool();
       }
+      if (layout.players == 4) {
+        randomDefaultGradientColorsDarkFirst = false;
+      }
       var df = randomDefaultGradientColorsDarkFirst;
       availableDefaultGradientColors.addAll(defaultGradientColors.sublist(df ? 4 : 0, df ? defaultGradientColors.length : 4).shuffled(random));
       availableDefaultGradientColors.addAll(defaultGradientColors.sublist(!df ? 4 : 0, !df ? defaultGradientColors.length : 4).shuffled(random));
