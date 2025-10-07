@@ -137,6 +137,46 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
     }
   }
 
+  Future<bool> _quickSetupConfirm() async {
+    return (1 ==
+      await showDialog<int>(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return const WarningDialog(
+            message: 'The player configuration will be reset',
+            confirmMessage: 'Reset',
+          );
+        },
+      ));
+  }
+
+  Future<bool> _quickSetupCommander() async {
+    if (await _quickSetupConfirm()) {
+      setState(() {
+        Service.settingsService.pref_startingLife = 40;
+        Service.settingsService.pref_enableCommanderDamage = true;
+        game.quickSetup(4);
+      });
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<bool> _quickSetupStandard() async {
+    if (await _quickSetupConfirm()) {
+      setState(() {
+        Service.settingsService.pref_startingLife = 20;
+        Service.settingsService.pref_enableCommanderDamage = false;
+        game.quickSetup(2);
+      });
+      return true;
+    }
+
+    return false;
+  }
+
   void _showPlanechase() {
     showDialog(
       context: context,
@@ -201,13 +241,156 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 4.0),
-                  child: Text(
-                    "Players",
-                    style: TextStyle(fontSize: 18),
+                Row(
+                  children: [
+                    OutlinedButton(
+                      style: ButtonStyle(
+                        padding: WidgetStatePropertyAll(
+                          EdgeInsets.only(
+                            left: 14.0,
+                            right: 20.0,
+                            top: 8.0,
+                            bottom: 8.0,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        _showMenu();
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.more_vert),
+                          Gap(8.0),
+                          Text("Menu"),
+                        ],
+                      ),
+                    ),
+                    Spacer(),
+                    OutlinedButton(
+                      style: ButtonStyle(
+                        padding: WidgetStatePropertyAll(
+                          EdgeInsets.only(
+                            left: 20.0,
+                            right: 20.0,
+                            top: 8.0,
+                            bottom: 8.0,
+                          ),
+                        ),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsPage(),
+                          ),
+                        );
+                        this.setState(() {});
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Settings"),
+                          Gap(8.0),
+                          Icon(Icons.settings),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Gap(12.0),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () async {
+                          if (await _quickSetupCommander() && context.mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        style: ButtonStyle(
+                          padding: WidgetStatePropertyAll(
+                            EdgeInsets.only(
+                              left: 22.0,
+                              right: 22.0,
+                              top: 18.0,
+                              bottom: 16.0,
+                            ),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Quick Setup",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                height: 1.0,
+                              ),
+                            ),
+                            Text(
+                              "Commander",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Gap(8.0),
+                      OutlinedButton(
+                        onPressed: () async {
+                          if (await _quickSetupStandard() && context.mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        style: ButtonStyle(
+                          padding: WidgetStatePropertyAll(
+                            EdgeInsets.only(
+                              left: 22.0,
+                              right: 22.0,
+                              top: 18.0,
+                              bottom: 16.0,
+                            ),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Quick Setup",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                height: 1.0,
+                              ),
+                            ),
+                            Text(
+                              "Standard",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                Gap(8.0),
+                Text(
+                  "Players",
+                  style: TextStyle(fontSize: 18),
+                ),
+                Gap(4.0),
                 SegmentedButton<int>(
                   segments: <ButtonSegment<int>>[
                     for (int i = 2; i <= 6; i++)
@@ -222,13 +405,12 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                     setState(() {});
                   },
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 4.0, top: 16.0),
-                  child: Text(
-                    "Layout",
-                    style: TextStyle(fontSize: 18),
-                  ),
+                Gap(16.0),
+                Text(
+                  "Layout",
+                  style: TextStyle(fontSize: 18),
                 ),
+                Gap(4.0),
                 if (Layouts.layoutsBySize[game.players.length] != null)
                   SegmentedButton<String>(
                     segments: <ButtonSegment<String>>[
@@ -256,35 +438,32 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                       });
                     },
                   ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: FilledButton(
-                    onPressed: () {
-                      setState(() {
-                        switchRotated();
-                      });
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        AnimatedRotation(
-                          turns: rotatedAnimate,
-                          duration: const Duration(milliseconds: 250),
-                          child: const Icon(Icons.screen_rotation_alt_outlined),
-                        ),
-                        const Gap(8),
-                        const Text("Rotate"),
-                      ],
-                    ),
+                Gap(12.0),
+                FilledButton(
+                  onPressed: () {
+                    setState(() {
+                      switchRotated();
+                    });
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AnimatedRotation(
+                        turns: rotatedAnimate,
+                        duration: const Duration(milliseconds: 250),
+                        child: const Icon(Icons.screen_rotation_alt_outlined),
+                      ),
+                      const Gap(8),
+                      const Text("Rotate"),
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
-                  child: OutlinedButton(
-                    child: const Text('Done'),
-                    onPressed: () => Navigator.pop(context),
-                  ),
+                Gap(16.0),
+                OutlinedButton(
+                  child: const Text('Done'),
+                  onPressed: () => Navigator.pop(context),
                 ),
+                Gap(8.0),
               ],
             ),
           );

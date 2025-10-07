@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'dart:math';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:magic_life_wheel/datamodel/background.dart';
@@ -26,6 +27,7 @@ class Game {
     );
   }
 
+  static bool randomDefaultGradientColorsDarkFirst = false;
   static const List<List<Color>> defaultGradientColors = [
     [
       Color.fromARGB(255, 127, 175, 145),
@@ -49,7 +51,11 @@ class Game {
     ],
     [
       Colors.red,
+      Color.fromARGB(255, 10, 10, 10),
+    ],
+    [
       Colors.blue,
+      Color.fromARGB(255, 10, 10, 10),
     ],
   ];
 
@@ -101,11 +107,29 @@ class Game {
   }
 
   void setupPlayers({bool reset = true}) {
+    List<List<Color>> availableDefaultGradientColors = [];
+    if (Service.settingsService.pref_defaultBackground == 1) {
+      var random = Random(DateTime.now().hashCode);
+      if (layout.players < 4 && players.isEmpty) {
+        randomDefaultGradientColorsDarkFirst = random.nextBool();
+      }
+      var df = randomDefaultGradientColorsDarkFirst;
+      availableDefaultGradientColors.addAll(defaultGradientColors.sublist(df ? 4 : 0, df ? defaultGradientColors.length : 4).shuffled(random));
+      availableDefaultGradientColors.addAll(defaultGradientColors.sublist(!df ? 4 : 0, !df ? defaultGradientColors.length : 4).shuffled(random));
+      availableDefaultGradientColors.removeWhere((gradient) => players.any((player) =>
+          player.background.colors != null &&
+          player.background.colors!.length == gradient.length &&
+          player.background.colors![0].toARGB32() == gradient[0].toARGB32() &&
+          player.background.colors![1].toARGB32() == gradient[1].toARGB32()));
+      if (layout.players > 4) {
+        availableDefaultGradientColors.shuffle();
+      }
+    }
     if (layout.players > players.length) {
       for (var i = players.length; i < layout.players; i++) {
         var bg = Background();
         if (Service.settingsService.pref_defaultBackground == 1) {
-          bg.colors = defaultGradientColors[i];
+          bg.colors = availableDefaultGradientColors.removeAt(0);
         }
         players.add(
           Player(
@@ -161,6 +185,13 @@ class Game {
     layoutId++;
     if (layoutId >= layouts.length) layoutId = 0;
     layout = layouts[layoutId];
+    save();
+  }
+
+  void quickSetup(int numPlayers) {
+    players.clear();
+    setPlayers(numPlayers);
+    rotated = false;
     save();
   }
 
