@@ -115,7 +115,11 @@ class Game {
     if (Service.settingsService.pref_defaultBackground == 1) {
       var random = Random(DateTime.now().hashCode);
       if (layout.players <= 4 && players.isEmpty) {
-        randomDefaultGradientColorsDarkFirst = random.nextBool();
+        randomDefaultGradientColorsDarkFirst = switch (Service.settingsService.pref_defaultColorScheme) {
+          1 => false,
+          2 => true,
+          _ => random.nextBool(),
+        };
       }
       var df = randomDefaultGradientColorsDarkFirst;
       availableDefaultGradientColors.addAll(defaultGradientColors.sublist(df ? 4 : 0, df ? defaultGradientColors.length : 4).shuffled(random));

@@ -57,6 +57,26 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
     }
   }
 
+  late final AnimationController _backgroundAnimationController = AnimationController(
+    duration: const Duration(milliseconds: 200),
+    vsync: this,
+    value: defaultBackground != 0 ? 1.0 : 0.0,
+  );
+  late final Animation<double> _backgroundAnimation = CurvedAnimation(
+    parent: _backgroundAnimationController,
+    curve: Curves.fastOutSlowIn,
+  );
+
+  int get defaultBackground => Service.settingsService.pref_defaultBackground;
+  set defaultBackground(int value) {
+    Service.settingsService.pref_defaultBackground = value;
+    if (value != 0) {
+      _backgroundAnimationController.forward();
+    } else {
+      _backgroundAnimationController.reverse();
+    }
+  }
+
   void onStartingLifeTextChanged() {
     var val = int.tryParse(startingLifeController.text);
     if (val != null) {
@@ -117,17 +137,17 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                   children: [
                                     Text(
                                       "Starting Life",
-                                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                            color: const Color.fromARGB(255, 229, 229, 229),
-                                          ),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleLarge?.copyWith(color: const Color.fromARGB(255, 229, 229, 229)),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                     ),
                                     Text(
                                       "The starting life total for players",
-                                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                            color: const Color.fromARGB(255, 229, 229, 229),
-                                          ),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleSmall?.copyWith(color: const Color.fromARGB(255, 229, 229, 229)),
                                     ),
                                   ],
                                 ),
@@ -145,17 +165,10 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(vertical: 2.0),
                               ),
-                              textStyle: const TextStyle(
-                                fontSize: 24,
-                              ),
+                              textStyle: const TextStyle(fontSize: 24),
                               width: 94,
                               dropdownMenuEntries: options
-                                  .map(
-                                    (e) => DropdownMenuEntry<int>(
-                                      value: e,
-                                      label: e.toString(),
-                                    ),
-                                  )
+                                  .map((e) => DropdownMenuEntry<int>(value: e, label: e.toString()))
                                   .toList(),
                             ),
                           ],
@@ -188,16 +201,16 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                       Text(
                                         "Planechase",
                                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                              color: const Color.fromARGB(255, 229, 229, 229),
-                                            ),
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                       ),
                                       Text(
                                         "Enable Planechase",
                                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                              color: const Color.fromARGB(255, 229, 229, 229),
-                                            ),
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -241,16 +254,16 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                       Text(
                                         "Commander",
                                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                              color: const Color.fromARGB(255, 229, 229, 229),
-                                            ),
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                       ),
                                       Text(
                                         "Commander damage tracking",
                                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                              color: const Color.fromARGB(255, 229, 229, 229),
-                                            ),
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -286,18 +299,15 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                                 child: Row(
                                   children: [
-                                    const SizedBox(
-                                      width: 32,
-                                      height: 32,
-                                    ),
+                                    const SizedBox(width: 32, height: 32),
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                         child: Text(
                                           "Larger + button",
                                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                color: const Color.fromARGB(255, 229, 229, 229),
-                                              ),
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -325,18 +335,15 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                                 child: Row(
                                   children: [
-                                    const SizedBox(
-                                      width: 32,
-                                      height: 32,
-                                    ),
+                                    const SizedBox(width: 32, height: 32),
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                         child: Text(
                                           "Buttons face player",
                                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                color: const Color.fromARGB(255, 229, 229, 229),
-                                              ),
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -364,18 +371,15 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                                 child: Row(
                                   children: [
-                                    const SizedBox(
-                                      width: 32,
-                                      height: 32,
-                                    ),
+                                    const SizedBox(width: 32, height: 32),
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                         child: Text(
                                           "Mini Grid",
                                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                color: const Color.fromARGB(255, 229, 229, 229),
-                                              ),
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -422,16 +426,16 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                       Text(
                                         "Reduce Motion",
                                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                              color: const Color.fromARGB(255, 229, 229, 229),
-                                            ),
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                       ),
                                       Text(
                                         "Disables some animations",
                                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                              color: const Color.fromARGB(255, 229, 229, 229),
-                                            ),
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -451,7 +455,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                       ),
                       const Divider(),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 12.0),
                         child: Row(
                           children: [
                             const Icon(
@@ -467,24 +471,24 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                   children: [
                                     Text(
                                       "Background",
-                                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                            color: const Color.fromARGB(255, 229, 229, 229),
-                                          ),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleLarge?.copyWith(color: const Color.fromARGB(255, 229, 229, 229)),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                     ),
                                     Text(
                                       "The default background",
-                                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                            color: const Color.fromARGB(255, 229, 229, 229),
-                                          ),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleSmall?.copyWith(color: const Color.fromARGB(255, 229, 229, 229)),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
                             DropdownMenu<int>(
-                              initialSelection: Service.settingsService.pref_defaultBackground,
+                              initialSelection: defaultBackground,
                               requestFocusOnTap: false,
                               inputDecorationTheme: const InputDecorationTheme(
                                 filled: false,
@@ -495,7 +499,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                               width: 120,
                               onSelected: (int? value) {
                                 setState(() {
-                                  Service.settingsService.pref_defaultBackground = value!;
+                                  defaultBackground = value!;
                                 });
                               },
                               dropdownMenuEntries: [
@@ -506,6 +510,52 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                           ],
                         ),
                       ),
+                      SizeTransition(
+                        sizeFactor: _backgroundAnimation,
+                        axis: Axis.vertical,
+                        axisAlignment: -1,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 32, height: 32),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Text(
+                                    "Background Theme",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleLarge?.copyWith(color: const Color.fromARGB(255, 229, 229, 229)),
+                                  ),
+                                ),
+                              ),
+                              DropdownMenu<int>(
+                                initialSelection: Service.settingsService.pref_defaultColorScheme,
+                                requestFocusOnTap: false,
+                                inputDecorationTheme: const InputDecorationTheme(
+                                  filled: false,
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(vertical: 2.0),
+                                ),
+                                textAlign: TextAlign.right,
+                                width: 120,
+                                onSelected: (int? value) {
+                                  setState(() {
+                                    Service.settingsService.pref_defaultColorScheme = value!;
+                                  });
+                                },
+                                dropdownMenuEntries: [
+                                  DropdownMenuEntry<int>(value: 0, label: "Random"),
+                                  DropdownMenuEntry<int>(value: 1, label: "Light"),
+                                  DropdownMenuEntry<int>(value: 2, label: "Dark"),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Gap(12.0),
                     ],
                   ),
                 ),
@@ -550,16 +600,16 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                       Text(
                                         "Advanced settings",
                                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                              color: const Color.fromARGB(255, 229, 229, 229),
-                                            ),
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                       ),
                                       Text(
                                         showAdvanced ? "Hide" : "Show More",
                                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                              color: const Color.fromARGB(255, 229, 229, 229),
-                                            ),
+                                          color: const Color.fromARGB(255, 229, 229, 229),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -602,16 +652,16 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                             Text(
                                               "Card images",
                                               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                    color: const Color.fromARGB(255, 229, 229, 229),
-                                                  ),
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                             ),
                                             Text(
                                               "Fetch card images from scryfall",
                                               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                                    color: const Color.fromARGB(255, 229, 229, 229),
-                                                  ),
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -656,16 +706,16 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                             Text(
                                               "Persistence",
                                               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                    color: const Color.fromARGB(255, 229, 229, 229),
-                                                  ),
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                             ),
                                             Text(
                                               "Save the state of players",
                                               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                                    color: const Color.fromARGB(255, 229, 229, 229),
-                                                  ),
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -710,16 +760,16 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                             Text(
                                               "Show Changed Life",
                                               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                    color: const Color.fromARGB(255, 229, 229, 229),
-                                                  ),
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                             ),
                                             Text(
                                               "Show the changed life for a short time",
                                               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                                    color: const Color.fromARGB(255, 229, 229, 229),
-                                                  ),
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -764,16 +814,16 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                             Text(
                                               "Maximise Font Size",
                                               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                    color: const Color.fromARGB(255, 229, 229, 229),
-                                                  ),
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                             ),
                                             Text(
                                               "Maximises the font size of the life counters. The font size of all the counters may not be the same",
                                               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                                    color: const Color.fromARGB(255, 229, 229, 229),
-                                                  ),
+                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                              ),
                                             ),
                                           ],
                                         ),

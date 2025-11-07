@@ -96,6 +96,11 @@ class SettingsService {
     if (defaultBackground != null) {
       _pref_defaultBackground = defaultBackground;
     }
+
+    var defaultColorScheme = prefs.getInt('defaultColorScheme');
+    if (defaultColorScheme != null) {
+      _pref_defaultColorScheme = defaultColorScheme;
+    }
   }
 
   bool _pref_getScryfallImages = true;
@@ -216,5 +221,12 @@ class SettingsService {
   set pref_defaultBackground(int val) {
     _pref_defaultBackground = val;
     prefs.setInt('defaultBackground', val);
+  }
+
+  int _pref_defaultColorScheme = 0;
+  int get pref_defaultColorScheme => _pref_defaultColorScheme;
+  set pref_defaultColorScheme(int val) {
+    _pref_defaultColorScheme = val;
+    prefs.setInt('defaultColorScheme', val);
   }
 }
