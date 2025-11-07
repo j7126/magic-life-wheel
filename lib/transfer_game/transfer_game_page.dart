@@ -235,7 +235,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
     }
   }
 
-  _onScanSuccess(Code? code) {
+  void _onScanSuccess(Code? code) {
     if (code != null) {
       var text = code.text;
       if (text != null && text.length > 3 && text[0] == ',') {
@@ -278,7 +278,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
     }
   }
 
-  _onScanFailure(Code? code) {
+  void _onScanFailure(Code? code) {
     if (code?.error?.isNotEmpty == true) {
       unknownCameraError = true;
     }
