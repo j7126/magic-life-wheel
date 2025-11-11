@@ -85,7 +85,7 @@ class _WarningDialogState extends State<WarningDialog> {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

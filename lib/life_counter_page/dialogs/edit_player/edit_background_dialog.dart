@@ -59,8 +59,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
       (card) {
         if (commanderOnly &&
             !(card.hasCommander() ||
-                ((widget.player.card?.hasKeywordChooseBackground() ?? false) &&
-                    card.hasSubtypeBackground()))) {
+                ((widget.player.card?.hasKeywordChooseBackground() ?? false) && card.hasSubtypeBackground()))) {
           return false;
         }
         if (!enableFunny && card.isFunny == true) {
@@ -164,29 +163,32 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
       var isLandscape = image.width > image.height;
       if (isLandscape) {
         image = await compute(
-            (image) => image_manipulation.copyResize(
-                  image,
-                  width: 700,
-                  height: null,
-                ),
-            image);
+          (image) => image_manipulation.copyResize(
+            image,
+            width: 700,
+            height: null,
+          ),
+          image,
+        );
       } else {
         image = await compute(
-            (image) => image_manipulation.copyResize(
-                  image,
-                  width: null,
-                  height: 700,
-                ),
-            image);
+          (image) => image_manipulation.copyResize(
+            image,
+            width: null,
+            height: 700,
+          ),
+          image,
+        );
       }
     }
 
     widget.player.background.customImage = await compute(
-        (image) => image_manipulation.encodeJpg(
-              image,
-              quality: 80,
-            ),
-        image);
+      (image) => image_manipulation.encodeJpg(
+        image,
+        quality: 80,
+      ),
+      image,
+    );
 
     pop();
   }
@@ -382,11 +384,13 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                       : null,
                                 ),
                               ),
-                            Text(widget.player.card?.name == selectedCard.name
-                                ? "Selected"
-                                : widget.player.cardPartner?.name == selectedCard.name
-                                    ? "Partnered"
-                                    : "Select"),
+                            Text(
+                              widget.player.card?.name == selectedCard.name
+                                  ? "Selected"
+                                  : widget.player.cardPartner?.name == selectedCard.name
+                                  ? "Partnered"
+                                  : "Select",
+                            ),
                           ],
                         ),
                       ),
@@ -404,8 +408,9 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             });
                           },
                           style: ButtonStyle(
-                            padding:
-                                const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                            padding: const WidgetStatePropertyAll(
+                              EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                            ),
                             backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.inversePrimary),
                             foregroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.inverseSurface),
                           ),
@@ -597,23 +602,24 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                   TextField(
                     controller: _searchFieldController,
                     decoration: InputDecoration(
-                        hintText: "Search Cards",
-                        border: const UnderlineInputBorder(),
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (_searchFieldController.text.isNotEmpty)
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _searchFieldController.clear();
-                                  });
-                                },
-                                icon: const Icon(Icons.close),
-                              ),
-                          ],
-                        )),
+                      hintText: "Search Cards",
+                      border: const UnderlineInputBorder(),
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (_searchFieldController.text.isNotEmpty)
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _searchFieldController.clear();
+                                });
+                              },
+                              icon: const Icon(Icons.close),
+                            ),
+                        ],
+                      ),
+                    ),
                     autofocus: true,
                     onChanged: (value) => searchCards(value),
                   )
@@ -644,16 +650,16 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                         Text(
                                           "Color background",
                                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                color: const Color.fromARGB(255, 229, 229, 229),
-                                              ),
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),
                                         Text(
                                           "Set a solid color or gradient background.",
                                           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                                color: const Color.fromARGB(255, 229, 229, 229),
-                                              ),
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -688,16 +694,16 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                         Text(
                                           "Custom image",
                                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                color: const Color.fromARGB(255, 229, 229, 229),
-                                              ),
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),
                                         Text(
                                           "Select your own custom background image.",
                                           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                                color: const Color.fromARGB(255, 229, 229, 229),
-                                              ),
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -737,16 +743,16 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                         Text(
                                           "Card images",
                                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                color: const Color.fromARGB(255, 229, 229, 229),
-                                              ),
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),
                                         Text(
                                           "Fetch card images from scryfall.",
                                           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                                color: const Color.fromARGB(255, 229, 229, 229),
-                                              ),
+                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -787,10 +793,10 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                   Text(
                                     "No results found",
                                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 24,
-                                          color: const Color.fromARGB(255, 76, 76, 76),
-                                        ),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24,
+                                      color: const Color.fromARGB(255, 76, 76, 76),
+                                    ),
                                     textAlign: TextAlign.center,
                                   ),
                                   const Spacer(),
@@ -838,8 +844,8 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                                 widget.player.background.customImage != null
                                                     ? "Custom Image"
                                                     : (widget.player.background.colors?.length ?? 0) > 1
-                                                        ? "Color Gradient"
-                                                        : "Color",
+                                                    ? "Color Gradient"
+                                                    : "Color",
                                                 style: const TextStyle(
                                                   fontSize: 18.0,
                                                   fontWeight: FontWeight.bold,
@@ -869,7 +875,8 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                                       : setColors,
                                                   style: const ButtonStyle(
                                                     padding: WidgetStatePropertyAll(
-                                                        EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                                                      EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                                                    ),
                                                   ),
                                                   child: Row(
                                                     mainAxisSize: MainAxisSize.min,
@@ -887,8 +894,8 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                                         widget.player.background.customImage != null
                                                             ? "Change Image"
                                                             : (widget.player.background.colors?.length ?? 0) > 1
-                                                                ? "Change Colors"
-                                                                : "Change Color",
+                                                            ? "Change Colors"
+                                                            : "Change Color",
                                                       ),
                                                     ],
                                                   ),
@@ -914,9 +921,11 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                                 ),
                                 child: AspectRatio(
                                   aspectRatio: 1.1,
-                                  child: cardSelector(Service.dataLoader.allSetCards?.data
-                                      .where((element) => element.name == widget.player.cardPartner?.name)
-                                      .toList()),
+                                  child: cardSelector(
+                                    Service.dataLoader.allSetCards?.data
+                                        .where((element) => element.name == widget.player.cardPartner?.name)
+                                        .toList(),
+                                  ),
                                 ),
                               ),
                             ),
@@ -939,10 +948,10 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                               Text(
                                 cards?.isEmpty ?? false ? "No results found" : "",
                                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: size * 0.13,
-                                      color: const Color.fromARGB(255, 76, 76, 76),
-                                    ),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: size * 0.13,
+                                  color: const Color.fromARGB(255, 76, 76, 76),
+                                ),
                                 textAlign: TextAlign.center,
                               ),
                               const Spacer(),

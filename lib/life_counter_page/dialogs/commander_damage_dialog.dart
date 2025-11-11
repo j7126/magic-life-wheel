@@ -102,7 +102,8 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: RotatedBox(
-            quarterTurns: (widget.layout.rotated ? 2 : 0) + (MediaQuery.of(context).orientation == Orientation.landscape ? 1 : 0),
+            quarterTurns:
+                (widget.layout.rotated ? 2 : 0) + (MediaQuery.of(context).orientation == Orientation.landscape ? 1 : 0),
             child: widget.layout.build(
               context,
               widget.players,
@@ -113,15 +114,20 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                   var card = partner ? player.cardPartner : player.card;
                   var cmdid = partner ? "${player.uuid}_partner" : player.uuid;
                   var dmg = (widget.player.commanderDamage[cmdid] ?? 0);
-                  var changedLife = widget.player.damageHistory.isNotEmpty &&
+                  var changedLife =
+                      widget.player.damageHistory.isNotEmpty &&
                           widget.player.damageHistory.last.fromCommander == cmdid &&
                           lastChanged == cmdid &&
-                          DateTime.now().millisecondsSinceEpoch - widget.player.damageHistory.last.time.millisecondsSinceEpoch < 5000
+                          DateTime.now().millisecondsSinceEpoch -
+                                  widget.player.damageHistory.last.time.millisecondsSinceEpoch <
+                              5000
                       ? widget.player.damageHistory.last.change * -1
                       : 0;
 
                   return RotatedBox(
-                    quarterTurns: Service.settingsService.pref_commanderDamageButtonsFacePlayer ? widget.layout.getTurnsInPosition(myIndex) + -1 * turns : 0,
+                    quarterTurns: Service.settingsService.pref_commanderDamageButtonsFacePlayer
+                        ? widget.layout.getTurnsInPosition(myIndex) + -1 * turns
+                        : 0,
                     child: Card(
                       clipBehavior: Clip.antiAlias,
                       margin: const EdgeInsets.all(1.0),
@@ -279,7 +285,7 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                                 ),
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -291,22 +297,24 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
                   child: SizedBox(
                     width: double.infinity,
                     height: double.infinity,
-                    child: LayoutBuilder(builder: (context, constraints) {
-                      return Flex(
-                        direction: constraints.maxWidth > constraints.maxHeight ? Axis.horizontal : Axis.vertical,
-                        children: [
-                          Expanded(
-                            child: counter(),
-                          ),
-                          if (player.cardPartner != null)
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Flex(
+                          direction: constraints.maxWidth > constraints.maxHeight ? Axis.horizontal : Axis.vertical,
+                          children: [
                             Expanded(
-                              child: counter(
-                                partner: true,
-                              ),
+                              child: counter(),
                             ),
-                        ],
-                      );
-                    }),
+                            if (player.cardPartner != null)
+                              Expanded(
+                                child: counter(
+                                  partner: true,
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 );
               },

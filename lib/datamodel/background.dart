@@ -28,6 +28,7 @@ class Background {
       colors = null;
     }
   }
+
   @JsonKey(
     includeFromJson: true,
     includeToJson: true,
@@ -55,6 +56,7 @@ class Background {
       colors = null;
     }
   }
+
   @JsonKey(
     includeFromJson: true,
     includeToJson: true,
@@ -108,7 +110,8 @@ class Background {
     includeFromJson: false,
     includeToJson: false,
   )
-  bool get hasBackground => (card != null && Service.settingsService.pref_getScryfallImages) || customImage != null || colors != null;
+  bool get hasBackground =>
+      (card != null && Service.settingsService.pref_getScryfallImages) || customImage != null || colors != null;
 
   void clear() {
     card = null;

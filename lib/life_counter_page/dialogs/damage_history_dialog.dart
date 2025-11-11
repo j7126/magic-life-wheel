@@ -110,7 +110,12 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  widget.player.damageHistory.where((x) => x.change < 0).map((x) => x.change).sum.abs().toString(),
+                                  widget.player.damageHistory
+                                      .where((x) => x.change < 0)
+                                      .map((x) => x.change)
+                                      .sum
+                                      .abs()
+                                      .toString(),
                                   style: const TextStyle(
                                     fontSize: 24,
                                     height: 1,
@@ -134,7 +139,12 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  widget.player.damageHistory.where((x) => x.change > 0).map((x) => x.change).sum.abs().toString(),
+                                  widget.player.damageHistory
+                                      .where((x) => x.change > 0)
+                                      .map((x) => x.change)
+                                      .sum
+                                      .abs()
+                                      .toString(),
                                   style: const TextStyle(
                                     fontSize: 24,
                                     height: 1,
@@ -170,10 +180,10 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                           Text(
                             "No history",
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24,
-                                  color: const Color.fromARGB(255, 127, 127, 127),
-                                ),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                              color: const Color.fromARGB(255, 127, 127, 127),
+                            ),
                             textAlign: TextAlign.center,
                           ),
                           const Spacer(),
@@ -196,71 +206,77 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                                   color: Theme.of(context).colorScheme.surface,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: Builder(builder: (context) {
-                                  Widget? bg;
-                                  if (event.fromCommander != null) {
-                                    if (event.fromCommander!.endsWith("_partner")) {
-                                      var player = widget.players.firstWhereOrNull((x) => "${x.uuid}_partner" == event.fromCommander);
-                                      if (player != null && player.cardPartner != null) {
-                                        bg = CardImage(
-                                          key: Key(player.cardPartner!.uuid),
-                                          cardSet: player.cardPartner,
+                                child: Builder(
+                                  builder: (context) {
+                                    Widget? bg;
+                                    if (event.fromCommander != null) {
+                                      if (event.fromCommander!.endsWith("_partner")) {
+                                        var player = widget.players.firstWhereOrNull(
+                                          (x) => "${x.uuid}_partner" == event.fromCommander,
                                         );
-                                      }
-                                    } else {
-                                      var player = widget.players.firstWhereOrNull((x) => x.uuid == event.fromCommander);
-                                      if (player != null) {
-                                        bg = player.card != null
-                                            ? CardImage(
-                                                key: Key(player.card!.uuid),
-                                                cardSet: player.card,
-                                              )
-                                            : BackgroundWidget(
-                                                background: player.background,
-                                              );
+                                        if (player != null && player.cardPartner != null) {
+                                          bg = CardImage(
+                                            key: Key(player.cardPartner!.uuid),
+                                            cardSet: player.cardPartner,
+                                          );
+                                        }
+                                      } else {
+                                        var player = widget.players.firstWhereOrNull(
+                                          (x) => x.uuid == event.fromCommander,
+                                        );
+                                        if (player != null) {
+                                          bg = player.card != null
+                                              ? CardImage(
+                                                  key: Key(player.card!.uuid),
+                                                  cardSet: player.card,
+                                                )
+                                              : BackgroundWidget(
+                                                  background: player.background,
+                                                );
+                                        }
                                       }
                                     }
-                                  }
-                                  return Stack(
-                                    children: [
-                                      if (bg != null) bg,
-                                      SizedBox(
-                                        width: 64,
-                                        height: 64,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: Text(
-                                              "${event.change > 0 ? "+" : ""}${event.change.toString()}",
-                                              style: TextStyle(
-                                                shadows: bg != null
-                                                    ? const [
-                                                        Shadow(
-                                                          offset: Offset(0, 0),
-                                                          blurRadius: 2.0,
-                                                          color: Color.fromARGB(100, 0, 0, 0),
-                                                        ),
-                                                        Shadow(
-                                                          offset: Offset(1, 1),
-                                                          blurRadius: 1.0,
-                                                          color: Colors.black,
-                                                        ),
-                                                        Shadow(
-                                                          offset: Offset(2, 2),
-                                                          blurRadius: 4.0,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ]
-                                                    : null,
+                                    return Stack(
+                                      children: [
+                                        if (bg != null) bg,
+                                        SizedBox(
+                                          width: 64,
+                                          height: 64,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: FittedBox(
+                                              fit: BoxFit.contain,
+                                              child: Text(
+                                                "${event.change > 0 ? "+" : ""}${event.change.toString()}",
+                                                style: TextStyle(
+                                                  shadows: bg != null
+                                                      ? const [
+                                                          Shadow(
+                                                            offset: Offset(0, 0),
+                                                            blurRadius: 2.0,
+                                                            color: Color.fromARGB(100, 0, 0, 0),
+                                                          ),
+                                                          Shadow(
+                                                            offset: Offset(1, 1),
+                                                            blurRadius: 1.0,
+                                                            color: Colors.black,
+                                                          ),
+                                                          Shadow(
+                                                            offset: Offset(2, 2),
+                                                            blurRadius: 4.0,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ]
+                                                      : null,
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                }),
+                                      ],
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                             Column(
@@ -273,8 +289,8 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                                     event.change > 0
                                         ? "Life Gain"
                                         : event.fromCommander != null
-                                            ? "Commander"
-                                            : "Damage",
+                                        ? "Commander"
+                                        : "Damage",
                                     style: const TextStyle(fontSize: 28),
                                   ),
                                 ),
@@ -300,7 +316,8 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                             padding: const EdgeInsets.symmetric(vertical: 12.0),
                             child: Container(
                               height: 2.0,
-                              color: (DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant).withAlpha(127),
+                              color: (DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant)
+                                  .withAlpha(127),
                             ),
                           ),
                         ),
@@ -320,7 +337,8 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                             padding: const EdgeInsets.symmetric(vertical: 12.0),
                             child: Container(
                               height: 2.0,
-                              color: (DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant).withAlpha(127),
+                              color: (DividerTheme.of(context).color ?? Theme.of(context).colorScheme.outlineVariant)
+                                  .withAlpha(127),
                             ),
                           ),
                         ),

@@ -11,7 +11,7 @@
 ///      fonts:
 ///       - asset: fonts/CustomIcons.ttf
 ///
-/// 
+///
 /// * Zocial, Copyright (C) 2012 by Sam Collins
 ///         Author:    Sam Collins
 ///         License:   MIT (http://opensource.org/licenses/mit-license.php)

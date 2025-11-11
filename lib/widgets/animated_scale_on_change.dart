@@ -35,8 +35,10 @@ class _AnimatedScaleOnChangeState extends State<AnimatedScaleOnChange> with Tick
       weight: 1,
     ),
     TweenSequenceItem<double>(
-      tween: Tween<double>(begin: widget.scale, end: 1.0 + (widget.scale - 1.0) * 0.95)
-          .chain(CurveTween(curve: Curves.easeIn)),
+      tween: Tween<double>(
+        begin: widget.scale,
+        end: 1.0 + (widget.scale - 1.0) * 0.95,
+      ).chain(CurveTween(curve: Curves.easeIn)),
       weight: 4,
     ),
     TweenSequenceItem<double>(

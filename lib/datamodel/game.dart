@@ -122,13 +122,21 @@ class Game {
         };
       }
       var df = randomDefaultGradientColorsDarkFirst;
-      availableDefaultGradientColors.addAll(defaultGradientColors.sublist(df ? 4 : 0, df ? defaultGradientColors.length : 4).shuffled(random));
-      availableDefaultGradientColors.addAll(defaultGradientColors.sublist(!df ? 4 : 0, !df ? defaultGradientColors.length : 4).shuffled(random));
-      availableDefaultGradientColors.removeWhere((gradient) => players.any((player) =>
-          player.background.colors != null &&
-          player.background.colors!.length == gradient.length &&
-          player.background.colors![0].toARGB32() == gradient[0].toARGB32() &&
-          player.background.colors![1].toARGB32() == gradient[1].toARGB32()));
+      availableDefaultGradientColors.addAll(
+        defaultGradientColors.sublist(df ? 4 : 0, df ? defaultGradientColors.length : 4).shuffled(random),
+      );
+      availableDefaultGradientColors.addAll(
+        defaultGradientColors.sublist(!df ? 4 : 0, !df ? defaultGradientColors.length : 4).shuffled(random),
+      );
+      availableDefaultGradientColors.removeWhere(
+        (gradient) => players.any(
+          (player) =>
+              player.background.colors != null &&
+              player.background.colors!.length == gradient.length &&
+              player.background.colors![0].toARGB32() == gradient[0].toARGB32() &&
+              player.background.colors![1].toARGB32() == gradient[1].toARGB32(),
+        ),
+      );
       if (layout.players > 4) {
         availableDefaultGradientColors.shuffle();
       }

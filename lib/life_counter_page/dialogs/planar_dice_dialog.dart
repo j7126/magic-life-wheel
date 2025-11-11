@@ -57,8 +57,8 @@ class _PlanarDiceDialogState extends State<PlanarDiceDialog> with SingleTickerPr
                   child: result == 0
                       ? const Icon(ManaIcons.ms_planeswalker, size: 50)
                       : result == 1
-                          ? const Icon(ManaIcons.ms_chaos, size: 50)
-                          : Container(),
+                      ? const Icon(ManaIcons.ms_chaos, size: 50)
+                      : Container(),
                 ),
               ),
             ),
@@ -67,8 +67,8 @@ class _PlanarDiceDialogState extends State<PlanarDiceDialog> with SingleTickerPr
               result == 0
                   ? 'Planeswalk'
                   : result == 1
-                      ? 'Chaos'
-                      : 'No effect',
+                  ? 'Chaos'
+                  : 'No effect',
               style: const TextStyle(
                 fontSize: 20,
               ),
@@ -86,7 +86,7 @@ class _PlanarDiceDialogState extends State<PlanarDiceDialog> with SingleTickerPr
                   ),
                   child: const Text('Click to Planeswalk'),
                 ),
-              )
+              ),
           ],
         ),
       ),

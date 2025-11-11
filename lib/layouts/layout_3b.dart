@@ -43,7 +43,7 @@ class Layout3b extends Layout {
         Gap(gap),
         Expanded(
           child: counter(0),
-        )
+        ),
       ],
     );
   }

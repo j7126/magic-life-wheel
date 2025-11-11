@@ -112,8 +112,9 @@ class TransferUrlService {
                 if (card != null) {
                   player.background.card = card;
                   if (cardPartnerUuid != null) {
-                    var cardPartner = Service.dataLoader.allSetCards?.data
-                        .firstWhereOrNull((element) => element.uuid == cardPartnerUuid);
+                    var cardPartner = Service.dataLoader.allSetCards?.data.firstWhereOrNull(
+                      (element) => element.uuid == cardPartnerUuid,
+                    );
                     player.background.cardPartner = cardPartner;
                   }
                 }

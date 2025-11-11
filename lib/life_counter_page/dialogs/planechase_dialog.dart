@@ -32,20 +32,27 @@ class PlanechaseDialog extends StatefulWidget {
       return;
     }
 
-    planechaseDeck = groupBy(
-            Service.dataLoader.allSetCards!.data.where((x) =>
-                x.hasTypePlane() &&
-                !Service.settingsService.pref_planechaseDisabledSets.contains(x.setCode) &&
-                (Service.settingsService.pref_planechaseEnableFunny || x.isFunny != true)),
-            (card) => card.name.trim().toLowerCase())
-        .entries
-        .map((cardsWithSameName) => cardsWithSameName.value.length == 1 || Service.dataLoader.sets == null
-            ? cardsWithSameName.value.first
-            : cardsWithSameName.value
-                .sortedBy(
-                    (card) => Service.dataLoader.sets!.data.firstWhere((set) => set.code == card.setCode).releaseDate)
-                .last)
-        .toList();
+    planechaseDeck =
+        groupBy(
+              Service.dataLoader.allSetCards!.data.where(
+                (x) =>
+                    x.hasTypePlane() &&
+                    !Service.settingsService.pref_planechaseDisabledSets.contains(x.setCode) &&
+                    (Service.settingsService.pref_planechaseEnableFunny || x.isFunny != true),
+              ),
+              (card) => card.name.trim().toLowerCase(),
+            ).entries
+            .map(
+              (cardsWithSameName) => cardsWithSameName.value.length == 1 || Service.dataLoader.sets == null
+                  ? cardsWithSameName.value.first
+                  : cardsWithSameName.value
+                        .sortedBy(
+                          (card) =>
+                              Service.dataLoader.sets!.data.firstWhere((set) => set.code == card.setCode).releaseDate,
+                        )
+                        .last,
+            )
+            .toList();
     planechaseDeck?.shuffle();
     planechasePlaneIndex = null;
   }
@@ -74,13 +81,16 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
     duration: const Duration(milliseconds: 300),
     vsync: this,
   );
-  late final Animation<Offset> _cardAnimation = Tween<Offset>(
-    begin: Offset.zero,
-    end: const Offset(1.0, 0.0),
-  ).animate(CurvedAnimation(
-    parent: _cardAnimationController,
-    curve: Curves.easeInOut,
-  ));
+  late final Animation<Offset> _cardAnimation =
+      Tween<Offset>(
+        begin: Offset.zero,
+        end: const Offset(1.0, 0.0),
+      ).animate(
+        CurvedAnimation(
+          parent: _cardAnimationController,
+          curve: Curves.easeInOut,
+        ),
+      );
 
   bool _animatingPlaneswalk = false;
 
@@ -370,342 +380,361 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
                       width: imgw,
                       height: imgh,
                       child: card == null
-                          ? LayoutBuilder(builder: (context, constraints) {
-                              return Center(
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                showSetsSelector = !showSetsSelector;
-                                              });
-                                            },
-                                            behavior: HitTestBehavior.opaque,
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-                                              child: Row(
-                                                children: [
-                                                  AnimatedRotation(
-                                                    duration: const Duration(milliseconds: 200),
-                                                    turns: showSetsSelector ? 0.5 : 0,
-                                                    child: Transform.scale(
-                                                      scale: 1.2,
-                                                      child: const Icon(
-                                                        Icons.expand_more,
-                                                        size: 32,
-                                                        color: Color.fromARGB(255, 178, 178, 178),
+                          ? LayoutBuilder(
+                              builder: (context, constraints) {
+                                return Center(
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  showSetsSelector = !showSetsSelector;
+                                                });
+                                              },
+                                              behavior: HitTestBehavior.opaque,
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                                                child: Row(
+                                                  children: [
+                                                    AnimatedRotation(
+                                                      duration: const Duration(milliseconds: 200),
+                                                      turns: showSetsSelector ? 0.5 : 0,
+                                                      child: Transform.scale(
+                                                        scale: 1.2,
+                                                        child: const Icon(
+                                                          Icons.expand_more,
+                                                          size: 32,
+                                                          color: Color.fromARGB(255, 178, 178, 178),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(
+                                                              "Enabled Sets",
+                                                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                                              ),
+                                                              overflow: TextOverflow.ellipsis,
+                                                              maxLines: 1,
+                                                            ),
+                                                            Text(
+                                                              "${enabledSets.length} / ${PlanechaseDialog.availableSets.length}",
+                                                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                                                color: const Color.fromARGB(255, 229, 229, 229),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            SizeTransition(
+                                              sizeFactor: _setsAnimation,
+                                              axis: Axis.vertical,
+                                              axisAlignment: -1,
+                                              child: Column(
+                                                children: [
+                                                  for (var set in PlanechaseDialog.availableSets.reversed)
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(
+                                                        horizontal: 21.0,
+                                                        vertical: 2.0,
+                                                      ),
+                                                      child: Row(
                                                         children: [
-                                                          Text(
-                                                            "Enabled Sets",
-                                                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                                  color: const Color.fromARGB(255, 229, 229, 229),
-                                                                ),
-                                                            overflow: TextOverflow.ellipsis,
-                                                            maxLines: 1,
+                                                          Checkbox(
+                                                            value: enabledSets.contains(set.code),
+                                                            onChanged: (value) {
+                                                              setDisabledSet(set.code, value == false);
+                                                            },
                                                           ),
-                                                          Text(
-                                                            "${enabledSets.length} / ${PlanechaseDialog.availableSets.length}",
-                                                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                                                  color: const Color.fromARGB(255, 229, 229, 229),
-                                                                ),
+                                                          const Gap(16.0),
+                                                          GestureDetector(
+                                                            child: Text("${set.code}: ${set.name}"),
+                                                            onTap: () {
+                                                              setDisabledSet(set.code, enabledSets.contains(set.code));
+                                                            },
                                                           ),
                                                         ],
                                                       ),
                                                     ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              Service.settingsService.pref_planechaseEnableFunny =
+                                                  !Service.settingsService.pref_planechaseEnableFunny;
+                                            });
+                                          },
+                                          behavior: HitTestBehavior.opaque,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                                            child: Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.gavel,
+                                                  size: 32,
+                                                  color: Color.fromARGB(255, 127, 127, 127),
+                                                ),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          "Enable Unsanctioned",
+                                                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                                          ),
+                                                          overflow: TextOverflow.ellipsis,
+                                                          maxLines: 1,
+                                                        ),
+                                                        Text(
+                                                          "Playtest cards or cards from un-sets",
+                                                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                                            color: const Color.fromARGB(255, 229, 229, 229),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Switch(
+                                                  value: Service.settingsService.pref_planechaseEnableFunny,
+                                                  onChanged: (bool value) {
+                                                    setState(() {
+                                                      Service.settingsService.pref_planechaseEnableFunny = value;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(32.0),
+                                          child: FilledButton(
+                                            onPressed: planeswalk,
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    ManaIcons.ms_planeswalker,
+                                                    size: 36,
+                                                  ),
+                                                  Gap(12.0),
+                                                  Text(
+                                                    "Planeswalk",
+                                                    style: TextStyle(
+                                                      fontSize: 26.0,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
                                             ),
                                           ),
-                                          SizeTransition(
-                                            sizeFactor: _setsAnimation,
-                                            axis: Axis.vertical,
-                                            axisAlignment: -1,
-                                            child: Column(
-                                              children: [
-                                                for (var set in PlanechaseDialog.availableSets.reversed)
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(horizontal: 21.0, vertical: 2.0),
-                                                    child: Row(
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                          : LayoutBuilder(
+                              builder: (context, constraints) {
+                                return PlanechaseDialog.showInfo
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(bottom: 8.0),
+                                              child: Text(
+                                                card.name,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: min(constraints.maxHeight, constraints.maxWidth) * 0.12,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Builder(
+                                                builder: (context) {
+                                                  var spans = RegExp(r'({)([^}]*)(})|([^{]*)')
+                                                      .allMatches(
+                                                        card.hasText() ? card.text.replaceAll("\n", "\n\n") : "",
+                                                      )
+                                                      .where((element) => element.group(0) != null);
+                                                  return AutoSizeText.rich(
+                                                    TextSpan(
                                                       children: [
-                                                        Checkbox(
-                                                          value: enabledSets.contains(set.code),
-                                                          onChanged: (value) {
-                                                            setDisabledSet(set.code, value == false);
-                                                          },
-                                                        ),
-                                                        const Gap(16.0),
-                                                        GestureDetector(
-                                                          child: Text("${set.code}: ${set.name}"),
-                                                          onTap: () {
-                                                            setDisabledSet(set.code, enabledSets.contains(set.code));
-                                                          },
-                                                        )
+                                                        for (var span in spans)
+                                                          span.groupCount > 1 &&
+                                                                  ManaIcons.icons.containsKey(
+                                                                    mapSymbolCode(span.group(2)),
+                                                                  )
+                                                              ? WidgetSpan(
+                                                                  child: Padding(
+                                                                    padding: EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          (IconTheme.of(context).size ?? 1) * 0.1,
+                                                                    ),
+                                                                    child: Container(
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(
+                                                                          (IconTheme.of(context).size ?? 1) * 0.5,
+                                                                        ),
+                                                                        color: mapSymbolBackgroundColor(span.group(2)),
+                                                                      ),
+                                                                      clipBehavior: Clip.hardEdge,
+                                                                      child: Padding(
+                                                                        padding: EdgeInsets.all(
+                                                                          (IconTheme.of(context).size ?? 1) * 0.1,
+                                                                        ),
+                                                                        child: Icon(
+                                                                          ManaIcons.icons[mapSymbolCode(span.group(2))],
+                                                                          color: mapSymbolForegroundColor(
+                                                                            span.group(2),
+                                                                          ),
+                                                                          size: (IconTheme.of(context).size ?? 1) * 0.8,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : TextSpan(
+                                                                  text: span.group(0),
+                                                                ),
                                                       ],
                                                     ),
-                                                  ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            Service.settingsService.pref_planechaseEnableFunny =
-                                                !Service.settingsService.pref_planechaseEnableFunny;
-                                          });
-                                        },
-                                        behavior: HitTestBehavior.opaque,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-                                          child: Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.gavel,
-                                                size: 32,
-                                                color: Color.fromARGB(255, 127, 127, 127),
+                                                    placeholderDimensions: [
+                                                      for (var span in spans)
+                                                        if (span.groupCount > 1 &&
+                                                            ManaIcons.icons.containsKey(mapSymbolCode(span.group(2))))
+                                                          PlaceholderDimensions(
+                                                            size: Size(
+                                                              (IconTheme.of(context).size ?? 0) * 1.2,
+                                                              (IconTheme.of(context).size ?? 0),
+                                                            ),
+                                                            alignment: PlaceholderAlignment.baseline,
+                                                          ),
+                                                    ],
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: min(constraints.maxHeight, constraints.maxWidth) * 0.08,
+                                                    ),
+                                                  );
+                                                },
                                               ),
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : RotatedBox(
+                                        quarterTurns: (isLandscape ? 1 : 0) + (PlanechaseDialog.rotated ? 2 : 0),
+                                        child: Container(
+                                          decoration: const BoxDecoration(),
+                                          clipBehavior: Clip.hardEdge,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Stack(
+                                              children: [
+                                                if (nextCard != null)
+                                                  Stack(
                                                     children: [
-                                                      Text(
-                                                        "Enable Unsanctioned",
-                                                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                              color: const Color.fromARGB(255, 229, 229, 229),
-                                                            ),
-                                                        overflow: TextOverflow.ellipsis,
-                                                        maxLines: 1,
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(
+                                                            min(constraints.maxHeight, constraints.maxWidth) * 0.05,
+                                                          ),
+                                                        ),
+                                                        clipBehavior: Clip.antiAlias,
+                                                        child: Opacity(
+                                                          opacity: _animatingPlaneswalk ? 1 : 0,
+                                                          child: CardImage(
+                                                            key: Key(nextCard.uuid),
+                                                            cardSet: nextCard,
+                                                            fullCard: true,
+                                                          ),
+                                                        ),
                                                       ),
-                                                      Text(
-                                                        "Playtest cards or cards from un-sets",
-                                                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                                              color: const Color.fromARGB(255, 229, 229, 229),
-                                                            ),
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(
+                                                            min(constraints.maxHeight, constraints.maxWidth) * 0.05,
+                                                          ),
+                                                          border: Border.all(
+                                                            color: Theme.of(context).colorScheme.surface,
+                                                            width:
+                                                                min(constraints.maxHeight, constraints.maxWidth) *
+                                                                0.005,
+                                                            strokeAlign: BorderSide.strokeAlignCenter,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                SlideTransition(
+                                                  position: _cardAnimation,
+                                                  child: Stack(
+                                                    children: [
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(
+                                                            min(constraints.maxHeight, constraints.maxWidth) * 0.05,
+                                                          ),
+                                                        ),
+                                                        clipBehavior: Clip.antiAlias,
+                                                        child: CardImage(
+                                                          key: Key(card.uuid),
+                                                          cardSet: card,
+                                                          fullCard: true,
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(
+                                                            min(constraints.maxHeight, constraints.maxWidth) * 0.05,
+                                                          ),
+                                                          border: Border.all(
+                                                            color: Theme.of(context).colorScheme.surface,
+                                                            width:
+                                                                min(constraints.maxHeight, constraints.maxWidth) *
+                                                                0.005,
+                                                            strokeAlign: BorderSide.strokeAlignCenter,
+                                                          ),
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                              Switch(
-                                                value: Service.settingsService.pref_planechaseEnableFunny,
-                                                onChanged: (bool value) {
-                                                  setState(() {
-                                                    Service.settingsService.pref_planechaseEnableFunny = value;
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(32.0),
-                                        child: FilledButton(
-                                          onPressed: planeswalk,
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  ManaIcons.ms_planeswalker,
-                                                  size: 36,
-                                                ),
-                                                Gap(12.0),
-                                                Text(
-                                                  "Planeswalk",
-                                                  style: TextStyle(
-                                                    fontSize: 26.0,
-                                                  ),
-                                                ),
                                               ],
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            })
-                          : LayoutBuilder(builder: (context, constraints) {
-                              return PlanechaseDialog.showInfo
-                                  ? Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(bottom: 8.0),
-                                            child: Text(
-                                              card.name,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: min(constraints.maxHeight, constraints.maxWidth) * 0.12,
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Builder(builder: (context) {
-                                              var spans = RegExp(r'({)([^}]*)(})|([^{]*)')
-                                                  .allMatches(card.hasText() ? card.text.replaceAll("\n", "\n\n") : "")
-                                                  .where((element) => element.group(0) != null);
-                                              return AutoSizeText.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    for (var span in spans)
-                                                      span.groupCount > 1 &&
-                                                              ManaIcons.icons.containsKey(mapSymbolCode(span.group(2)))
-                                                          ? WidgetSpan(
-                                                              child: Padding(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    horizontal:
-                                                                        (IconTheme.of(context).size ?? 1) * 0.1),
-                                                                child: Container(
-                                                                  decoration: BoxDecoration(
-                                                                    borderRadius: BorderRadius.circular(
-                                                                        (IconTheme.of(context).size ?? 1) * 0.5),
-                                                                    color: mapSymbolBackgroundColor(span.group(2)),
-                                                                  ),
-                                                                  clipBehavior: Clip.hardEdge,
-                                                                  child: Padding(
-                                                                    padding: EdgeInsets.all(
-                                                                        (IconTheme.of(context).size ?? 1) * 0.1),
-                                                                    child: Icon(
-                                                                      ManaIcons.icons[mapSymbolCode(span.group(2))],
-                                                                      color: mapSymbolForegroundColor(span.group(2)),
-                                                                      size: (IconTheme.of(context).size ?? 1) * 0.8,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            )
-                                                          : TextSpan(
-                                                              text: span.group(0),
-                                                            ),
-                                                  ],
-                                                ),
-                                                placeholderDimensions: [
-                                                  for (var span in spans)
-                                                    if (span.groupCount > 1 &&
-                                                        ManaIcons.icons.containsKey(mapSymbolCode(span.group(2))))
-                                                      PlaceholderDimensions(
-                                                        size: Size(
-                                                          (IconTheme.of(context).size ?? 0) * 1.2,
-                                                          (IconTheme.of(context).size ?? 0),
-                                                        ),
-                                                        alignment: PlaceholderAlignment.baseline,
-                                                      )
-                                                ],
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: min(constraints.maxHeight, constraints.maxWidth) * 0.08,
-                                                ),
-                                              );
-                                            }),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : RotatedBox(
-                                      quarterTurns: (isLandscape ? 1 : 0) + (PlanechaseDialog.rotated ? 2 : 0),
-                                      child: Container(
-                                        decoration: const BoxDecoration(),
-                                        clipBehavior: Clip.hardEdge,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Stack(
-                                            children: [
-                                              if (nextCard != null)
-                                                Stack(
-                                                  children: [
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(
-                                                          min(constraints.maxHeight, constraints.maxWidth) * 0.05,
-                                                        ),
-                                                      ),
-                                                      clipBehavior: Clip.antiAlias,
-                                                      child: Opacity(
-                                                        opacity: _animatingPlaneswalk ? 1 : 0,
-                                                        child: CardImage(
-                                                          key: Key(nextCard.uuid),
-                                                          cardSet: nextCard,
-                                                          fullCard: true,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(
-                                                          min(constraints.maxHeight, constraints.maxWidth) * 0.05,
-                                                        ),
-                                                        border: Border.all(
-                                                          color: Theme.of(context).colorScheme.surface,
-                                                          width:
-                                                              min(constraints.maxHeight, constraints.maxWidth) * 0.005,
-                                                          strokeAlign: BorderSide.strokeAlignCenter,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              SlideTransition(
-                                                position: _cardAnimation,
-                                                child: Stack(
-                                                  children: [
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(
-                                                          min(constraints.maxHeight, constraints.maxWidth) * 0.05,
-                                                        ),
-                                                      ),
-                                                      clipBehavior: Clip.antiAlias,
-                                                      child: CardImage(
-                                                        key: Key(card.uuid),
-                                                        cardSet: card,
-                                                        fullCard: true,
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(
-                                                          min(constraints.maxHeight, constraints.maxWidth) * 0.05,
-                                                        ),
-                                                        border: Border.all(
-                                                          color: Theme.of(context).colorScheme.surface,
-                                                          width:
-                                                              min(constraints.maxHeight, constraints.maxWidth) * 0.005,
-                                                          strokeAlign: BorderSide.strokeAlignCenter,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                            }),
+                                      );
+                              },
+                            ),
                     ),
                   ),
                 ),
@@ -726,7 +755,8 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
                     children: [
                       Expanded(
                         child: TextButton(
-                          onPressed: PlanechaseDialog.planechasePlaneIndex == null ||
+                          onPressed:
+                              PlanechaseDialog.planechasePlaneIndex == null ||
                                   PlanechaseDialog.planechasePlaneIndex! <= 0
                               ? null
                               : back,

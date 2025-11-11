@@ -147,8 +147,9 @@ class _CardsVariantDialogState extends State<CardsVariantDialog> {
                               });
                             },
                             style: ButtonStyle(
-                              padding:
-                                  const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0)),
+                              padding: const WidgetStatePropertyAll(
+                                EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                              ),
                               backgroundColor: widget.player!.cardPartner?.uuid == card.uuid
                                   ? WidgetStatePropertyAll(Theme.of(context).colorScheme.inversePrimary)
                                   : null,
@@ -168,11 +169,13 @@ class _CardsVariantDialogState extends State<CardsVariantDialog> {
                                       size: 18.0,
                                     ),
                                   ),
-                                Text(widget.player!.card?.uuid == card.uuid
-                                    ? "Selected"
-                                    : widget.player!.cardPartner?.uuid == card.uuid
-                                        ? "Partnered"
-                                        : "Select"),
+                                Text(
+                                  widget.player!.card?.uuid == card.uuid
+                                      ? "Selected"
+                                      : widget.player!.cardPartner?.uuid == card.uuid
+                                      ? "Partnered"
+                                      : "Select",
+                                ),
                               ],
                             ),
                           ),

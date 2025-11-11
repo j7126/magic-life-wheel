@@ -117,7 +117,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
   }
 
   Future _showSwitchPlayersDialog(int players) async {
-    var result = game.isGameReset ||
+    var result =
+        game.isGameReset ||
         (1 ==
             await showDialog<int>(
               context: context,
@@ -139,16 +140,16 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
 
   Future<bool> _quickSetupConfirm() async {
     return (1 ==
-      await showDialog<int>(
-        context: context,
-        barrierDismissible: true,
-        builder: (context) {
-          return const WarningDialog(
-            message: 'The player configuration will be reset',
-            confirmMessage: 'Reset',
-          );
-        },
-      ));
+        await showDialog<int>(
+          context: context,
+          barrierDismissible: true,
+          builder: (context) {
+            return const WarningDialog(
+              message: 'The player configuration will be reset',
+              confirmMessage: 'Reset',
+            );
+          },
+        ));
   }
 
   Future<bool> _quickSetupCommander() async {
@@ -234,240 +235,243 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
       isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Row(
-                  children: [
-                    OutlinedButton(
-                      style: ButtonStyle(
-                        padding: WidgetStatePropertyAll(
-                          EdgeInsets.only(
-                            left: 14.0,
-                            right: 20.0,
-                            top: 8.0,
-                            bottom: 8.0,
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        _showMenu();
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.more_vert),
-                          Gap(8.0),
-                          Text("Menu"),
-                        ],
-                      ),
-                    ),
-                    Spacer(),
-                    OutlinedButton(
-                      style: ButtonStyle(
-                        padding: WidgetStatePropertyAll(
-                          EdgeInsets.only(
-                            left: 20.0,
-                            right: 20.0,
-                            top: 8.0,
-                            bottom: 8.0,
-                          ),
-                        ),
-                      ),
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                        await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const SettingsPage(),
-                          ),
-                        );
-                        this.setState(() {});
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text("Settings"),
-                          Gap(8.0),
-                          Icon(Icons.settings),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Gap(12.0),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Row(
                     children: [
                       OutlinedButton(
-                        onPressed: () async {
-                          if (await _quickSetupCommander() && context.mounted) {
-                            Navigator.of(context).pop();
-                          }
-                        },
                         style: ButtonStyle(
                           padding: WidgetStatePropertyAll(
                             EdgeInsets.only(
-                              left: 22.0,
-                              right: 22.0,
-                              top: 18.0,
-                              bottom: 16.0,
+                              left: 14.0,
+                              right: 20.0,
+                              top: 8.0,
+                              bottom: 8.0,
                             ),
                           ),
                         ),
-                        child: Column(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _showMenu();
+                        },
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              "Quick Setup",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                                height: 1.0,
-                              ),
-                            ),
-                            Text(
-                              "Commander",
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
+                            Icon(Icons.more_vert),
+                            Gap(8.0),
+                            Text("Menu"),
                           ],
                         ),
                       ),
-                      Gap(8.0),
+                      Spacer(),
                       OutlinedButton(
-                        onPressed: () async {
-                          if (await _quickSetupStandard() && context.mounted) {
-                            Navigator.of(context).pop();
-                          }
-                        },
                         style: ButtonStyle(
                           padding: WidgetStatePropertyAll(
                             EdgeInsets.only(
-                              left: 22.0,
-                              right: 22.0,
-                              top: 18.0,
-                              bottom: 16.0,
+                              left: 20.0,
+                              right: 20.0,
+                              top: 8.0,
+                              bottom: 8.0,
                             ),
                           ),
                         ),
-                        child: Column(
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const SettingsPage(),
+                            ),
+                          );
+                          this.setState(() {});
+                        },
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              "Quick Setup",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                                height: 1.0,
-                              ),
-                            ),
-                            Text(
-                              "Standard",
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
+                            Text("Settings"),
+                            Gap(8.0),
+                            Icon(Icons.settings),
                           ],
                         ),
                       ),
                     ],
                   ),
-                ),
-                Gap(8.0),
-                Text(
-                  "Players",
-                  style: TextStyle(fontSize: 18),
-                ),
-                Gap(4.0),
-                SegmentedButton<int>(
-                  segments: <ButtonSegment<int>>[
-                    for (int i = 2; i <= 6; i++)
-                      ButtonSegment<int>(
-                        value: i,
-                        label: Text(i.toString()),
-                      ),
-                  ],
-                  selected: {game.players.length},
-                  onSelectionChanged: (Set<int> newSelection) async {
-                    await _showSwitchPlayersDialog(newSelection.first);
-                    setState(() {});
-                  },
-                ),
-                Gap(16.0),
-                Text(
-                  "Layout",
-                  style: TextStyle(fontSize: 18),
-                ),
-                Gap(4.0),
-                if (Layouts.layoutsBySize[game.players.length] != null)
-                  SegmentedButton<String>(
-                    segments: <ButtonSegment<String>>[
-                      for (Layout l in Layouts.layoutsBySize[game.players.length] ?? [])
-                        ButtonSegment<String>(
-                          value: l.runtimeType.toString(),
-                          label: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              height: 48,
-                              width: 48,
-                              child: RotatedBox(
-                                quarterTurns: (game.rotated && l.runtimeType == game.layout.runtimeType ? 2 : 0) +
-                                    layoutRotationOffset,
-                                child: l.buildPreview(context),
+                  Gap(12.0),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () async {
+                            if (await _quickSetupCommander() && context.mounted) {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          style: ButtonStyle(
+                            padding: WidgetStatePropertyAll(
+                              EdgeInsets.only(
+                                left: 22.0,
+                                right: 22.0,
+                                top: 18.0,
+                                bottom: 16.0,
                               ),
                             ),
                           ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Quick Setup",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                  height: 1.0,
+                                ),
+                              ),
+                              Text(
+                                "Commander",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Gap(8.0),
+                        OutlinedButton(
+                          onPressed: () async {
+                            if (await _quickSetupStandard() && context.mounted) {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          style: ButtonStyle(
+                            padding: WidgetStatePropertyAll(
+                              EdgeInsets.only(
+                                left: 22.0,
+                                right: 22.0,
+                                top: 18.0,
+                                bottom: 16.0,
+                              ),
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Quick Setup",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                  height: 1.0,
+                                ),
+                              ),
+                              Text(
+                                "Standard",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Gap(8.0),
+                  Text(
+                    "Players",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Gap(4.0),
+                  SegmentedButton<int>(
+                    segments: <ButtonSegment<int>>[
+                      for (int i = 2; i <= 6; i++)
+                        ButtonSegment<int>(
+                          value: i,
+                          label: Text(i.toString()),
                         ),
                     ],
-                    selected: {game.layout.runtimeType.toString()},
-                    onSelectionChanged: (Set<String> newSelection) async {
-                      setState(() {
-                        switchLayout();
-                      });
+                    selected: {game.players.length},
+                    onSelectionChanged: (Set<int> newSelection) async {
+                      await _showSwitchPlayersDialog(newSelection.first);
+                      setState(() {});
                     },
                   ),
-                Gap(12.0),
-                FilledButton(
-                  onPressed: () {
-                    setState(() {
-                      switchRotated();
-                    });
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AnimatedRotation(
-                        turns: rotatedAnimate,
-                        duration: const Duration(milliseconds: 250),
-                        child: const Icon(Icons.screen_rotation_alt_outlined),
-                      ),
-                      const Gap(8),
-                      const Text("Rotate"),
-                    ],
+                  Gap(16.0),
+                  Text(
+                    "Layout",
+                    style: TextStyle(fontSize: 18),
                   ),
-                ),
-                Gap(16.0),
-                OutlinedButton(
-                  child: const Text('Done'),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                Gap(8.0),
-              ],
-            ),
-          );
-        });
+                  Gap(4.0),
+                  if (Layouts.layoutsBySize[game.players.length] != null)
+                    SegmentedButton<String>(
+                      segments: <ButtonSegment<String>>[
+                        for (Layout l in Layouts.layoutsBySize[game.players.length] ?? [])
+                          ButtonSegment<String>(
+                            value: l.runtimeType.toString(),
+                            label: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                height: 48,
+                                width: 48,
+                                child: RotatedBox(
+                                  quarterTurns:
+                                      (game.rotated && l.runtimeType == game.layout.runtimeType ? 2 : 0) +
+                                      layoutRotationOffset,
+                                  child: l.buildPreview(context),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                      selected: {game.layout.runtimeType.toString()},
+                      onSelectionChanged: (Set<String> newSelection) async {
+                        setState(() {
+                          switchLayout();
+                        });
+                      },
+                    ),
+                  Gap(12.0),
+                  FilledButton(
+                    onPressed: () {
+                      setState(() {
+                        switchRotated();
+                      });
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AnimatedRotation(
+                          turns: rotatedAnimate,
+                          duration: const Duration(milliseconds: 250),
+                          child: const Icon(Icons.screen_rotation_alt_outlined),
+                        ),
+                        const Gap(8),
+                        const Text("Rotate"),
+                      ],
+                    ),
+                  ),
+                  Gap(16.0),
+                  OutlinedButton(
+                    child: const Text('Done'),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  Gap(8.0),
+                ],
+              ),
+            );
+          },
+        );
       },
     );
   }
@@ -762,70 +766,71 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                               ),
                               if (rearrangeMode)
                                 DragTarget<int>(
-                                  builder: (
-                                    BuildContext context,
-                                    List<dynamic> candidateData,
-                                    List<dynamic> rejectedData,
-                                  ) {
-                                    return Stack(
-                                      children: [
-                                        Draggable<int>(
-                                          data: i,
-                                          dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
-                                          maxSimultaneousDrags: 1,
-                                          onDragStarted: () {
-                                            setState(() {
-                                              dragging++;
-                                            });
-                                          },
-                                          onDragEnd: (_) {
-                                            setState(() {
-                                              dragging--;
-                                            });
-                                          },
-                                          feedback: Card(
-                                            clipBehavior: Clip.antiAlias,
-                                            child: SizedBox(
-                                              width: 100,
-                                              height: 100,
-                                              child: BackgroundWidget(
-                                                background: game.players[i].background,
-                                                forceShowNoImageIcon: true,
+                                  builder:
+                                      (
+                                        BuildContext context,
+                                        List<dynamic> candidateData,
+                                        List<dynamic> rejectedData,
+                                      ) {
+                                        return Stack(
+                                          children: [
+                                            Draggable<int>(
+                                              data: i,
+                                              dragAnchorStrategy: (d, c, o) => const Offset(50, 50),
+                                              maxSimultaneousDrags: 1,
+                                              onDragStarted: () {
+                                                setState(() {
+                                                  dragging++;
+                                                });
+                                              },
+                                              onDragEnd: (_) {
+                                                setState(() {
+                                                  dragging--;
+                                                });
+                                              },
+                                              feedback: Card(
+                                                clipBehavior: Clip.antiAlias,
+                                                child: SizedBox(
+                                                  width: 100,
+                                                  height: 100,
+                                                  child: BackgroundWidget(
+                                                    background: game.players[i].background,
+                                                    forceShowNoImageIcon: true,
+                                                  ),
+                                                ),
+                                              ),
+                                              childWhenDragging: Padding(
+                                                padding: const EdgeInsets.all(padding),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(35),
+                                                    color: const Color.fromARGB(100, 0, 0, 0),
+                                                  ),
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(padding),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(35),
+                                                    color: const Color.fromARGB(0, 0, 0, 0),
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          childWhenDragging: Padding(
-                                            padding: const EdgeInsets.all(padding),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(35),
-                                                color: const Color.fromARGB(100, 0, 0, 0),
+                                            if (candidateData.isNotEmpty)
+                                              Padding(
+                                                padding: const EdgeInsets.all(padding),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(35),
+                                                    color: const Color.fromARGB(45, 48, 150, 63),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(padding),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(35),
-                                                color: const Color.fromARGB(0, 0, 0, 0),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        if (candidateData.isNotEmpty)
-                                          Padding(
-                                            padding: const EdgeInsets.all(padding),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(35),
-                                                color: const Color.fromARGB(45, 48, 150, 63),
-                                              ),
-                                            ),
-                                          )
-                                      ],
-                                    );
-                                  },
+                                          ],
+                                        );
+                                      },
                                   onAcceptWithDetails: (DragTargetDetails<int> details) {
                                     var data = details.data;
                                     setState(() {
@@ -935,40 +940,41 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                               children: [
                                 const Spacer(),
                                 DragTarget<int>(
-                                  builder: (
-                                    BuildContext context,
-                                    List<dynamic> candidateData,
-                                    List<dynamic> rejectedData,
-                                  ) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: candidateData.isNotEmpty ? Colors.redAccent : Colors.red,
-                                          borderRadius: BorderRadius.circular(32.0),
-                                        ),
-                                        child: const Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.delete_outline,
-                                                size: 20.0,
+                                  builder:
+                                      (
+                                        BuildContext context,
+                                        List<dynamic> candidateData,
+                                        List<dynamic> rejectedData,
+                                      ) {
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: candidateData.isNotEmpty ? Colors.redAccent : Colors.red,
+                                              borderRadius: BorderRadius.circular(32.0),
+                                            ),
+                                            child: const Padding(
+                                              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.delete_outline,
+                                                    size: 20.0,
+                                                  ),
+                                                  Gap(8.0),
+                                                  Text(
+                                                    "Remove Player",
+                                                    style: TextStyle(
+                                                      fontSize: 20.0,
+                                                      height: 1,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              Gap(8.0),
-                                              Text(
-                                                "Remove Player",
-                                                style: TextStyle(
-                                                  fontSize: 20.0,
-                                                  height: 1,
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    );
-                                  },
+                                        );
+                                      },
                                   onAcceptWithDetails: (DragTargetDetails<int> details) {
                                     var data = details.data;
                                     setState(() {

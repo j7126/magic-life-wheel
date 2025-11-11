@@ -103,23 +103,24 @@ class _CardSearchPageState extends State<CardSearchPage> {
           TextField(
             controller: _searchFieldController,
             decoration: InputDecoration(
-                hintText: "Search Cards",
-                border: const UnderlineInputBorder(),
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (_searchFieldController.text.isNotEmpty)
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _searchFieldController.clear();
-                          });
-                        },
-                        icon: const Icon(Icons.close),
-                      ),
-                  ],
-                )),
+              hintText: "Search Cards",
+              border: const UnderlineInputBorder(),
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_searchFieldController.text.isNotEmpty)
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _searchFieldController.clear();
+                        });
+                      },
+                      icon: const Icon(Icons.close),
+                    ),
+                ],
+              ),
+            ),
             autofocus: true,
             onChanged: (value) => searchCards(value),
           ),
@@ -139,10 +140,10 @@ class _CardSearchPageState extends State<CardSearchPage> {
                       Text(
                         cards?.isEmpty ?? false ? "No results found" : "",
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: size * 0.13,
-                              color: const Color.fromARGB(255, 76, 76, 76),
-                            ),
+                          fontWeight: FontWeight.bold,
+                          fontSize: size * 0.13,
+                          color: const Color.fromARGB(255, 76, 76, 76),
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       const Spacer(),

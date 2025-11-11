@@ -92,11 +92,13 @@ class Player {
         damageHistory.removeLast();
       }
     } else {
-      damageHistory.add(DamageEvent(
-        priorLife: this.life,
-        change: life,
-        fromCommander: player,
-      ));
+      damageHistory.add(
+        DamageEvent(
+          priorLife: this.life,
+          change: life,
+          fromCommander: player,
+        ),
+      );
     }
     // update life
     this.life += life;
@@ -116,10 +118,12 @@ class Player {
         damageHistory.removeLast();
       }
     } else {
-      damageHistory.add(DamageEvent(
-        priorLife: fromDead ? 0 : this.life,
-        change: life,
-      ));
+      damageHistory.add(
+        DamageEvent(
+          priorLife: fromDead ? 0 : this.life,
+          change: life,
+        ),
+      );
     }
     // update life
     if (fromDead) {

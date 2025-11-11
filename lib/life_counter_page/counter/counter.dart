@@ -47,7 +47,8 @@ class _CounterState extends State<Counter> {
   Timer? longPressTimer;
   int? longPressDirection;
 
-  int get changedLife => widget.player.damageHistory.isNotEmpty &&
+  int get changedLife =>
+      widget.player.damageHistory.isNotEmpty &&
           widget.player.damageHistory.last.fromCommander == null &&
           DateTime.now().millisecondsSinceEpoch - widget.player.damageHistory.last.time.millisecondsSinceEpoch < 5000
       ? widget.player.damageHistory.last.change
@@ -256,8 +257,8 @@ class _CounterState extends State<Counter> {
                   constraints.maxHeight -
                       (Service.settingsService.pref_enableCommanderDamage
                           ? Service.settingsService.pref_commanderDamageMiniGrid
-                              ? 102
-                              : 82
+                                ? 102
+                                : 82
                           : 20),
                   (constraints.maxWidth - 144.0) * 0.9,
                 ),
@@ -295,14 +296,15 @@ class _CounterState extends State<Counter> {
                       opacity: widget.player.dead ? 0 : 1,
                       child: Padding(
                         padding: EdgeInsets.only(
-                          top: Service.settingsService.pref_enableCommanderDamage &&
+                          top:
+                              Service.settingsService.pref_enableCommanderDamage &&
                                   Service.settingsService.pref_commanderDamageMiniGrid
                               ? 16
                               : 32,
                           bottom: Service.settingsService.pref_enableCommanderDamage
                               ? Service.settingsService.pref_commanderDamageMiniGrid
-                                  ? 48
-                                  : 32
+                                    ? 48
+                                    : 32
                               : 16,
                           left: 72.0,
                           right: 72.0,
@@ -385,15 +387,18 @@ class _CounterState extends State<Counter> {
                                                     scale: 1.4,
                                                     child: Container(
                                                       decoration: BoxDecoration(
-                                                          color: ColorScheme.of(context).surfaceContainer,
-                                                          borderRadius: BorderRadius.circular(16.0)),
+                                                        color: ColorScheme.of(context).surfaceContainer,
+                                                        borderRadius: BorderRadius.circular(16.0),
+                                                      ),
                                                       child: Padding(
                                                         padding: const EdgeInsets.symmetric(horizontal: 14.0),
                                                         child: Text(
                                                           changedLife.toString(),
                                                           style: TextStyle(
-                                                            fontSize:
-                                                                min(34.0, widget.counterFontSizeGroup.minSize * 0.8),
+                                                            fontSize: min(
+                                                              34.0,
+                                                              widget.counterFontSizeGroup.minSize * 0.8,
+                                                            ),
                                                             fontWeight: FontWeight.bold,
                                                           ),
                                                           maxLines: 1,
@@ -459,15 +464,18 @@ class _CounterState extends State<Counter> {
                                                     scale: 1.4,
                                                     child: Container(
                                                       decoration: BoxDecoration(
-                                                          color: ColorScheme.of(context).surfaceContainer,
-                                                          borderRadius: BorderRadius.circular(16.0)),
+                                                        color: ColorScheme.of(context).surfaceContainer,
+                                                        borderRadius: BorderRadius.circular(16.0),
+                                                      ),
                                                       child: Padding(
                                                         padding: const EdgeInsets.symmetric(horizontal: 14.0),
                                                         child: Text(
                                                           "+$changedLife",
                                                           style: TextStyle(
-                                                            fontSize:
-                                                                min(34.0, widget.counterFontSizeGroup.minSize * 0.8),
+                                                            fontSize: min(
+                                                              34.0,
+                                                              widget.counterFontSizeGroup.minSize * 0.8,
+                                                            ),
                                                             fontWeight: FontWeight.bold,
                                                           ),
                                                           maxLines: 1,

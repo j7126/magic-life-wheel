@@ -67,23 +67,25 @@ class _CardFullDialogState extends State<CardFullDialog> {
           Flexible(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: LayoutBuilder(builder: (context, constraints) {
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      min(constraints.maxHeight, constraints.maxWidth) * 0.05,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        min(constraints.maxHeight, constraints.maxWidth) * 0.05,
+                      ),
                     ),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: AspectRatio(
-                    aspectRatio: 672 / 936,
-                    child: CardImage(
-                      cardSet: widget.card,
-                      fullCard: true,
+                    clipBehavior: Clip.antiAlias,
+                    child: AspectRatio(
+                      aspectRatio: 672 / 936,
+                      child: CardImage(
+                        cardSet: widget.card,
+                        fullCard: true,
+                      ),
                     ),
-                  ),
-                );
-              }),
+                  );
+                },
+              ),
             ),
           ),
         ],

@@ -325,56 +325,56 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
     var maxDimention = min(maxContentHeight, maxContentWidth);
 
     cameraError(String message, Function() retry) => Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.videocam_off,
-                size: maxDimention / 3,
-                color: Colors.black,
-              ),
-              SizedBox(
-                width: maxDimention / 3 * 2,
-                child: Text(
-                  message,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.black),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: SizedBox(
-                  width: maxDimention / 3 * 2,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          foregroundColor: WidgetStatePropertyAll(
-                            HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.4).toColor(),
-                          ),
-                          iconColor: WidgetStatePropertyAll(
-                            HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.4).toColor(),
-                          ),
-                        ),
-                        onPressed: retry,
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.restart_alt),
-                            Gap(4.0),
-                            Text("Retry"),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.videocam_off,
+            size: maxDimention / 3,
+            color: Colors.black,
           ),
-        );
+          SizedBox(
+            width: maxDimention / 3 * 2,
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.black),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: SizedBox(
+              width: maxDimention / 3 * 2,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    style: ButtonStyle(
+                      foregroundColor: WidgetStatePropertyAll(
+                        HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.4).toColor(),
+                      ),
+                      iconColor: WidgetStatePropertyAll(
+                        HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.4).toColor(),
+                      ),
+                    ),
+                    onPressed: retry,
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.restart_alt),
+                        Gap(4.0),
+                        Text("Retry"),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
 
     if (!Service.supportScanner ||
         _tabController.index != 1 ||
@@ -451,11 +451,11 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                       tabBorderRadius: BorderRadius.circular(10),
                       childPadding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0, bottom: 12.0),
                       selectedTextStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Colors.black,
-                          ),
+                        color: Colors.black,
+                      ),
                       unselectedTextStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       colors: [
                         Colors.white,
                         HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.9).toColor(),
@@ -466,12 +466,14 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Builder(builder: (context) {
-                                return Icon(
-                                  Icons.call_made,
-                                  color: DefaultTextStyle.of(context).style.color,
-                                );
-                              }),
+                              Builder(
+                                builder: (context) {
+                                  return Icon(
+                                    Icons.call_made,
+                                    color: DefaultTextStyle.of(context).style.color,
+                                  );
+                                },
+                              ),
                               const Gap(8.0),
                               const Text('Send'),
                             ],
@@ -481,12 +483,14 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Builder(builder: (context) {
-                              return Icon(
-                                Icons.call_received,
-                                color: DefaultTextStyle.of(context).style.color,
-                              );
-                            }),
+                            Builder(
+                              builder: (context) {
+                                return Icon(
+                                  Icons.call_received,
+                                  color: DefaultTextStyle.of(context).style.color,
+                                );
+                              },
+                            ),
                             const Gap(8.0),
                             const Text('Import'),
                           ],
@@ -578,7 +582,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                                                   size: 20,
                                                 ),
                                                 const Gap(8.0),
-                                                split <= 1 ? const Text("Split") : const Text("Un-Split")
+                                                split <= 1 ? const Text("Split") : const Text("Un-Split"),
                                               ],
                                             ),
                                           ),
@@ -603,153 +607,151 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                               height: maxDimention,
                               child: Service.supportScanner
                                   ? _tabController.index == 1
-                                      ? showLowPerformanceWarning
-                                          // low performance warning
-                                          ? Center(
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Icon(
-                                                    Icons.speed,
-                                                    size: maxDimention / 3,
-                                                    color: Colors.black,
-                                                  ),
-                                                  SizedBox(
-                                                    width: maxDimention / 3 * 2,
-                                                    child: const Text(
-                                                      "Your device has been detected to have low performance, the QR code scanner may not work.",
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(color: Colors.black),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(top: 8.0),
-                                                    child: SizedBox(
-                                                      width: maxDimention / 3 * 2,
-                                                      child: Row(
-                                                        mainAxisSize: MainAxisSize.max,
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          TextButton(
-                                                            style: ButtonStyle(
-                                                              foregroundColor: WidgetStatePropertyAll(
-                                                                HSLColor.fromColor(
-                                                                        Theme.of(context).colorScheme.primary)
-                                                                    .withLightness(0.4)
-                                                                    .toColor(),
-                                                              ),
-                                                              iconColor: WidgetStatePropertyAll(
-                                                                HSLColor.fromColor(
-                                                                        Theme.of(context).colorScheme.primary)
-                                                                    .withLightness(0.4)
-                                                                    .toColor(),
-                                                              ),
-                                                            ),
-                                                            child: const Row(
-                                                              mainAxisSize: MainAxisSize.min,
-                                                              children: [
-                                                                Icon(Icons.arrow_forward),
-                                                                Gap(4.0),
-                                                                Text("Continue"),
-                                                              ],
-                                                            ),
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                showLowPerformanceWarning = false;
-                                                              });
-                                                            },
-                                                          ),
-                                                        ],
+                                        ? showLowPerformanceWarning
+                                              // low performance warning
+                                              ? Center(
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.speed,
+                                                        size: maxDimention / 3,
+                                                        color: Colors.black,
                                                       ),
-                                                    ),
+                                                      SizedBox(
+                                                        width: maxDimention / 3 * 2,
+                                                        child: const Text(
+                                                          "Your device has been detected to have low performance, the QR code scanner may not work.",
+                                                          textAlign: TextAlign.center,
+                                                          style: TextStyle(color: Colors.black),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(top: 8.0),
+                                                        child: SizedBox(
+                                                          width: maxDimention / 3 * 2,
+                                                          child: Row(
+                                                            mainAxisSize: MainAxisSize.max,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              TextButton(
+                                                                style: ButtonStyle(
+                                                                  foregroundColor: WidgetStatePropertyAll(
+                                                                    HSLColor.fromColor(
+                                                                      Theme.of(context).colorScheme.primary,
+                                                                    ).withLightness(0.4).toColor(),
+                                                                  ),
+                                                                  iconColor: WidgetStatePropertyAll(
+                                                                    HSLColor.fromColor(
+                                                                      Theme.of(context).colorScheme.primary,
+                                                                    ).withLightness(0.4).toColor(),
+                                                                  ),
+                                                                ),
+                                                                child: const Row(
+                                                                  mainAxisSize: MainAxisSize.min,
+                                                                  children: [
+                                                                    Icon(Icons.arrow_forward),
+                                                                    Gap(4.0),
+                                                                    Text("Continue"),
+                                                                  ],
+                                                                ),
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    showLowPerformanceWarning = false;
+                                                                  });
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
-                                            )
-                                          : importingData
+                                                )
+                                              : importingData
                                               // loader while importing data
                                               ? const Center(
                                                   child: CircularProgressIndicator(),
                                                 )
                                               : unknownCameraError
-                                                  // unknown camera error
-                                                  ? cameraError(
-                                                      "Unknown camera error!",
-                                                      () {
-                                                        setState(() {
-                                                          unknownCameraError = false;
-                                                        });
-                                                      },
-                                                    )
-                                                  : cameraDenied
-                                                      // camera access denied
-                                                      ? cameraError(
-                                                          "Camera permission denied!",
-                                                          () {
-                                                            setState(() {
-                                                              cameraDenied = false;
-                                                            });
-                                                          },
-                                                        )
-                                                      // qr reader
-                                                      : Stack(
+                                              // unknown camera error
+                                              ? cameraError(
+                                                  "Unknown camera error!",
+                                                  () {
+                                                    setState(() {
+                                                      unknownCameraError = false;
+                                                    });
+                                                  },
+                                                )
+                                              : cameraDenied
+                                              // camera access denied
+                                              ? cameraError(
+                                                  "Camera permission denied!",
+                                                  () {
+                                                    setState(() {
+                                                      cameraDenied = false;
+                                                    });
+                                                  },
+                                                )
+                                              // qr reader
+                                              : Stack(
+                                                  children: [
+                                                    Opacity(
+                                                      opacity: cameraReady ? 1 : 0,
+                                                      child: Container(
+                                                        clipBehavior: Clip.antiAlias,
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(16),
+                                                        ),
+                                                        child: Stack(
                                                           children: [
-                                                            Opacity(
-                                                              opacity: cameraReady ? 1 : 0,
-                                                              child: Container(
-                                                                clipBehavior: Clip.antiAlias,
-                                                                decoration: BoxDecoration(
-                                                                  borderRadius: BorderRadius.circular(16),
-                                                                ),
-                                                                child: Stack(
-                                                                  children: [
-                                                                    ReaderWidget(
-                                                                      codeFormat: Format.qrCode,
-                                                                      onScan: _onScanSuccess,
-                                                                      onScanFailure: _onScanFailure,
-                                                                      onControllerCreated: _onControllerCreated,
-                                                                      scanDelay: const Duration(milliseconds: 100),
-                                                                      scanDelaySuccess:
-                                                                          const Duration(milliseconds: 500),
-                                                                      allowPinchZoom: true,
-                                                                      isMultiScan: false,
-                                                                      showGallery: false,
-                                                                      showFlashlight: false,
-                                                                      showToggleCamera: true,
-                                                                      actionButtonsAlignment: Alignment.bottomRight,
-                                                                      resolution: ResolutionPreset.high,
-                                                                      lensDirection: CameraLensDirection.back,
-                                                                      toggleCameraIcon: const Icon(Icons.cameraswitch),
-                                                                      showScannerOverlay: false,
-                                                                      cropPercent: 1,
-                                                                      actionButtonsBackgroundBorderRadius:
-                                                                          BorderRadius.circular(16),
-                                                                      actionButtonsBackgroundColor:
-                                                                          Colors.black.withOpacity(0.4),
-                                                                      tryHarder: false,
-                                                                    ),
-                                                                    if (cameraReady && scannedNumSplit > 1)
-                                                                      Positioned(
-                                                                        left: -1,
-                                                                        right: -1,
-                                                                        top: 0,
-                                                                        child: LinearProgressIndicator(
-                                                                          value: scannedSplit.length / scannedNumSplit,
-                                                                          minHeight: 16,
-                                                                        ),
-                                                                      ),
-                                                                  ],
-                                                                ),
+                                                            ReaderWidget(
+                                                              codeFormat: Format.qrCode,
+                                                              onScan: _onScanSuccess,
+                                                              onScanFailure: _onScanFailure,
+                                                              onControllerCreated: _onControllerCreated,
+                                                              scanDelay: const Duration(milliseconds: 100),
+                                                              scanDelaySuccess: const Duration(milliseconds: 500),
+                                                              allowPinchZoom: true,
+                                                              isMultiScan: false,
+                                                              showGallery: false,
+                                                              showFlashlight: false,
+                                                              showToggleCamera: true,
+                                                              actionButtonsAlignment: Alignment.bottomRight,
+                                                              resolution: ResolutionPreset.high,
+                                                              lensDirection: CameraLensDirection.back,
+                                                              toggleCameraIcon: const Icon(Icons.cameraswitch),
+                                                              showScannerOverlay: false,
+                                                              cropPercent: 1,
+                                                              actionButtonsBackgroundBorderRadius:
+                                                                  BorderRadius.circular(16),
+                                                              actionButtonsBackgroundColor: Colors.black.withOpacity(
+                                                                0.4,
                                                               ),
+                                                              tryHarder: false,
                                                             ),
-                                                            if (!cameraReady)
-                                                              const Center(
-                                                                child: CircularProgressIndicator(),
+                                                            if (cameraReady && scannedNumSplit > 1)
+                                                              Positioned(
+                                                                left: -1,
+                                                                right: -1,
+                                                                top: 0,
+                                                                child: LinearProgressIndicator(
+                                                                  value: scannedSplit.length / scannedNumSplit,
+                                                                  minHeight: 16,
+                                                                ),
                                                               ),
                                                           ],
-                                                        )
-                                      // import tab not visible
-                                      : Container()
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    if (!cameraReady)
+                                                      const Center(
+                                                        child: CircularProgressIndicator(),
+                                                      ),
+                                                  ],
+                                                )
+                                        // import tab not visible
+                                        : Container()
                                   // qr scanning not supported
                                   : Center(
                                       child: Column(

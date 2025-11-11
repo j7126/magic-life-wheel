@@ -12,7 +12,7 @@ class MTGDataLoader {
   Function onLoad;
 
   bool loaded = false;
-  
+
   ProtobufAllSetCards? allSetCards;
   MtgSets? sets;
 

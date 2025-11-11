@@ -65,14 +65,14 @@ class _AboutPageState extends State<AboutPage> {
                                 Text(
                                   'Magic Life Wheel',
                                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                        color: const Color.fromARGB(255, 229, 229, 229),
-                                      ),
+                                    color: const Color.fromARGB(255, 229, 229, 229),
+                                  ),
                                 ),
                                 Text(
                                   '© 2025 Jefferey Neuffer',
                                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                        color: const Color.fromARGB(255, 229, 229, 229),
-                                      ),
+                                    color: const Color.fromARGB(255, 229, 229, 229),
+                                  ),
                                 ),
                               ],
                             ),
@@ -101,14 +101,14 @@ class _AboutPageState extends State<AboutPage> {
                                 Text(
                                   'App Version',
                                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                        color: const Color.fromARGB(255, 229, 229, 229),
-                                      ),
+                                    color: const Color.fromARGB(255, 229, 229, 229),
+                                  ),
                                 ),
                                 Text(
                                   '${packageInfo?.version ?? '-.-.-'} (${packageInfo?.buildNumber ?? ''})',
                                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                        color: const Color.fromARGB(255, 229, 229, 229),
-                                      ),
+                                    color: const Color.fromARGB(255, 229, 229, 229),
+                                  ),
                                 ),
                               ],
                             ),
@@ -139,14 +139,14 @@ class _AboutPageState extends State<AboutPage> {
                                   Text(
                                     'Home Page',
                                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                          color: const Color.fromARGB(255, 229, 229, 229),
-                                        ),
+                                      color: const Color.fromARGB(255, 229, 229, 229),
+                                    ),
                                   ),
                                   Text(
                                     'https://jefferey.dev/projects/magic-life-wheel',
                                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                          color: const Color.fromARGB(255, 229, 229, 229),
-                                        ),
+                                      color: const Color.fromARGB(255, 229, 229, 229),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -178,14 +178,14 @@ class _AboutPageState extends State<AboutPage> {
                                   Text(
                                     'Report an issue',
                                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                          color: const Color.fromARGB(255, 229, 229, 229),
-                                        ),
+                                      color: const Color.fromARGB(255, 229, 229, 229),
+                                    ),
                                   ),
                                   Text(
                                     'https://github.com/j7126/magic-life-wheel/issues',
                                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                          color: const Color.fromARGB(255, 229, 229, 229),
-                                        ),
+                                      color: const Color.fromARGB(255, 229, 229, 229),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -217,14 +217,14 @@ class _AboutPageState extends State<AboutPage> {
                                   Text(
                                     'View on GitHub',
                                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                          color: const Color.fromARGB(255, 229, 229, 229),
-                                        ),
+                                      color: const Color.fromARGB(255, 229, 229, 229),
+                                    ),
                                   ),
                                   Text(
                                     'https://github.com/j7126/magic-life-wheel',
                                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                          color: const Color.fromARGB(255, 229, 229, 229),
-                                        ),
+                                      color: const Color.fromARGB(255, 229, 229, 229),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -257,14 +257,14 @@ class _AboutPageState extends State<AboutPage> {
                                   Text(
                                     'Credits',
                                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                          color: const Color.fromARGB(255, 229, 229, 229),
-                                        ),
+                                      color: const Color.fromARGB(255, 229, 229, 229),
+                                    ),
                                   ),
                                   Text(
                                     'https://github.com/j7126/magic-life-wheel/blob/main/CREDITS.md',
                                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                          color: const Color.fromARGB(255, 229, 229, 229),
-                                        ),
+                                      color: const Color.fromARGB(255, 229, 229, 229),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -297,14 +297,14 @@ class _AboutPageState extends State<AboutPage> {
                                   Text(
                                     'License',
                                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                          color: const Color.fromARGB(255, 229, 229, 229),
-                                        ),
+                                      color: const Color.fromARGB(255, 229, 229, 229),
+                                    ),
                                   ),
                                   Text(
                                     'GNU Affero General Public License',
                                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                          color: const Color.fromARGB(255, 229, 229, 229),
-                                        ),
+                                      color: const Color.fromARGB(255, 229, 229, 229),
+                                    ),
                                   ),
                                 ],
                               ),

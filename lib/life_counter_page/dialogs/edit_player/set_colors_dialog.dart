@@ -106,67 +106,71 @@ class _SetColorsDialogState extends State<SetColorsDialog> {
       );
     }
 
-    return LayoutBuilder(builder: (context, constraints) {
-      var constrainedWidth = min(constraints.maxWidth, constraints.maxHeight) - 48 - 48 * 2;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        var constrainedWidth = min(constraints.maxWidth, constraints.maxHeight) - 48 - 48 * 2;
 
-      return AlertDialog(
-        titlePadding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
-        contentPadding: const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 32.0, top: 8.0),
-        title: Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 4.0),
-              child: Text("Customise Color"),
-            ),
-            const Spacer(),
-            IconButton.outlined(
-              icon: const Icon(Icons.check),
-              onPressed: () {
-                Navigator.of(context).pop(colors);
-              },
-            ),
-          ],
-        ),
-        content: SingleChildScrollView(
-          child: Column(
+        return AlertDialog(
+          titlePadding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+          contentPadding: const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 32.0, top: 8.0),
+          title: Row(
             children: [
-              Container(
-                key: ValueKey(colors.length),
-                width: constrainedWidth / 3,
-                height: constrainedWidth / 4,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16.0),
-                  gradient: colors.length > 1
-                      ? LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: colors,
-                        )
-                      : null,
-                  color: colors.length > 1 ? null : (colors.firstOrNull ?? const Color.fromARGB(255, 70, 73, 72)),
-                ),
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
-              const Gap(16.0),
-              for (var row in colorOptions)
-                Row(
-                  children: row
-                      .map((e) => colorButton(
+              const Padding(
+                padding: EdgeInsets.only(left: 4.0),
+                child: Text("Customise Color"),
+              ),
+              const Spacer(),
+              IconButton.outlined(
+                icon: const Icon(Icons.check),
+                onPressed: () {
+                  Navigator.of(context).pop(colors);
+                },
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  key: ValueKey(colors.length),
+                  width: constrainedWidth / 3,
+                  height: constrainedWidth / 4,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16.0),
+                    gradient: colors.length > 1
+                        ? LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: colors,
+                          )
+                        : null,
+                    color: colors.length > 1 ? null : (colors.firstOrNull ?? const Color.fromARGB(255, 70, 73, 72)),
+                  ),
+                ),
+                const Gap(16.0),
+                for (var row in colorOptions)
+                  Row(
+                    children: row
+                        .map(
+                          (e) => colorButton(
                             e.$1,
                             constrainedWidth,
                             e.$2,
-                          ))
-                      .toList(),
-                ),
-            ],
+                          ),
+                        )
+                        .toList(),
+                  ),
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }

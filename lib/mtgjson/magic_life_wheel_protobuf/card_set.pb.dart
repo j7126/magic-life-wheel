@@ -46,26 +46,19 @@ class CardSet extends $pb.GeneratedMessage {
     if (scryfallId != null) result.scryfallId = scryfallId;
     if (commander != null) result.commander = commander;
     if (cardSearchString != null) result.cardSearchString = cardSearchString;
-    if (cardSearchStringWords != null)
-      result.cardSearchStringWords.addAll(cardSearchStringWords);
-    if (cardSearchStringAlt != null)
-      result.cardSearchStringAlt = cardSearchStringAlt;
-    if (cardSearchStringWordsAlt != null)
-      result.cardSearchStringWordsAlt.addAll(cardSearchStringWordsAlt);
+    if (cardSearchStringWords != null) result.cardSearchStringWords.addAll(cardSearchStringWords);
+    if (cardSearchStringAlt != null) result.cardSearchStringAlt = cardSearchStringAlt;
+    if (cardSearchStringWordsAlt != null) result.cardSearchStringWordsAlt.addAll(cardSearchStringWordsAlt);
     if (artist != null) result.artist = artist;
     if (text != null) result.text = text;
     if (flavorName != null) result.flavorName = flavorName;
     if (isFunny != null) result.isFunny = isFunny;
     if (keywordPartner != null) result.keywordPartner = keywordPartner;
-    if (keywordFriendsForever != null)
-      result.keywordFriendsForever = keywordFriendsForever;
-    if (keywordDoctorsCompanion != null)
-      result.keywordDoctorsCompanion = keywordDoctorsCompanion;
-    if (keywordChooseBackground != null)
-      result.keywordChooseBackground = keywordChooseBackground;
+    if (keywordFriendsForever != null) result.keywordFriendsForever = keywordFriendsForever;
+    if (keywordDoctorsCompanion != null) result.keywordDoctorsCompanion = keywordDoctorsCompanion;
+    if (keywordChooseBackground != null) result.keywordChooseBackground = keywordChooseBackground;
     if (subtypeBackground != null) result.subtypeBackground = subtypeBackground;
-    if (subtypeTimeLordDoctor != null)
-      result.subtypeTimeLordDoctor = subtypeTimeLordDoctor;
+    if (subtypeTimeLordDoctor != null) result.subtypeTimeLordDoctor = subtypeTimeLordDoctor;
     if (typePlane != null) result.typePlane = typePlane;
     return result;
   }
@@ -75,44 +68,30 @@ class CardSet extends $pb.GeneratedMessage {
   factory CardSet.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory CardSet.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+  factory CardSet.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CardSet',
-      package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'mtgjson_converter_dart'),
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CardSet',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'mtgjson_converter_dart'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'setCode', protoName: 'setCode')
     ..aOS(4, _omitFieldNames ? '' : 'scryfallId', protoName: 'scryfallId')
     ..aOB(5, _omitFieldNames ? '' : 'commander')
-    ..aOS(6, _omitFieldNames ? '' : 'cardSearchString',
-        protoName: 'cardSearchString')
-    ..pPS(7, _omitFieldNames ? '' : 'cardSearchStringWords',
-        protoName: 'cardSearchStringWords')
-    ..aOS(8, _omitFieldNames ? '' : 'cardSearchStringAlt',
-        protoName: 'cardSearchStringAlt')
-    ..pPS(9, _omitFieldNames ? '' : 'cardSearchStringWordsAlt',
-        protoName: 'cardSearchStringWordsAlt')
+    ..aOS(6, _omitFieldNames ? '' : 'cardSearchString', protoName: 'cardSearchString')
+    ..pPS(7, _omitFieldNames ? '' : 'cardSearchStringWords', protoName: 'cardSearchStringWords')
+    ..aOS(8, _omitFieldNames ? '' : 'cardSearchStringAlt', protoName: 'cardSearchStringAlt')
+    ..pPS(9, _omitFieldNames ? '' : 'cardSearchStringWordsAlt', protoName: 'cardSearchStringWordsAlt')
     ..aOS(10, _omitFieldNames ? '' : 'artist')
     ..aOS(11, _omitFieldNames ? '' : 'text')
     ..aOS(12, _omitFieldNames ? '' : 'flavorName', protoName: 'flavorName')
     ..aOB(13, _omitFieldNames ? '' : 'isFunny', protoName: 'isFunny')
-    ..aOB(14, _omitFieldNames ? '' : 'keywordPartner',
-        protoName: 'keywordPartner')
-    ..aOB(15, _omitFieldNames ? '' : 'keywordFriendsForever',
-        protoName: 'keywordFriendsForever')
-    ..aOB(16, _omitFieldNames ? '' : 'keywordDoctorsCompanion',
-        protoName: 'keywordDoctorsCompanion')
-    ..aOB(17, _omitFieldNames ? '' : 'keywordChooseBackground',
-        protoName: 'keywordChooseBackground')
-    ..aOB(18, _omitFieldNames ? '' : 'subtypeBackground',
-        protoName: 'subtypeBackground')
-    ..aOB(19, _omitFieldNames ? '' : 'subtypeTimeLordDoctor',
-        protoName: 'subtypeTimeLordDoctor')
+    ..aOB(14, _omitFieldNames ? '' : 'keywordPartner', protoName: 'keywordPartner')
+    ..aOB(15, _omitFieldNames ? '' : 'keywordFriendsForever', protoName: 'keywordFriendsForever')
+    ..aOB(16, _omitFieldNames ? '' : 'keywordDoctorsCompanion', protoName: 'keywordDoctorsCompanion')
+    ..aOB(17, _omitFieldNames ? '' : 'keywordChooseBackground', protoName: 'keywordChooseBackground')
+    ..aOB(18, _omitFieldNames ? '' : 'subtypeBackground', protoName: 'subtypeBackground')
+    ..aOB(19, _omitFieldNames ? '' : 'subtypeTimeLordDoctor', protoName: 'subtypeTimeLordDoctor')
     ..aOB(20, _omitFieldNames ? '' : 'typePlane', protoName: 'typePlane')
     ..hasRequiredFields = false;
 
@@ -131,8 +110,7 @@ class CardSet extends $pb.GeneratedMessage {
   CardSet createEmptyInstance() => create();
   static $pb.PbList<CardSet> createRepeated() => $pb.PbList<CardSet>();
   @$core.pragma('dart2js:noInline')
-  static CardSet getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CardSet>(create);
+  static CardSet getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CardSet>(create);
   static CardSet? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -304,7 +282,5 @@ class CardSet extends $pb.GeneratedMessage {
   void clearTypePlane() => $_clearField(20);
 }
 
-const $core.bool _omitFieldNames =
-    $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames =
-    $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
