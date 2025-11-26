@@ -21,7 +21,7 @@ dependencies:
   json_annotation: ^4.9.0
   shared_preferences: ^2.2.3
   collection: ^1.18.0
-  string_normalizer: ^0.3.1
+  string_normalizer: ^0.4.0
   uuid: ^4.4.0
   keyrune_icons_flutter: ^3.17.1
   auto_size_text:
