@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
 
 import 'dart:core' as $core;
 
@@ -36,16 +36,21 @@ class ProtobufAllSetCards extends $pb.GeneratedMessage {
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ProtobufAllSetCards',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'mtgjson_converter_dart'), createEmptyInstance: create)
-    ..pc<$0.CardSet>(1, _omitFieldNames ? '' : 'data', $pb.PbFieldType.PM, subBuilder: $0.CardSet.create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProtobufAllSetCards',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'mtgjson_converter_dart'),
+      createEmptyInstance: create)
+    ..pPM<$0.CardSet>(1, _omitFieldNames ? '' : 'data',
+        subBuilder: $0.CardSet.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ProtobufAllSetCards clone() => ProtobufAllSetCards()..mergeFromMessage(this);
+  ProtobufAllSetCards clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ProtobufAllSetCards copyWith(void Function(ProtobufAllSetCards) updates) =>
-      super.copyWith((message) => updates(message as ProtobufAllSetCards)) as ProtobufAllSetCards;
+      super.copyWith((message) => updates(message as ProtobufAllSetCards))
+          as ProtobufAllSetCards;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -54,15 +59,16 @@ class ProtobufAllSetCards extends $pb.GeneratedMessage {
   static ProtobufAllSetCards create() => ProtobufAllSetCards._();
   @$core.override
   ProtobufAllSetCards createEmptyInstance() => create();
-  static $pb.PbList<ProtobufAllSetCards> createRepeated() => $pb.PbList<ProtobufAllSetCards>();
   @$core.pragma('dart2js:noInline')
-  static ProtobufAllSetCards getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ProtobufAllSetCards>(create);
+  static ProtobufAllSetCards getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProtobufAllSetCards>(create);
   static ProtobufAllSetCards? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$0.CardSet> get data => $_getList(0);
 }
 
-const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');
