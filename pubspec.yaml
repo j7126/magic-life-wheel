@@ -29,7 +29,7 @@ dependencies:
       url: https://github.com/j7126/auto_size_text.git
       ref: v3.0.x
   mana_icons_flutter: ^1.18.0
-  image_picker: ^1.1.2
+  image_picker: ^1.2.1
   image: ^4.2.0
   tab_container: ^3.5.3
   barcode_widget: ^2.0.4
