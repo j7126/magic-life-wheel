@@ -1,6 +1,6 @@
 # Magic Life Wheel
 
-An easy to use life counter app for Magic: The Gathering or other games.
+An easy to use life counter app for MTG or other games.
 
 [<img src="https://j7126.dev/store-badges/play.png" style="width: 250px;">](https://play.google.com/store/apps/details?id=dev.j7126.magic_life_wheel)
 
