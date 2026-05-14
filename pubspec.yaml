@@ -40,6 +40,7 @@ dependencies:
   web: ^1.1.0
   flutter_fullscreen: ^1.2.0
   protobuf: ^6.0.0
+  xdg_desktop_portal: ^0.1.14
 
 dev_dependencies:
   flutter_lints: ^6.0.0
