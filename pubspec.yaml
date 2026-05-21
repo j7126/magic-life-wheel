@@ -5,8 +5,8 @@ publish_to: 'none'
 version: 1.10.3+35
 
 environment:
-  sdk: '>=3.9.0 <4.0.0'
-  flutter: '>=3.35.0'
+  sdk: '>=3.11.0 <4.0.0'
+  flutter: '>=3.41.6'
 
 dependencies:
   flutter:
@@ -15,7 +15,7 @@ dependencies:
   wakelock_plus: ^1.4.0
   gap: ^3.0.1
   dynamic_color: ^1.7.0
-  package_info_plus: ^9.0.0
+  package_info_plus: ^10.1.0
   flutter_svg: ^2.0.10
   url_launcher: ^6.3.0
   json_annotation: ^4.9.0
@@ -33,8 +33,8 @@ dependencies:
   image: ^4.2.0
   tab_container: ^3.5.3
   barcode_widget: ^2.0.4
-  flutter_zxing: ^2.1.0
-  camera: ^0.11.0+1
+  flutter_zxing: ^2.3.0
+  camera: ^0.12.0
   system_info2: ^4.0.0
   app_links: ^7.0.0
   web: ^1.1.0
