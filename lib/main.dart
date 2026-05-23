@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_links/app_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:magic_life_wheel/settings/settings.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/platform_util/web/index.dart';
 import 'package:magic_life_wheel/util/color/darken.dart';
+import 'package:xdg_desktop_portal/xdg_desktop_portal.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +33,8 @@ class _AppState extends State<App> {
   String? waitingUri;
   late AppLinks _appLinks;
 
+  Color? overrideAcentColor;
+
   void mtgDataOnLoad() {
     setState(() {});
   }
@@ -39,6 +44,37 @@ class _AppState extends State<App> {
     setState(() {
       settingsReady = true;
     });
+  }
+
+
+  void getAccentColor() async {
+    if (Platform.isLinux) {
+      try {
+        var client = XdgDesktopPortalClient();
+        var result = await client.settings.read(
+          "org.freedesktop.appearance",
+          "accent-color",
+        );
+        var vals = List.from(
+          result.asVariant().asStruct().map((x) => x.asDouble()),
+        );
+        if (vals.length == 3 && !vals.any((x) => x < 0 || x > 1)) {
+          var color = Color.fromARGB(
+            255,
+            (255 * vals[0]).floor(),
+            (255 * vals[1]).floor(),
+            (255 * vals[2]).floor(),
+          );
+          if (mounted) {
+            setState(() {
+              overrideAcentColor = color;
+            });
+          }
+        }
+      } catch (exception) {
+        overrideAcentColor = null;
+      }
+    }
   }
 
   @override
@@ -58,6 +94,7 @@ class _AppState extends State<App> {
 
     Service.dataLoader = MTGDataLoader(mtgDataOnLoad);
     loadSettingsService();
+    getAccentColor();
     super.initState();
   }
 
@@ -65,7 +102,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-        var seedColor = darkDynamic?.primary ?? Colors.green;
+        var seedColor = overrideAcentColor ?? darkDynamic?.primary ?? Colors.green;
         var baseColorScheme = ColorScheme.fromSeed(
           seedColor: seedColor,
           brightness: Brightness.dark,
