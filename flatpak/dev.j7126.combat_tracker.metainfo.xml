@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>dev.j7126.magic_life_wheel</id>
+
+    <name>Magic Life Wheel</name>
+    <summary>An easy to use life counter app for MTG or other games.</summary>
+    <url type="homepage">https://github.com/j7126/magic-life-wheel</url>
+    <url type="bugtracker">https://github.com/j7126/magic-life-wheel/issues</url>
+    <url type="vcs-browser">https://github.com/j7126/magic-life-wheel</url>
+
+    <metadata_license>MIT</metadata_license>
+    <project_license>AGPL-3.0-or-later</project_license>
+
+    <developer id="dev.j7126">
+        <name>Jefferey Neuffer</name>
+    </developer>
+
+    <categories>
+        <category>Game</category>
+    </categories>
+
+    <recommends>
+        <control>touch</control>
+    </recommends>
+
+    <description>
+        <p>
+            An easy to use life counter app for MTG or other games.
+        </p>
+        <ul>
+            <li>Support for 2 to 6 players, with various layouts.</li>
+            <li>Customize player backgrounds</li>
+            <li>Track commander damage. (With support for partner commanders!)</li>
+            <li>Damage history.</li>
+            <li>Transfer the game to another device using a qr code.</li>
+            <li>Support for planechase.</li>
+            <li>Quickly rearrange seating positions by dragging, or randomize them.</li>
+        </ul>
+    </description>
+
+    <branding>
+        <color type="primary" scheme_preference="light">#4c9643</color>
+        <color type="primary" scheme_preference="dark">#35682f</color>
+    </branding>
+
+    <content_rating type="oars-1.1" />
+
+    <screenshots>
+        <screenshot type="default">
+            <image>
+                https://raw.githubusercontent.com/j7126/magic-life-wheel/fe988716a5032452f930476e494abaf077337bc4/screenshots/commander_game.png</image>
+            <caption>Commander Game</caption>
+        </screenshot>
+        <screenshot>
+            <image>
+                https://raw.githubusercontent.com/j7126/magic-life-wheel/fe988716a5032452f930476e494abaf077337bc4/screenshots/standard_game.png</image>
+            <caption>Standard Game</caption>
+        </screenshot>
+        <screenshot>
+            <image>
+                https://raw.githubusercontent.com/j7126/magic-life-wheel/fe988716a5032452f930476e494abaf077337bc4/screenshots/menu.png</image>
+            <caption>Menu</caption>
+        </screenshot>
+        <screenshot>
+            <image>
+                https://raw.githubusercontent.com/j7126/magic-life-wheel/fe988716a5032452f930476e494abaf077337bc4/screenshots/damage_history.png</image>
+            <caption>Damage History</caption>
+        </screenshot>
+    </screenshots>
+
+    <releases>
+        
+    </releases>
+
+    <launchable type="desktop-id">dev.j7126.magic-life-wheel.desktop</launchable>
+</component>
