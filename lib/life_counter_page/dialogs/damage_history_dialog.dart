@@ -238,7 +238,7 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                                     }
                                     return Stack(
                                       children: [
-                                        if (bg != null) bg,
+                                        ?bg,
                                         SizedBox(
                                           width: 64,
                                           height: 64,

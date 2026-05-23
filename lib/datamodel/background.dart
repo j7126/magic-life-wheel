@@ -98,7 +98,7 @@ class Background {
   )
   List<Color>? get colors => _colors?.map((e) => Color(e)).toList();
   set colors(List<Color>? value) {
-    _colors = value?.map((e) => e.value).toList();
+    _colors = value?.map((e) => e.toARGB32()).toList();
     if (value != null) {
       card = null;
       cardPartner = null;

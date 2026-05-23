@@ -725,8 +725,8 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                                                               cropPercent: 1,
                                                               actionButtonsBackgroundBorderRadius:
                                                                   BorderRadius.circular(16),
-                                                              actionButtonsBackgroundColor: Colors.black.withOpacity(
-                                                                0.4,
+                                                              actionButtonsBackgroundColor: Colors.black.withValues(
+                                                                alpha: 0.4,
                                                               ),
                                                               tryHarder: false,
                                                             ),

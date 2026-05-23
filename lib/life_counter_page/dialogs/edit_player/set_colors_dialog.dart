@@ -67,7 +67,7 @@ class _SetColorsDialogState extends State<SetColorsDialog> {
   Widget build(BuildContext context) {
     colorButton(Color color, double constrainedWidth, bool darkIcon) {
       var size = constrainedWidth / 5;
-      var checked = colors.any((x) => x.value == color.value);
+      var checked = colors.any((x) => x.toARGB32() == color.toARGB32());
       var foregroundColor = darkIcon ? Colors.black : Colors.white;
 
       return SizedBox(
@@ -81,7 +81,7 @@ class _SetColorsDialogState extends State<SetColorsDialog> {
                 if (!checked) {
                   colors.add(color);
                 } else {
-                  colors.removeWhere((x) => x.value == color.value);
+                  colors.removeWhere((x) => x.toARGB32() == color.toARGB32());
                 }
               });
             },
