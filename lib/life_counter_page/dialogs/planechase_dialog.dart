@@ -307,8 +307,14 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
       contentPadding: EdgeInsets.zero,
       title: Row(
         children: [
-          const Text("Planechase"),
-          const Spacer(),
+          Expanded(
+            child: const Text(
+              "Planechase",
+              overflow: TextOverflow.fade,
+              maxLines: 1,
+              softWrap: false,
+            ),
+          ),
           if (card != null)
             IconButton(
               icon: Icon(PlanechaseDialog.showInfo ? Icons.image_outlined : Icons.info_outline),

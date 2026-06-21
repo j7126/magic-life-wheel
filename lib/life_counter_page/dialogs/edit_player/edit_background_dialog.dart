@@ -462,14 +462,18 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                           Navigator.of(context).pop();
                         },
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Text(
-                          "Background",
-                          style: Theme.of(context).textTheme.titleLarge,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: Text(
+                            "Background",
+                            style: Theme.of(context).textTheme.titleLarge,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
+                          ),
                         ),
                       ),
-                      const Spacer(),
                       IconButton(
                         onPressed: setCustomImage,
                         icon: const Icon(Icons.image_outlined),

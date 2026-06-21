@@ -67,8 +67,14 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
       contentPadding: EdgeInsets.zero,
       title: Row(
         children: [
-          const Text("Damage History"),
-          const Spacer(),
+          Expanded(
+            child: const Text(
+              "Damage History",
+              overflow: TextOverflow.fade,
+              maxLines: 1,
+              softWrap: false,
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () {
@@ -279,31 +285,37 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                                 ),
                               ),
                             ),
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Text(
-                                    event.change > 0
-                                        ? "Life Gain"
-                                        : event.fromCommander != null
-                                        ? "Commander"
-                                        : "Damage",
-                                    style: const TextStyle(fontSize: 28),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Text(
-                                    timeDiffString(event.time),
-                                    style: const TextStyle(
-                                      fontSize: 16,
+                            Expanded(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Text(
+                                        event.change > 0
+                                            ? "Life Gain"
+                                            : event.fromCommander != null
+                                            ? "Commander"
+                                            : "Damage",
+                                        style: const TextStyle(fontSize: 28),
+                                      ),
                                     ),
-                                  ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Text(
+                                        timeDiffString(event.time),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ],
                         ),
@@ -369,11 +381,17 @@ class _DamageHistoryDialogDialog extends State<DamageHistoryDialog> {
                                 ),
                               ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(right: 8.0),
-                              child: Text(
-                                "Game Start",
-                                style: TextStyle(fontSize: 28),
+                            Expanded(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: const Padding(
+                                  padding: EdgeInsets.only(right: 8.0),
+                                  child: Text(
+                                    "Game Start",
+                                    style: TextStyle(fontSize: 28),
+                                  ),
+                                ),
                               ),
                             ),
                           ],

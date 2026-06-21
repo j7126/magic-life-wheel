@@ -86,8 +86,14 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
       contentPadding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 8.0),
       title: Row(
         children: [
-          const Text("Commander"),
-          const Spacer(),
+          Expanded(
+            child: const Text(
+              "Commander",
+              overflow: TextOverflow.fade,
+              maxLines: 1,
+              softWrap: false,
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () {

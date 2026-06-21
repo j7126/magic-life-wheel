@@ -77,8 +77,14 @@ class _EditPlayerDialogState extends State<EditPlayerDialog> {
       contentPadding: const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 32.0, top: 8.0),
       title: Row(
         children: [
-          const Text("Edit Player"),
-          const Spacer(),
+          Expanded(
+            child: const Text(
+              "Edit Player",
+              overflow: TextOverflow.fade,
+              maxLines: 1,
+              softWrap: false,
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {

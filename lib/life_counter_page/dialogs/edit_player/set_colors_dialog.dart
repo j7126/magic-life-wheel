@@ -121,11 +121,17 @@ class _SetColorsDialogState extends State<SetColorsDialog> {
                   Navigator.of(context).pop();
                 },
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 4.0),
-                child: Text("Customise Color"),
+              Expanded(
+                child: const Padding(
+                  padding: EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    "Customise Color",
+                    overflow: TextOverflow.fade,
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                ),
               ),
-              const Spacer(),
               IconButton.outlined(
                 icon: const Icon(Icons.check),
                 onPressed: () {
