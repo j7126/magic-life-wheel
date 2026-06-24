@@ -302,8 +302,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                     ],
                   ),
                   Gap(12.0),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
