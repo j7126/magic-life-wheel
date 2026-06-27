@@ -1,0 +1,13 @@
+syntax = "proto3";
+package magic_life_wheel;
+
+message PlayerTransfer {
+  string uuid = 1;
+  string name = 2;
+  bool enableDead = 3;
+  int32 life = 4;
+  map<string, int32> commanderDamage = 5;
+  string card = 6;
+  string cardPartner = 7;
+  repeated uint32 colors = 8;
+}

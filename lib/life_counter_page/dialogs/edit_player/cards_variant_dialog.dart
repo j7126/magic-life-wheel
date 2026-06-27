@@ -4,7 +4,7 @@ import 'package:magic_life_wheel/datamodel/player.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/dialogs/card_full_dialog.dart';
 import 'package:magic_life_wheel/mtgjson/extension/card_set.dart';
-import 'package:magic_life_wheel/mtgjson/magic_life_wheel_protobuf/card_set.pb.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel/generated/card_set.pb.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 

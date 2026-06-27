@@ -1,2 +1,2 @@
-cd ./lib/mtgjson/magic_life_wheel_protobuf/
+cd ./lib/mtgjson/magic_life_wheel/proto/
 ./protobuf_gen.sh

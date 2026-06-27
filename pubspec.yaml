@@ -41,7 +41,7 @@ dependencies:
   flutter_fullscreen: ^1.2.0
   protobuf: ^6.0.0
   xdg_desktop_portal: ^0.1.14
-
+  archive: ^4.0.9
 dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.2

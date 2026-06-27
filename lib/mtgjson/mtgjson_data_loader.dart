@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:magic_life_wheel/mtgjson/dataModel/sets.dart';
-import 'package:magic_life_wheel/mtgjson/magic_life_wheel_protobuf/all_set_cards.pb.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel/generated/all_set_cards.pb.dart';
 
 class MTGDataLoader {
   MTGDataLoader(this.onLoad) {

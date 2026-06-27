@@ -1,5 +1,5 @@
 syntax = "proto3";
-package mtgjson_converter_dart;
+package magic_life_wheel;
 
 import "card_set.proto";
 

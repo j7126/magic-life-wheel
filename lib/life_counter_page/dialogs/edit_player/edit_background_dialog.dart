@@ -12,7 +12,7 @@ import 'package:magic_life_wheel/dialogs/message_dialog.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/set_colors_dialog.dart';
 import 'package:magic_life_wheel/icons/custom_icons.dart';
 import 'package:magic_life_wheel/mtgjson/extension/card_set.dart';
-import 'package:magic_life_wheel/mtgjson/magic_life_wheel_protobuf/card_set.pb.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel/generated/card_set.pb.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/cards_variant_dialog.dart';

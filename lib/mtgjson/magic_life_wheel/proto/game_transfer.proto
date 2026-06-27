@@ -1,0 +1,10 @@
+syntax = "proto3";
+package magic_life_wheel;
+
+import "player_transfer.proto";
+
+message GameTransfer {
+  int32 numPlayers = 1;
+  int32 layoutId = 2;
+  repeated PlayerTransfer players = 3;
+}

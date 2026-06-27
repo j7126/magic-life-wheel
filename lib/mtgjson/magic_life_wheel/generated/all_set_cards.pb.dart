@@ -38,8 +38,8 @@ class ProtobufAllSetCards extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ProtobufAllSetCards',
-      package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'mtgjson_converter_dart'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'magic_life_wheel'),
       createEmptyInstance: create)
     ..pPM<$0.CardSet>(1, _omitFieldNames ? '' : 'data',
         subBuilder: $0.CardSet.create)

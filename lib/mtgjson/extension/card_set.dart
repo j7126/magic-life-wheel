@@ -1,4 +1,4 @@
-import 'package:magic_life_wheel/mtgjson/magic_life_wheel_protobuf/card_set.pb.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel/generated/card_set.pb.dart';
 import 'package:string_normalizer/string_normalizer.dart';
 
 extension CardSetExtension on CardSet {

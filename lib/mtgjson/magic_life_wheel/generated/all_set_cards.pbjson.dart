@@ -24,7 +24,7 @@ const ProtobufAllSetCards$json = {
       '3': 1,
       '4': 3,
       '5': 11,
-      '6': '.mtgjson_converter_dart.CardSet',
+      '6': '.magic_life_wheel.CardSet',
       '10': 'data'
     },
   ],
@@ -32,5 +32,5 @@ const ProtobufAllSetCards$json = {
 
 /// Descriptor for `ProtobufAllSetCards`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List protobufAllSetCardsDescriptor = $convert.base64Decode(
-    'ChNQcm90b2J1ZkFsbFNldENhcmRzEjMKBGRhdGEYASADKAsyHy5tdGdqc29uX2NvbnZlcnRlcl'
-    '9kYXJ0LkNhcmRTZXRSBGRhdGE=');
+    'ChNQcm90b2J1ZkFsbFNldENhcmRzEi0KBGRhdGEYASADKAsyGS5tYWdpY19saWZlX3doZWVsLk'
+    'NhcmRTZXRSBGRhdGE=');

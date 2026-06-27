@@ -10,7 +10,7 @@ import 'package:magic_life_wheel/mtgjson/dataModel/set.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 import 'package:mana_icons_flutter/mana_icons_flutter.dart';
-import 'package:magic_life_wheel/mtgjson/magic_life_wheel_protobuf/card_set.pb.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel/generated/card_set.pb.dart';
 import 'package:magic_life_wheel/icons/custom_icons.dart';
 
 class PlanechaseDialog extends StatefulWidget {

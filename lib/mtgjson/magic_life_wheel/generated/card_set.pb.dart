@@ -81,8 +81,8 @@ class CardSet extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'CardSet',
-      package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'mtgjson_converter_dart'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'magic_life_wheel'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'name')
