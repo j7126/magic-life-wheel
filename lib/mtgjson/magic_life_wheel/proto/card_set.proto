@@ -1,5 +1,5 @@
 syntax = "proto3";
-package magic_life_wheel;
+package mtgjson_converter_dart;
 
 message CardSet {
   string uuid = 1;

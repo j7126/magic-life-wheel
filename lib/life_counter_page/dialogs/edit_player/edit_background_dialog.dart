@@ -262,7 +262,7 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Text(
-                    Service.dataLoader.sets?.getSet(selectedCard.setCode)?.name ?? "Unknown Set",
+                    Service.dataLoader.sets?.sets.firstWhereOrNull((element) => element.code == selectedCard?.setCode)?.name ?? "Unknown Set",
                     style: const TextStyle(
                       fontSize: 14.0,
                     ),

@@ -1,0 +1,9 @@
+syntax = "proto3";
+package mtgjson_converter_dart;
+
+import "set.proto";
+
+message SetList {
+  repeated SetListSet sets = 1;
+  string buildDate = 2;
+}

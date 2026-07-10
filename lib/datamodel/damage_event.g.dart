@@ -12,9 +12,10 @@ DamageEvent _$DamageEventFromJson(Map<String, dynamic> json) => DamageEvent(
   fromCommander: json['fromCommander'] as String?,
 )..time = DateTime.parse(json['time'] as String);
 
-Map<String, dynamic> _$DamageEventToJson(DamageEvent instance) => <String, dynamic>{
-  'priorLife': instance.priorLife,
-  'change': instance.change,
-  'fromCommander': instance.fromCommander,
-  'time': instance.time.toIso8601String(),
-};
+Map<String, dynamic> _$DamageEventToJson(DamageEvent instance) =>
+    <String, dynamic>{
+      'priorLife': instance.priorLife,
+      'change': instance.change,
+      'fromCommander': instance.fromCommander,
+      'time': instance.time.toIso8601String(),
+    };

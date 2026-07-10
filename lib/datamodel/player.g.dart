@@ -9,9 +9,11 @@ part of 'player.dart';
 Player _$PlayerFromJson(Map<String, dynamic> json) =>
     Player(
         name: json['name'] as String,
+        background: json['background'] == null
+            ? null
+            : Background.fromJson(json['background'] as Map<String, dynamic>),
       )
       ..uuid = json['uuid'] as String
-      ..background = Background.fromJson(json['background'] as Map<String, dynamic>)
       ..enableDead = json['enableDead'] as bool
       ..life = (json['life'] as num).toInt()
       ..commanderDamage = Map<String, int>.from(json['commanderDamage'] as Map)

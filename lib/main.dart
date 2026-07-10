@@ -27,25 +27,25 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  bool settingsReady = false;
-  bool get ready => settingsReady;
+  bool ready = false;
 
   String? waitingUri;
   late AppLinks _appLinks;
 
   Color? overrideAcentColor;
 
-  void mtgDataOnLoad() {
+  void mtgDataLoaded() {
     setState(() {});
   }
 
-  void loadSettingsService() async {
-    Service.settingsService = await SettingsService.build();
-    setState(() {
-      settingsReady = true;
-    });
+  void loadMtgData() async {
+    Service.dataLoader = MTGDataLoader(mtgDataLoaded);
+    Service.dataLoader.loadAll();
   }
 
+  Future loadSettingsService() async {
+    Service.settingsService = await SettingsService.build();
+  }
 
   void getAccentColor() async {
     if (Platform.isLinux) {
@@ -77,6 +77,15 @@ class _AppState extends State<App> {
     }
   }
 
+  void load() async {
+    await loadSettingsService();
+    setState(() {
+      ready = true;
+    });
+    loadMtgData();
+    getAccentColor();
+  }
+
   @override
   void initState() {
     _appLinks = AppLinks();
@@ -92,9 +101,7 @@ class _AppState extends State<App> {
       }
     });
 
-    Service.dataLoader = MTGDataLoader(mtgDataOnLoad);
-    loadSettingsService();
-    getAccentColor();
+    load();
     super.initState();
   }
 

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/planar_dice_dialog.dart';
-import 'package:magic_life_wheel/mtgjson/dataModel/set.dart';
+import 'package:magic_life_wheel/mtgjson/magic_life_wheel/generated/set.pb.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 import 'package:mana_icons_flutter/mana_icons_flutter.dart';
@@ -22,7 +22,7 @@ class PlanechaseDialog extends StatefulWidget {
   static List<CardSet>? planechaseDeck;
   static bool rotated = false;
   static bool showInfo = false;
-  static List<MtgSet> availableSets = [];
+  static List<SetListSet> availableSets = [];
 
   @override
   State<PlanechaseDialog> createState() => _PlanechaseDialogState();
@@ -48,7 +48,7 @@ class PlanechaseDialog extends StatefulWidget {
                   : cardsWithSameName.value
                         .sortedBy(
                           (card) =>
-                              Service.dataLoader.sets!.data.firstWhere((set) => set.code == card.setCode).releaseDate,
+                              Service.dataLoader.sets!.sets.firstWhere((set) => set.code == card.setCode).releaseDate,
                         )
                         .last,
             )
@@ -177,7 +177,7 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
       PlanechaseDialog.availableSets = [];
       for (var card in Service.dataLoader.allSetCards!.data) {
         if (card.hasTypePlane() && !PlanechaseDialog.availableSets.any((x) => x.code == card.setCode)) {
-          var set = Service.dataLoader.sets!.data.firstWhereOrNull((x) => x.code == card.setCode);
+          var set = Service.dataLoader.sets!.sets.firstWhereOrNull((x) => x.code == card.setCode);
           if (set != null) {
             PlanechaseDialog.availableSets.add(set);
           }

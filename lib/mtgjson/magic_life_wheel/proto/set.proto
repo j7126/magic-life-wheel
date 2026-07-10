@@ -1,0 +1,8 @@
+syntax = "proto3";
+package mtgjson_converter_dart;
+
+message SetListSet {
+  string code = 1;
+  string name = 2;
+  string releaseDate = 3;
+}

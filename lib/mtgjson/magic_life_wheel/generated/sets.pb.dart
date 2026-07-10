@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from all_set_cards.proto.
+// Generated from sets.proto.
 
 // @dart = 3.3
 
@@ -14,61 +14,60 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'card_set.pb.dart' as $0;
+import 'set.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-class ProtobufAllSetCards extends $pb.GeneratedMessage {
-  factory ProtobufAllSetCards({
-    $core.Iterable<$0.CardSet>? data,
+class SetList extends $pb.GeneratedMessage {
+  factory SetList({
+    $core.Iterable<$0.SetListSet>? sets,
     $core.String? buildDate,
   }) {
     final result = create();
-    if (data != null) result.data.addAll(data);
+    if (sets != null) result.sets.addAll(sets);
     if (buildDate != null) result.buildDate = buildDate;
     return result;
   }
 
-  ProtobufAllSetCards._();
+  SetList._();
 
-  factory ProtobufAllSetCards.fromBuffer($core.List<$core.int> data,
+  factory SetList.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ProtobufAllSetCards.fromJson($core.String json,
+  factory SetList.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ProtobufAllSetCards',
+      _omitMessageNames ? '' : 'SetList',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'mtgjson_converter_dart'),
       createEmptyInstance: create)
-    ..pPM<$0.CardSet>(1, _omitFieldNames ? '' : 'data',
-        subBuilder: $0.CardSet.create)
+    ..pPM<$0.SetListSet>(1, _omitFieldNames ? '' : 'sets',
+        subBuilder: $0.SetListSet.create)
     ..aOS(2, _omitFieldNames ? '' : 'buildDate', protoName: 'buildDate')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ProtobufAllSetCards clone() => deepCopy();
+  SetList clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ProtobufAllSetCards copyWith(void Function(ProtobufAllSetCards) updates) =>
-      super.copyWith((message) => updates(message as ProtobufAllSetCards))
-          as ProtobufAllSetCards;
+  SetList copyWith(void Function(SetList) updates) =>
+      super.copyWith((message) => updates(message as SetList)) as SetList;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ProtobufAllSetCards create() => ProtobufAllSetCards._();
+  static SetList create() => SetList._();
   @$core.override
-  ProtobufAllSetCards createEmptyInstance() => create();
+  SetList createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ProtobufAllSetCards getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ProtobufAllSetCards>(create);
-  static ProtobufAllSetCards? _defaultInstance;
+  static SetList getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SetList>(create);
+  static SetList? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$0.CardSet> get data => $_getList(0);
+  $pb.PbList<$0.SetListSet> get sets => $_getList(0);
 
   @$pb.TagNumber(2)
   $core.String get buildDate => $_getSZ(1);

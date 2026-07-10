@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from all_set_cards.proto.
+// Generated from sets.proto.
 
 // @dart = 3.3
 
@@ -15,23 +15,23 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use protobufAllSetCardsDescriptor instead')
-const ProtobufAllSetCards$json = {
-  '1': 'ProtobufAllSetCards',
+@$core.Deprecated('Use setListDescriptor instead')
+const SetList$json = {
+  '1': 'SetList',
   '2': [
     {
-      '1': 'data',
+      '1': 'sets',
       '3': 1,
       '4': 3,
       '5': 11,
-      '6': '.mtgjson_converter_dart.CardSet',
-      '10': 'data'
+      '6': '.mtgjson_converter_dart.SetListSet',
+      '10': 'sets'
     },
     {'1': 'buildDate', '3': 2, '4': 1, '5': 9, '10': 'buildDate'},
   ],
 };
 
-/// Descriptor for `ProtobufAllSetCards`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List protobufAllSetCardsDescriptor = $convert.base64Decode(
-    'ChNQcm90b2J1ZkFsbFNldENhcmRzEjMKBGRhdGEYASADKAsyHy5tdGdqc29uX2NvbnZlcnRlcl'
-    '9kYXJ0LkNhcmRTZXRSBGRhdGESHAoJYnVpbGREYXRlGAIgASgJUglidWlsZERhdGU=');
+/// Descriptor for `SetList`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setListDescriptor = $convert.base64Decode(
+    'CgdTZXRMaXN0EjYKBHNldHMYASADKAsyIi5tdGdqc29uX2NvbnZlcnRlcl9kYXJ0LlNldExpc3'
+    'RTZXRSBHNldHMSHAoJYnVpbGREYXRlGAIgASgJUglidWlsZERhdGU=');

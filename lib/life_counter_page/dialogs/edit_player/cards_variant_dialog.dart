@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/player.dart';
@@ -62,7 +63,8 @@ class _CardsVariantDialogState extends State<CardsVariantDialog> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Text(
-                      Service.dataLoader.sets?.getSet(card.setCode)?.name ?? "Unknown Set",
+                      Service.dataLoader.sets?.sets.firstWhereOrNull((element) => element.code == card.setCode)?.name ??
+                          "Unknown Set",
                       style: const TextStyle(
                         fontSize: 14.0,
                       ),

@@ -1,4 +1,6 @@
 import 'package:magic_life_wheel/icons/custom_icons.dart';
+import 'package:magic_life_wheel/mtgjson/data_updater.dart';
+import 'package:magic_life_wheel/static_service.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -315,6 +317,51 @@ class _AboutPageState extends State<AboutPage> {
                     ),
                   ),
                 ),
+                if (Service.settingsService.pref_getScryfallImages)
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          const Icon(
+                            Icons.image_outlined,
+                            size: 32,
+                            color: Color.fromARGB(255, 127, 127, 127),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Card Data',
+                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                      color: const Color.fromARGB(255, 229, 229, 229),
+                                    ),
+                                  ),
+                                  Text(
+                                    "Current version is ${Service.dataLoader.allSetCards?.buildDate ?? "Unknown"}",
+                                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                      color: const Color.fromARGB(255, 229, 229, 229),
+                                    ),
+                                  ),
+                                  if (DataUpdater.status != null)
+                                    Text(
+                                      DataUpdater.status!,
+                                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                        color: const Color.fromARGB(255, 229, 229, 229),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 const Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Text(
