@@ -77,7 +77,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
     if (result == null) {
       dataError();
     } else {
-      useData(result.$1, result.$2);
+      await useData(result.$1, result.$2);
     }
 
     if (mounted) {
@@ -87,35 +87,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
     }
   }
 
-  void useBase64Data(String? data) async {
-    setState(() {
-      importingData = true;
-    });
-
-    if (data == null) {
-      dataError();
-      await Future.delayed(const Duration(milliseconds: 1000));
-      setState(() {
-        importingData = false;
-      });
-      return;
-    }
-
-    var result = await TransferUrlService.parseBase64Data(data);
-    if (result == null) {
-      dataError();
-    } else {
-      useData(result.$1, result.$2);
-    }
-
-    if (mounted) {
-      setState(() {
-        importingData = false;
-      });
-    }
-  }
-
-  void useData(List<Player> players, int layoutId) async {
+  Future useData(List<Player> players, int layoutId) async {
     if (!widget.game.players.any((x) => !x.isReset) || await _showResetWarning(players.length)) {
       if (mounted) {
         setState(() {
