@@ -14,7 +14,6 @@ import 'package:magic_life_wheel/life_counter_page/dialogs/commander_damage_dial
 import 'package:magic_life_wheel/life_counter_page/card_image/background_widget.dart';
 import 'package:magic_life_wheel/life_counter_page/dialogs/edit_player/edit_player_dialog.dart';
 import 'package:magic_life_wheel/widgets/animated_scale_on_change.dart';
-import 'package:magic_life_wheel/widgets/icon_shim.dart';
 
 class Counter extends StatefulWidget {
   const Counter({
@@ -212,7 +211,7 @@ class _CounterState extends State<Counter> {
         : IconButton(
             icon: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: IconX(
+              child: Icon(
                 KeyruneIcons.ss_cmd,
                 size: 28.0,
                 shadows: onBackgroundShadow,
@@ -407,7 +406,7 @@ class _CounterState extends State<Counter> {
                                                       ),
                                                     ),
                                                   )
-                                                : IconX(
+                                                : Icon(
                                                     Icons.remove,
                                                     shadows: onBackgroundShadow,
                                                     size: 28,
@@ -484,7 +483,7 @@ class _CounterState extends State<Counter> {
                                                       ),
                                                     ),
                                                   )
-                                                : IconX(
+                                                : Icon(
                                                     Icons.add,
                                                     shadows: onBackgroundShadow,
                                                     size: 28,
