@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:magic_life_wheel/mtgjson/data_updater.dart';
 import 'package:magic_life_wheel/mtgjson/file_names.dart';
@@ -38,13 +39,15 @@ class MTGDataLoader {
   }
 
   static Future<Uint8List> readData(String name) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File("${directory.path}/$name.bin");
-    if (await file.exists()) {
-      return await file.readAsBytes();
-    } else {
-      var data = await rootBundle.load('data/$name.bin');
-      return data.buffer.asUint8List();
+    if (!kIsWeb) {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File("${directory.path}/$name.bin");
+      if (await file.exists()) {
+        return await file.readAsBytes();
+      }
     }
+
+    var data = await rootBundle.load('data/$name.bin');
+    return data.buffer.asUint8List();
   }
 }
