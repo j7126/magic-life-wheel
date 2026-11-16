@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magic_life_wheel/datamodel/background.dart';
 import 'package:magic_life_wheel/life_counter_page/card_image/card_image.dart';
 

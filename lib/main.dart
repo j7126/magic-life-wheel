@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:app_links/app_links.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter_fullscreen/flutter_fullscreen.dart';
 import 'package:magic_life_wheel/mtgjson/mtgjson_data_loader.dart';

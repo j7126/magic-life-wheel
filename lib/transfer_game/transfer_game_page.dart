@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
 import 'package:gap/gap.dart';
 import 'package:magic_life_wheel/datamodel/game.dart';
@@ -14,7 +15,6 @@ import 'package:magic_life_wheel/dialogs/warning_dialog.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:magic_life_wheel/transfer_game/transfer_url_service.dart';
 import 'package:system_info2/system_info2.dart';
-import 'package:tab_container/tab_container.dart';
 
 class TransferGamePage extends StatefulWidget {
   const TransferGamePage({super.key, required this.game});
@@ -184,9 +184,7 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
 
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
-    var maxContentWidth = width - 68.0;
-    var maxContentHeight = height - (width > height ? 278 : 352) - (hasCustomImage ? 56.0 : 0.0);
-    var maxDimention = min(maxContentHeight, maxContentWidth);
+    var iconDimension = min(width, height) / 3;
 
     cameraError(String message, Function() retry) => Center(
       child: Column(
@@ -194,46 +192,40 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
         children: [
           Icon(
             Icons.videocam_off,
-            size: maxDimention / 3,
             color: Colors.black,
+            size: iconDimension,
           ),
-          SizedBox(
-            width: maxDimention / 3 * 2,
-            child: Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.black),
-            ),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.black),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
-            child: SizedBox(
-              width: maxDimention / 3 * 2,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    style: ButtonStyle(
-                      foregroundColor: WidgetStatePropertyAll(
-                        HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.4).toColor(),
-                      ),
-                      iconColor: WidgetStatePropertyAll(
-                        HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.4).toColor(),
-                      ),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  style: ButtonStyle(
+                    foregroundColor: WidgetStatePropertyAll(
+                      HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.4).toColor(),
                     ),
-                    onPressed: retry,
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.restart_alt),
-                        Gap(4.0),
-                        Text("Retry"),
-                      ],
+                    iconColor: WidgetStatePropertyAll(
+                      HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.4).toColor(),
                     ),
                   ),
-                ],
-              ),
+                  onPressed: retry,
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.restart_alt),
+                      Gap(4.0),
+                      Text("Retry"),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -307,92 +299,282 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                         ),
                       ),
                     const Gap(12.0),
-                    TabContainer(
+                    TabBar(
                       controller: _tabController,
-                      tabEdge: width > height ? TabEdge.left : TabEdge.top,
-                      tabExtent: width > height ? 150 : 50,
-                      borderRadius: BorderRadius.circular(10),
-                      tabBorderRadius: BorderRadius.circular(10),
-                      childPadding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0, bottom: 12.0),
-                      selectedTextStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Colors.black,
-                      ),
-                      unselectedTextStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                      colors: [
-                        Colors.white,
-                        HSLColor.fromColor(Theme.of(context).colorScheme.primary).withLightness(0.9).toColor(),
-                      ],
                       tabs: [
-                        SizedBox(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Builder(
-                                builder: (context) {
-                                  return Icon(
-                                    Icons.call_made,
-                                    color: DefaultTextStyle.of(context).style.color,
-                                  );
-                                },
-                              ),
-                              const Gap(8.0),
-                              const Text('Send'),
-                            ],
+                        Tab(
+                          icon: Icon(
+                            Icons.call_made,
                           ),
+                          text: 'Send',
                         ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Builder(
-                              builder: (context) {
-                                return Icon(
-                                  Icons.call_received,
-                                  color: DefaultTextStyle.of(context).style.color,
-                                );
-                              },
-                            ),
-                            const Gap(8.0),
-                            const Text('Import'),
-                          ],
+                        Tab(
+                          icon: Icon(
+                            Icons.call_received,
+                          ),
+                          text: 'Import',
                         ),
                       ],
-                      children: [
-                        Column(
-                          children: [
-                            const SizedBox(width: double.infinity),
-                            Text(
-                              "Use the \"Import\" tab to scan this QR code on the other device.",
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
-                            ),
-                            const Gap(8.0),
-                            SizedBox(
-                              width: maxDimention,
-                              height: maxDimention,
-                              child: ready
-                                  ? BarcodeWidget(
-                                      barcode: Barcode.qrCode(),
-                                      data: data,
-                                      backgroundColor: Colors.white,
-                                      padding: EdgeInsets.zero,
-                                    )
-                                  : const Center(
-                                      child: CircularProgressIndicator(),
+                    ),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  const SizedBox(width: double.infinity),
+                                  Text(
+                                    "Scan this QR code on the other device.",
+                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
+                                  ),
+                                  const Gap(8.0),
+                                  Flexible(
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: ready
+                                          ? BarcodeWidget(
+                                              barcode: Barcode.qrCode(),
+                                              data: data,
+                                              backgroundColor: Colors.white,
+                                              padding: EdgeInsets.zero,
+                                            )
+                                          : const Center(
+                                              child: CircularProgressIndicator(),
+                                            ),
                                     ),
-                            ),
-                            const Gap(8.0),
-                            Container(
-                              child: ready
-                                  ? SizedBox(
-                                      height: 38,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          FilledButton(
+                                  ),
+                                  const Gap(8.0),
+                                  Container(
+                                    child: ready
+                                        ? SizedBox(
+                                            height: 38,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                FilledButton(
+                                                  style: const ButtonStyle(
+                                                    padding: WidgetStatePropertyAll(
+                                                      EdgeInsets.symmetric(
+                                                        vertical: 2.0,
+                                                        horizontal: 20.0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    Clipboard.setData(
+                                                      ClipboardData(
+                                                        text: data,
+                                                      ),
+                                                    );
+                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text('Game data copied to clipboard!'),
+                                                        behavior: SnackBarBehavior.floating,
+                                                        margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 58.0),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: const Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.copy,
+                                                        size: 20,
+                                                      ),
+                                                      Gap(8.0),
+                                                      Text("Copy"),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        : null,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const SizedBox(width: double.infinity),
+                                  Text(
+                                    "Scan the QR code displayed on the other device.",
+                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
+                                  ),
+                                  const Gap(8.0),
+                                  Flexible(
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: Service.supportScanner
+                                          ? _tabController.index == 1
+                                                ? showLowPerformanceWarning
+                                                      // low performance warning
+                                                      ? Center(
+                                                          child: Column(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            children: [
+                                                              Icon(
+                                                                Icons.speed,
+                                                                color: Colors.black,
+                                                                size: iconDimension,
+                                                              ),
+                                                              const Text(
+                                                                "Your device has been detected to have low performance, the QR code scanner may not work.",
+                                                                textAlign: TextAlign.center,
+                                                                style: TextStyle(color: Colors.black),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets.only(top: 8.0),
+                                                                child: Row(
+                                                                  mainAxisSize: MainAxisSize.max,
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  children: [
+                                                                    TextButton(
+                                                                      style: ButtonStyle(
+                                                                        foregroundColor: WidgetStatePropertyAll(
+                                                                          HSLColor.fromColor(
+                                                                            Theme.of(context).colorScheme.primary,
+                                                                          ).withLightness(0.4).toColor(),
+                                                                        ),
+                                                                        iconColor: WidgetStatePropertyAll(
+                                                                          HSLColor.fromColor(
+                                                                            Theme.of(context).colorScheme.primary,
+                                                                          ).withLightness(0.4).toColor(),
+                                                                        ),
+                                                                      ),
+                                                                      child: const Row(
+                                                                        mainAxisSize: MainAxisSize.min,
+                                                                        children: [
+                                                                          Icon(Icons.arrow_forward),
+                                                                          Gap(4.0),
+                                                                          Text("Continue"),
+                                                                        ],
+                                                                      ),
+                                                                      onPressed: () {
+                                                                        setState(() {
+                                                                          showLowPerformanceWarning = false;
+                                                                        });
+                                                                      },
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : importingData
+                                                      // loader while importing data
+                                                      ? const Center(
+                                                          child: CircularProgressIndicator(),
+                                                        )
+                                                      : unknownCameraError
+                                                      // unknown camera error
+                                                      ? cameraError(
+                                                          "Unknown camera error!",
+                                                          () {
+                                                            setState(() {
+                                                              unknownCameraError = false;
+                                                            });
+                                                          },
+                                                        )
+                                                      : cameraDenied
+                                                      // camera access denied
+                                                      ? cameraError(
+                                                          "Camera permission denied!",
+                                                          () {
+                                                            setState(() {
+                                                              cameraDenied = false;
+                                                            });
+                                                          },
+                                                        )
+                                                      // qr reader
+                                                      : Stack(
+                                                          children: [
+                                                            Opacity(
+                                                              opacity: cameraReady ? 1 : 0,
+                                                              child: Container(
+                                                                clipBehavior: Clip.antiAlias,
+                                                                decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(16),
+                                                                ),
+                                                                child: Stack(
+                                                                  children: [
+                                                                    ReaderWidget(
+                                                                      codeFormat: Format.qrCode,
+                                                                      onScan: _onScanSuccess,
+                                                                      onScanFailure: _onScanFailure,
+                                                                      onControllerCreated: _onControllerCreated,
+                                                                      scanDelay: const Duration(milliseconds: 100),
+                                                                      scanDelaySuccess: const Duration(
+                                                                        milliseconds: 500,
+                                                                      ),
+                                                                      allowPinchZoom: true,
+                                                                      isMultiScan: false,
+                                                                      showGallery: false,
+                                                                      showFlashlight: false,
+                                                                      showToggleCamera: true,
+                                                                      actionButtonsAlignment: Alignment.bottomRight,
+                                                                      resolution: ResolutionPreset.high,
+                                                                      lensDirection: CameraLensDirection.back,
+                                                                      toggleCameraIcon: const Icon(Icons.cameraswitch),
+                                                                      showScannerOverlay: false,
+                                                                      cropPercent: 1,
+                                                                      actionButtonsBackgroundBorderRadius:
+                                                                          BorderRadius.circular(16),
+                                                                      actionButtonsBackgroundColor: Colors.black
+                                                                          .withValues(
+                                                                            alpha: 0.4,
+                                                                          ),
+                                                                      tryHarder: false,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            if (!cameraReady)
+                                                              const Center(
+                                                                child: CircularProgressIndicator(),
+                                                              ),
+                                                          ],
+                                                        )
+                                                // import tab not visible
+                                                : Container()
+                                          // qr scanning not supported
+                                          : Center(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    Icons.videocam_off,
+                                                    color: Colors.black,
+                                                    size: iconDimension,
+                                                  ),
+                                                  const Text(
+                                                    "QR scanning is not supported on this device",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(color: Colors.black),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                                  // paste button
+                                  const Gap(8.0),
+                                  SizedBox(
+                                    height: 38.0,
+                                    child: importingData
+                                        ? null
+                                        : FilledButton(
                                             style: const ButtonStyle(
                                               padding: WidgetStatePropertyAll(
                                                 EdgeInsets.symmetric(
@@ -401,248 +583,32 @@ class _TransferGamePageState extends State<TransferGamePage> with SingleTickerPr
                                                 ),
                                               ),
                                             ),
-                                            onPressed: () {
-                                              Clipboard.setData(
-                                                ClipboardData(
-                                                  text: data,
-                                                ),
-                                              );
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                const SnackBar(
-                                                  content: Text('Game data copied to clipboard!'),
-                                                  behavior: SnackBarBehavior.floating,
-                                                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 58.0),
-                                                ),
-                                              );
+                                            onPressed: () async {
+                                              setState(() {
+                                                importingData = true;
+                                              });
+                                              var data = await Clipboard.getData("text/plain");
+                                              useUrl(data?.text);
                                             },
                                             child: const Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Icon(
-                                                  Icons.copy,
+                                                  Icons.paste,
                                                   size: 20,
                                                 ),
                                                 Gap(8.0),
-                                                Text("Copy"),
+                                                Text("Paste"),
                                               ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    )
-                                  : null,
-                            ),
-                          ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(width: double.infinity),
-                            Text(
-                              "Scan the QR code displayed on the other device.",
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
-                            ),
-                            const Gap(8.0),
-                            SizedBox(
-                              width: maxDimention,
-                              height: maxDimention,
-                              child: Service.supportScanner
-                                  ? _tabController.index == 1
-                                        ? showLowPerformanceWarning
-                                              // low performance warning
-                                              ? Center(
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.speed,
-                                                        size: maxDimention / 3,
-                                                        color: Colors.black,
-                                                      ),
-                                                      SizedBox(
-                                                        width: maxDimention / 3 * 2,
-                                                        child: const Text(
-                                                          "Your device has been detected to have low performance, the QR code scanner may not work.",
-                                                          textAlign: TextAlign.center,
-                                                          style: TextStyle(color: Colors.black),
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(top: 8.0),
-                                                        child: SizedBox(
-                                                          width: maxDimention / 3 * 2,
-                                                          child: Row(
-                                                            mainAxisSize: MainAxisSize.max,
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            children: [
-                                                              TextButton(
-                                                                style: ButtonStyle(
-                                                                  foregroundColor: WidgetStatePropertyAll(
-                                                                    HSLColor.fromColor(
-                                                                      Theme.of(context).colorScheme.primary,
-                                                                    ).withLightness(0.4).toColor(),
-                                                                  ),
-                                                                  iconColor: WidgetStatePropertyAll(
-                                                                    HSLColor.fromColor(
-                                                                      Theme.of(context).colorScheme.primary,
-                                                                    ).withLightness(0.4).toColor(),
-                                                                  ),
-                                                                ),
-                                                                child: const Row(
-                                                                  mainAxisSize: MainAxisSize.min,
-                                                                  children: [
-                                                                    Icon(Icons.arrow_forward),
-                                                                    Gap(4.0),
-                                                                    Text("Continue"),
-                                                                  ],
-                                                                ),
-                                                                onPressed: () {
-                                                                  setState(() {
-                                                                    showLowPerformanceWarning = false;
-                                                                  });
-                                                                },
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              : importingData
-                                              // loader while importing data
-                                              ? const Center(
-                                                  child: CircularProgressIndicator(),
-                                                )
-                                              : unknownCameraError
-                                              // unknown camera error
-                                              ? cameraError(
-                                                  "Unknown camera error!",
-                                                  () {
-                                                    setState(() {
-                                                      unknownCameraError = false;
-                                                    });
-                                                  },
-                                                )
-                                              : cameraDenied
-                                              // camera access denied
-                                              ? cameraError(
-                                                  "Camera permission denied!",
-                                                  () {
-                                                    setState(() {
-                                                      cameraDenied = false;
-                                                    });
-                                                  },
-                                                )
-                                              // qr reader
-                                              : Stack(
-                                                  children: [
-                                                    Opacity(
-                                                      opacity: cameraReady ? 1 : 0,
-                                                      child: Container(
-                                                        clipBehavior: Clip.antiAlias,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(16),
-                                                        ),
-                                                        child: Stack(
-                                                          children: [
-                                                            ReaderWidget(
-                                                              codeFormat: Format.qrCode,
-                                                              onScan: _onScanSuccess,
-                                                              onScanFailure: _onScanFailure,
-                                                              onControllerCreated: _onControllerCreated,
-                                                              scanDelay: const Duration(milliseconds: 100),
-                                                              scanDelaySuccess: const Duration(milliseconds: 500),
-                                                              allowPinchZoom: true,
-                                                              isMultiScan: false,
-                                                              showGallery: false,
-                                                              showFlashlight: false,
-                                                              showToggleCamera: true,
-                                                              actionButtonsAlignment: Alignment.bottomRight,
-                                                              resolution: ResolutionPreset.high,
-                                                              lensDirection: CameraLensDirection.back,
-                                                              toggleCameraIcon: const Icon(Icons.cameraswitch),
-                                                              showScannerOverlay: false,
-                                                              cropPercent: 1,
-                                                              actionButtonsBackgroundBorderRadius:
-                                                                  BorderRadius.circular(16),
-                                                              actionButtonsBackgroundColor: Colors.black.withValues(
-                                                                alpha: 0.4,
-                                                              ),
-                                                              tryHarder: false,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    if (!cameraReady)
-                                                      const Center(
-                                                        child: CircularProgressIndicator(),
-                                                      ),
-                                                  ],
-                                                )
-                                        // import tab not visible
-                                        : Container()
-                                  // qr scanning not supported
-                                  : Center(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Icons.videocam_off,
-                                            size: maxDimention / 3,
-                                            color: Colors.black,
-                                          ),
-                                          SizedBox(
-                                            width: maxDimention / 3 * 2,
-                                            child: const Text(
-                                              "QR scanning is not supported on this device",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(color: Colors.black),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                            ),
-                            // paste button
-                            const Gap(8.0),
-                            SizedBox(
-                              height: 38.0,
-                              child: importingData
-                                  ? null
-                                  : FilledButton(
-                                      style: const ButtonStyle(
-                                        padding: WidgetStatePropertyAll(
-                                          EdgeInsets.symmetric(
-                                            vertical: 2.0,
-                                            horizontal: 20.0,
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed: () async {
-                                        setState(() {
-                                          importingData = true;
-                                        });
-                                        var data = await Clipboard.getData("text/plain");
-                                        useUrl(data?.text);
-                                      },
-                                      child: const Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Icons.paste,
-                                            size: 20,
-                                          ),
-                                          Gap(8.0),
-                                          Text("Paste"),
-                                        ],
-                                      ),
-                                    ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),

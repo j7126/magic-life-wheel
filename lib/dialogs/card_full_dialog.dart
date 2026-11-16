@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:magic_life_wheel/dialog_service.dart';
 import 'package:magic_life_wheel/mtgjson/extension/card_set.dart';
 import 'package:magic_life_wheel/mtgjson/magic_life_wheel/generated/card_set.pb.dart';

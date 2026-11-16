@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:magic_life_wheel/mtgjson/magic_life_wheel/generated/card_set.pb.dart';
 import 'package:magic_life_wheel/serialization/unit_8_list_converter.dart';
