@@ -83,14 +83,13 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
       barrierDismissible: true,
       builder: (context) {
         return const WarningDialog(
-          message: 'The life counters will be reset',
+          message: 'Confirm Reset Game',
+          subtitle: 'The life counters will be reset.',
           confirmMessage: 'Reset',
-          secondaryMessage: 'Reset Players',
         );
       },
     );
     if (result == null) return null;
-    if (result < 0) _showResetPlayers();
     if (result == 1) {
       setState(() {
         game.resetGame();
@@ -104,7 +103,8 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
       barrierDismissible: true,
       builder: (context) {
         return const WarningDialog(
-          message: 'The player configuration will be reset!',
+          message: 'Confirm Reset Players',
+          subtitle: 'The player configuration (name, background, etc.) will be reset.',
           confirmMessage: 'Reset',
         );
       },
@@ -268,6 +268,20 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
                             Text("Menu"),
                           ],
                         ),
+                      ),
+                      Gap(8.0),
+                      OutlinedButton(
+                        style: ButtonStyle(
+                          padding: WidgetStatePropertyAll(
+                            EdgeInsets.symmetric(vertical: 8.0),
+                          ),
+                          iconButtonWidth: IconButtonWidthVariant.narrow,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _showReset();
+                        },
+                        child: Icon(Icons.restart_alt),
                       ),
                       Spacer(),
                       OutlinedButton(
@@ -539,6 +553,11 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
         _showReset,
         Icons.restart_alt,
         "Reset Game",
+      ),
+      (
+        _showResetPlayers,
+        Icons.person_outline,
+        "Reset Players",
       ),
       (
         randomPlayerAnimationInProgress ? null : _chooseRandomPlayer,

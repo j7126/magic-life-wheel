@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
@@ -262,7 +263,10 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Text(
-                    Service.dataLoader.sets?.sets.firstWhereOrNull((element) => element.code == selectedCard?.setCode)?.name ?? "Unknown Set",
+                    Service.dataLoader.sets?.sets
+                            .firstWhereOrNull((element) => element.code == selectedCard?.setCode)
+                            ?.name ??
+                        "Unknown Set",
                     style: const TextStyle(
                       fontSize: 14.0,
                     ),
@@ -473,14 +477,6 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                             softWrap: false,
                           ),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: setCustomImage,
-                        icon: const Icon(Icons.image_outlined),
-                      ),
-                      IconButton(
-                        onPressed: setColors,
-                        icon: const Icon(Icons.color_lens_outlined),
                       ),
                       MenuAnchor(
                         childFocusNode: _menuButtonFocusNode,

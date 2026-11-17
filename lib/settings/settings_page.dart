@@ -125,7 +125,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                         child: Row(
                           children: [
                             const Icon(
-                              Icons.favorite_outline,
+                              Icons.favorite,
                               size: 32,
                               color: Color.fromARGB(255, 127, 127, 127),
                             ),
@@ -465,47 +465,61 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                             ),
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                padding: const EdgeInsets.only(left: 16.0),
                                 child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "Background",
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.titleLarge?.copyWith(color: const Color.fromARGB(255, 229, 229, 229)),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Background",
+                                          style:
+                                              Theme.of(
+                                                    context,
+                                                  ).textTheme.titleLarge
+                                                  ?.copyWith(color: const Color.fromARGB(255, 229, 229, 229)),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                        Text(
+                                          "The default background",
+                                          style:
+                                              Theme.of(
+                                                    context,
+                                                  ).textTheme.titleSmall
+                                                  ?.copyWith(color: const Color.fromARGB(255, 229, 229, 229)),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      "The default background",
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.titleSmall?.copyWith(color: const Color.fromARGB(255, 229, 229, 229)),
+                                    LayoutBuilder(
+                                      builder: (context, constraints) {
+                                        return DropdownMenu<int>(
+                                          initialSelection: defaultBackground,
+                                          requestFocusOnTap: false,
+                                          inputDecorationTheme: const InputDecorationTheme(
+                                            filled: false,
+                                            border: InputBorder.none,
+                                            contentPadding: EdgeInsets.symmetric(vertical: 2.0),
+                                          ),
+                                          textAlign: TextAlign.left,
+                                          width: constraints.maxWidth,
+                                          onSelected: (int? value) {
+                                            setState(() {
+                                              defaultBackground = value!;
+                                            });
+                                          },
+                                          dropdownMenuEntries: [
+                                            DropdownMenuEntry<int>(value: 0, label: "None"),
+                                            DropdownMenuEntry<int>(value: 1, label: "Gradient"),
+                                          ],
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                            DropdownMenu<int>(
-                              initialSelection: defaultBackground,
-                              requestFocusOnTap: false,
-                              inputDecorationTheme: const InputDecorationTheme(
-                                filled: false,
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.symmetric(vertical: 2.0),
-                              ),
-                              textAlign: TextAlign.right,
-                              width: 120,
-                              onSelected: (int? value) {
-                                setState(() {
-                                  defaultBackground = value!;
-                                });
-                              },
-                              dropdownMenuEntries: [
-                                DropdownMenuEntry<int>(value: 0, label: "None"),
-                                DropdownMenuEntry<int>(value: 1, label: "Gradient"),
-                              ],
                             ),
                           ],
                         ),
@@ -513,7 +527,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                       SizeTransition(
                         sizeFactor: _backgroundAnimation,
                         axis: Axis.vertical,
-                        axisAlignment: -1,
+                        alignment: AlignmentGeometry.topCenter,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Row(
@@ -521,35 +535,47 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                               const SizedBox(width: 32, height: 32),
                               Expanded(
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Text(
-                                    "Background Theme",
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.titleLarge?.copyWith(color: const Color.fromARGB(255, 229, 229, 229)),
+                                  padding: const EdgeInsets.only(left: 16.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Background Theme",
+                                        style:
+                                            Theme.of(
+                                                  context,
+                                                ).textTheme.titleLarge
+                                                ?.copyWith(color: const Color.fromARGB(255, 229, 229, 229)),
+                                      ),
+                                      LayoutBuilder(
+                                        builder: (context, constraints) {
+                                          return DropdownMenu<int>(
+                                            initialSelection: Service.settingsService.pref_defaultColorScheme,
+                                            requestFocusOnTap: false,
+                                            inputDecorationTheme: const InputDecorationTheme(
+                                              filled: false,
+                                              border: InputBorder.none,
+                                              contentPadding: EdgeInsets.symmetric(vertical: 2.0),
+                                            ),
+                                            textAlign: TextAlign.left,
+                                            width: constraints.maxWidth,
+                                            onSelected: (int? value) {
+                                              setState(() {
+                                                Service.settingsService.pref_defaultColorScheme = value!;
+                                              });
+                                            },
+                                            dropdownMenuEntries: [
+                                              DropdownMenuEntry<int>(value: 0, label: "Random"),
+                                              DropdownMenuEntry<int>(value: 1, label: "Light"),
+                                              DropdownMenuEntry<int>(value: 2, label: "Dark"),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              DropdownMenu<int>(
-                                initialSelection: Service.settingsService.pref_defaultColorScheme,
-                                requestFocusOnTap: false,
-                                inputDecorationTheme: const InputDecorationTheme(
-                                  filled: false,
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(vertical: 2.0),
-                                ),
-                                textAlign: TextAlign.right,
-                                width: 120,
-                                onSelected: (int? value) {
-                                  setState(() {
-                                    Service.settingsService.pref_defaultColorScheme = value!;
-                                  });
-                                },
-                                dropdownMenuEntries: [
-                                  DropdownMenuEntry<int>(value: 0, label: "Random"),
-                                  DropdownMenuEntry<int>(value: 1, label: "Light"),
-                                  DropdownMenuEntry<int>(value: 2, label: "Dark"),
-                                ],
                               ),
                             ],
                           ),
@@ -812,7 +838,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "Maximise Font Size",
+                                              "Maximise Font",
                                               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                                 color: const Color.fromARGB(255, 229, 229, 229),
                                               ),
@@ -820,7 +846,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                                               maxLines: 1,
                                             ),
                                             Text(
-                                              "Maximises the font size of the life counters. The font size of all the counters may not be the same",
+                                              "The font size of each player may differ",
                                               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                                 color: const Color.fromARGB(255, 229, 229, 229),
                                               ),
