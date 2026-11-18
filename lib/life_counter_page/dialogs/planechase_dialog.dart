@@ -449,7 +449,7 @@ class _PlanechaseDialogState extends State<PlanechaseDialog> with TickerProvider
                                             SizeTransition(
                                               sizeFactor: _setsAnimation,
                                               axis: Axis.vertical,
-                                              axisAlignment: -1,
+                                              alignment: AlignmentGeometry.topCenter,
                                               child: Column(
                                                 children: [
                                                   for (var set in PlanechaseDialog.availableSets.reversed)

@@ -284,7 +284,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                       SizeTransition(
                         sizeFactor: _commanderAnimation,
                         axis: Axis.vertical,
-                        axisAlignment: -1,
+                        alignment: AlignmentGeometry.topCenter,
                         child: Column(
                           children: [
                             GestureDetector(
@@ -648,7 +648,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                       SizeTransition(
                         sizeFactor: _advancedAnimation,
                         axis: Axis.vertical,
-                        axisAlignment: -1,
+                        alignment: AlignmentGeometry.topCenter,
                         child: Column(
                           children: [
                             const Divider(),
