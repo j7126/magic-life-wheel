@@ -22,4 +22,5 @@ message CardSet {
   optional bool subtypeBackground = 18;
   optional bool subtypeTimeLordDoctor = 19;
   optional bool typePlane = 20;
+  repeated uint32 artColors = 21;
 }

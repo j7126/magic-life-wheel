@@ -38,6 +38,7 @@ class CardSet extends $pb.GeneratedMessage {
     $core.bool? subtypeBackground,
     $core.bool? subtypeTimeLordDoctor,
     $core.bool? typePlane,
+    $core.Iterable<$core.int>? artColors,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -67,6 +68,7 @@ class CardSet extends $pb.GeneratedMessage {
     if (subtypeTimeLordDoctor != null)
       result.subtypeTimeLordDoctor = subtypeTimeLordDoctor;
     if (typePlane != null) result.typePlane = typePlane;
+    if (artColors != null) result.artColors.addAll(artColors);
     return result;
   }
 
@@ -114,6 +116,8 @@ class CardSet extends $pb.GeneratedMessage {
     ..aOB(19, _omitFieldNames ? '' : 'subtypeTimeLordDoctor',
         protoName: 'subtypeTimeLordDoctor')
     ..aOB(20, _omitFieldNames ? '' : 'typePlane', protoName: 'typePlane')
+    ..p<$core.int>(21, _omitFieldNames ? '' : 'artColors', $pb.PbFieldType.KU3,
+        protoName: 'artColors')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -301,6 +305,9 @@ class CardSet extends $pb.GeneratedMessage {
   $core.bool hasTypePlane() => $_has(19);
   @$pb.TagNumber(20)
   void clearTypePlane() => $_clearField(20);
+
+  @$pb.TagNumber(21)
+  $pb.PbList<$core.int> get artColors => $_getList(20);
 }
 
 const $core.bool _omitFieldNames =

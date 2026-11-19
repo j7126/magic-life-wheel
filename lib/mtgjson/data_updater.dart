@@ -9,6 +9,7 @@ import 'package:magic_life_wheel/mtgjson/magic_life_wheel/generated/sets.pb.dart
 import 'package:magic_life_wheel/mtgjson/mtgjson_data_loader.dart';
 import 'package:magic_life_wheel/static_service.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DataUpdater {
   static const String supportedVersion = "1.2.0";
@@ -16,6 +17,9 @@ class DataUpdater {
   static GitHub github = GitHub();
   static String? status;
   static bool checked = false;
+
+  // the minimum revision that can be bundled with this version of the app
+  static int minBundledRevision = 20261119;
 
   static Future checkForUpdates(MTGDataLoader loader, {bool force = false}) async {
     if (!loader.loaded || !Service.settingsService.pref_getScryfallImages || kIsWeb) {
@@ -70,6 +74,12 @@ class DataUpdater {
         await writeData(setListData, FileNames.setList);
         await writeData(allCardsData, FileNames.allCards);
         status = "Data updated successfully";
+
+        // save the revision
+        if (setListBuildDate != null) {
+          var prefs = await SharedPreferences.getInstance();
+          prefs.setInt("currentDataRevision", setListBuildDate);
+        }
 
         // reload the data
         loader.loadAll();

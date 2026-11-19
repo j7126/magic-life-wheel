@@ -65,12 +65,10 @@ class CommanderDamageGrid extends StatelessWidget {
                               CardImage(
                                 key: Key(card.uuid),
                                 cardSet: card,
-                                showLoader: false,
                               ),
                             if (!partner && card == null && player.background.hasBackground)
                               BackgroundWidget(
                                 background: player.background,
-                                showLoader: false,
                               ),
                             Positioned.fill(
                               child: FittedBox(

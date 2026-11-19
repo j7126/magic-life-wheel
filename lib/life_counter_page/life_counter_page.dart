@@ -568,6 +568,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> with FullScreenListen
 
     showModalBottomSheet<void>(
       context: context,
+      scrollControlDisabledMaxHeightRatio: 0.8,
       builder: (BuildContext context) {
         return Padding(
           padding: const EdgeInsets.all(8.0),

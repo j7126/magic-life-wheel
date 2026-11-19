@@ -7,6 +7,7 @@ import 'package:magic_life_wheel/mtgjson/file_names.dart';
 import 'package:magic_life_wheel/mtgjson/magic_life_wheel/generated/all_set_cards.pb.dart';
 import 'package:magic_life_wheel/mtgjson/magic_life_wheel/generated/sets.pb.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MTGDataLoader {
   MTGDataLoader(this.onLoad);
@@ -17,8 +18,10 @@ class MTGDataLoader {
 
   ProtobufAllSetCards? allSetCards;
   SetList? sets;
+  late SharedPreferences prefs;
 
   void loadAll() async {
+    prefs = await SharedPreferences.getInstance();
     await loadCards();
     await loadSets();
     loaded = true;
@@ -38,8 +41,10 @@ class MTGDataLoader {
     sets = SetList.fromBuffer(data.buffer.asUint8List());
   }
 
-  static Future<Uint8List> readData(String name) async {
-    if (!kIsWeb) {
+  Future<Uint8List> readData(String name) async {
+    var currentUpdatedRevision = prefs.getInt("currentDataRevision");
+
+    if (!kIsWeb && currentUpdatedRevision != null && currentUpdatedRevision > DataUpdater.minBundledRevision) {
       final directory = await getApplicationDocumentsDirectory();
       final file = File("${directory.path}/$name.bin");
       if (await file.exists()) {

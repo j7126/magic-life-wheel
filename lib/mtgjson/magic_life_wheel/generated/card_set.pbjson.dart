@@ -155,6 +155,7 @@ const CardSet$json = {
       '10': 'typePlane',
       '17': true
     },
+    {'1': 'artColors', '3': 21, '4': 3, '5': 13, '10': 'artColors'},
   ],
   '8': [
     {'1': '_scryfallId'},
@@ -191,9 +192,9 @@ final $typed_data.Uint8List cardSetDescriptor = $convert.base64Decode(
     'QmFja2dyb3VuZBgRIAEoCEgKUhdrZXl3b3JkQ2hvb3NlQmFja2dyb3VuZIgBARIxChFzdWJ0eX'
     'BlQmFja2dyb3VuZBgSIAEoCEgLUhFzdWJ0eXBlQmFja2dyb3VuZIgBARI5ChVzdWJ0eXBlVGlt'
     'ZUxvcmREb2N0b3IYEyABKAhIDFIVc3VidHlwZVRpbWVMb3JkRG9jdG9yiAEBEiEKCXR5cGVQbG'
-    'FuZRgUIAEoCEgNUgl0eXBlUGxhbmWIAQFCDQoLX3NjcnlmYWxsSWRCDAoKX2NvbW1hbmRlckIW'
-    'ChRfY2FyZFNlYXJjaFN0cmluZ0FsdEIJCgdfYXJ0aXN0QgcKBV90ZXh0Qg0KC19mbGF2b3JOYW'
-    '1lQgoKCF9pc0Z1bm55QhEKD19rZXl3b3JkUGFydG5lckIYChZfa2V5d29yZEZyaWVuZHNGb3Jl'
-    'dmVyQhoKGF9rZXl3b3JkRG9jdG9yc0NvbXBhbmlvbkIaChhfa2V5d29yZENob29zZUJhY2tncm'
-    '91bmRCFAoSX3N1YnR5cGVCYWNrZ3JvdW5kQhgKFl9zdWJ0eXBlVGltZUxvcmREb2N0b3JCDAoK'
-    'X3R5cGVQbGFuZQ==');
+    'FuZRgUIAEoCEgNUgl0eXBlUGxhbmWIAQESHAoJYXJ0Q29sb3JzGBUgAygNUglhcnRDb2xvcnNC'
+    'DQoLX3NjcnlmYWxsSWRCDAoKX2NvbW1hbmRlckIWChRfY2FyZFNlYXJjaFN0cmluZ0FsdEIJCg'
+    'dfYXJ0aXN0QgcKBV90ZXh0Qg0KC19mbGF2b3JOYW1lQgoKCF9pc0Z1bm55QhEKD19rZXl3b3Jk'
+    'UGFydG5lckIYChZfa2V5d29yZEZyaWVuZHNGb3JldmVyQhoKGF9rZXl3b3JkRG9jdG9yc0NvbX'
+    'BhbmlvbkIaChhfa2V5d29yZENob29zZUJhY2tncm91bmRCFAoSX3N1YnR5cGVCYWNrZ3JvdW5k'
+    'QhgKFl9zdWJ0eXBlVGltZUxvcmREb2N0b3JCDAoKX3R5cGVQbGFuZQ==');
