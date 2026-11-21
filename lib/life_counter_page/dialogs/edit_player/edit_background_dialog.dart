@@ -776,160 +776,166 @@ class _EditBackgroundDialogState extends State<EditBackgroundDialog> {
                 if (_searchFieldController.text.isEmpty || (cards?.isEmpty ?? true))
                   if (widget.player.background.hasBackground)
                     Expanded(
-                      child: Column(
-                        children: [
-                          if (cards?.isEmpty ?? false)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
-                              child: Row(
-                                children: [
-                                  const Spacer(),
-                                  const Icon(
-                                    CustomIcons.cardsOutlined,
-                                    size: 34,
-                                    color: Color.fromARGB(255, 76, 76, 76),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              if (cards?.isEmpty ?? false)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
+                                  child: Row(
+                                    children: [
+                                      const Spacer(),
+                                      const Icon(
+                                        CustomIcons.cardsOutlined,
+                                        size: 34,
+                                        color: Color.fromARGB(255, 76, 76, 76),
+                                      ),
+                                      const Gap(8.0),
+                                      Text(
+                                        "No results found",
+                                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 24,
+                                          color: const Color.fromARGB(255, 76, 76, 76),
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const Spacer(),
+                                    ],
                                   ),
-                                  const Gap(8.0),
-                                  Text(
-                                    "No results found",
-                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 24,
-                                      color: const Color.fromARGB(255, 76, 76, 76),
+                                ),
+                              const Gap(16.0),
+                              if (widget.player.card != null && Service.dataLoader.allSetCards != null)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Container(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 500,
                                     ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const Spacer(),
-                                ],
-                              ),
-                            ),
-                          const Gap(16.0),
-                          if (widget.player.card != null && Service.dataLoader.allSetCards != null)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Container(
-                                constraints: const BoxConstraints(
-                                  maxWidth: 500,
-                                ),
-                                child: AspectRatio(
-                                  aspectRatio: 1.1,
-                                  child: cardSelector(
-                                    Service.dataLoader.allSetCards?.data
-                                        .where((element) => element.name == widget.player.card?.name)
-                                        .toList(),
-                                    useSelectedName: true,
+                                    child: AspectRatio(
+                                      aspectRatio: 1.1,
+                                      child: cardSelector(
+                                        Service.dataLoader.allSetCards?.data
+                                            .where((element) => element.name == widget.player.card?.name)
+                                            .toList(),
+                                        useSelectedName: true,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          if (widget.player.background.customImage != null || widget.player.background.colors != null)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Container(
-                                constraints: const BoxConstraints(
-                                  maxWidth: 500,
-                                ),
-                                child: AspectRatio(
-                                  aspectRatio: 1.1,
-                                  child: Card(
-                                    clipBehavior: Clip.antiAlias,
-                                    child: Stack(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                              if (widget.player.background.customImage != null ||
+                                  widget.player.background.colors != null)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Container(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 500,
+                                    ),
+                                    child: AspectRatio(
+                                      aspectRatio: 1.1,
+                                      child: Card(
+                                        clipBehavior: Clip.antiAlias,
+                                        child: Stack(
                                           children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
-                                              child: Text(
-                                                widget.player.background.customImage != null
-                                                    ? "Custom Image"
-                                                    : (widget.player.background.colors?.length ?? 0) > 1
-                                                    ? "Color Gradient"
-                                                    : "Color",
-                                                style: const TextStyle(
-                                                  fontSize: 18.0,
-                                                  fontWeight: FontWeight.bold,
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
+                                                  child: Text(
+                                                    widget.player.background.customImage != null
+                                                        ? "Custom Image"
+                                                        : (widget.player.background.colors?.length ?? 0) > 1
+                                                        ? "Color Gradient"
+                                                        : "Color",
+                                                    style: const TextStyle(
+                                                      fontSize: 18.0,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(top: 8.0),
+                                                    child: BackgroundWidget(
+                                                      background: widget.player.background,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            Expanded(
+                                            Align(
+                                              alignment: Alignment.bottomLeft,
                                               child: Padding(
-                                                padding: const EdgeInsets.only(top: 8.0),
-                                                child: BackgroundWidget(
-                                                  background: widget.player.background,
+                                                padding: const EdgeInsets.all(6.0),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.max,
+                                                  children: [
+                                                    FilledButton(
+                                                      onPressed: widget.player.background.customImage != null
+                                                          ? setCustomImage
+                                                          : setColors,
+                                                      style: const ButtonStyle(
+                                                        padding: WidgetStatePropertyAll(
+                                                          EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                                                        ),
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: [
+                                                          Padding(
+                                                            padding: const EdgeInsets.only(right: 6.0),
+                                                            child: Icon(
+                                                              widget.player.background.customImage != null
+                                                                  ? Icons.image_outlined
+                                                                  : Icons.color_lens_outlined,
+                                                              size: 18.0,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            widget.player.background.customImage != null
+                                                                ? "Change Image"
+                                                                : (widget.player.background.colors?.length ?? 0) > 1
+                                                                ? "Change Colors"
+                                                                : "Change Color",
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
                                           ],
                                         ),
-                                        Align(
-                                          alignment: Alignment.bottomLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(6.0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                FilledButton(
-                                                  onPressed: widget.player.background.customImage != null
-                                                      ? setCustomImage
-                                                      : setColors,
-                                                  style: const ButtonStyle(
-                                                    padding: WidgetStatePropertyAll(
-                                                      EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                                                    ),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: [
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(right: 6.0),
-                                                        child: Icon(
-                                                          widget.player.background.customImage != null
-                                                              ? Icons.image_outlined
-                                                              : Icons.color_lens_outlined,
-                                                          size: 18.0,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        widget.player.background.customImage != null
-                                                            ? "Change Image"
-                                                            : (widget.player.background.colors?.length ?? 0) > 1
-                                                            ? "Change Colors"
-                                                            : "Change Color",
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          const Gap(8.0),
-                          if ((widget.player.card != null && Service.dataLoader.allSetCards != null) &&
-                              widget.player.cardPartner != null)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Container(
-                                constraints: const BoxConstraints(
-                                  maxWidth: 500,
-                                ),
-                                child: AspectRatio(
-                                  aspectRatio: 1.1,
-                                  child: cardSelector(
-                                    Service.dataLoader.allSetCards?.data
-                                        .where((element) => element.name == widget.player.cardPartner?.name)
-                                        .toList(),
+                              const Gap(8.0),
+                              if ((widget.player.card != null && Service.dataLoader.allSetCards != null) &&
+                                  widget.player.cardPartner != null)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Container(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 500,
+                                    ),
+                                    child: AspectRatio(
+                                      aspectRatio: 1.1,
+                                      child: cardSelector(
+                                        Service.dataLoader.allSetCards?.data
+                                            .where((element) => element.name == widget.player.cardPartner?.name)
+                                            .toList(),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                        ],
+                            ],
+                          ),
+                        ),
                       ),
                     )
                   else if (Service.settingsService.pref_getScryfallImages)
