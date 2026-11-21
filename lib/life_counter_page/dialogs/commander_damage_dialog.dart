@@ -23,6 +23,7 @@ class CommanderDamageDialog extends StatefulWidget {
 class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
   Timer? lifeChangedTimer;
   String? lastChanged;
+  late bool showSelf;
 
   void changeLife(String cmdid, int x) {
     setState(() {
@@ -43,6 +44,11 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
   @override
   void initState() {
     DialogService.register(context);
+
+    showSelf =
+        (widget.player.commanderDamage[widget.player.uuid] ?? 0) > 0 ||
+        (widget.player.commanderDamage["${widget.player.uuid}_partner"] ?? 0) > 0;
+
     super.initState();
   }
 
@@ -80,250 +86,292 @@ class _EditCommanderDamageDialog extends State<CommanderDamageDialog> {
 
     var myIndex = widget.players.indexWhere((x) => widget.player.uuid == x.uuid);
 
-    return AlertDialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: isLandscape ? 132.0 : 60.0, vertical: isLandscape ? 60.0 : 132.0),
-      titlePadding: const EdgeInsets.only(top: 12.0, left: 18.0, right: 16.0),
-      contentPadding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 8.0),
-      title: Row(
-        children: [
-          Expanded(
-            child: const Text(
-              "Commander",
-              overflow: TextOverflow.fade,
-              maxLines: 1,
-              softWrap: false,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onHorizontalDragUpdate: (details) {
+        int sensitivity = 8;
+        if (details.delta.dx > sensitivity || details.delta.dx < -sensitivity) {
+          Navigator.of(context).pop();
+        }
+      },
+      onVerticalDragUpdate: (details) {
+        int sensitivity = 8;
+        if (details.delta.dy > sensitivity || details.delta.dy < -sensitivity) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: AlertDialog(
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: isLandscape ? 132.0 : 60.0,
+          vertical: isLandscape ? 60.0 : 132.0,
+        ),
+        titlePadding: const EdgeInsets.only(top: 12.0, left: 18.0, right: 16.0),
+        contentPadding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 8.0),
+        title: Row(
+          children: [
+            Expanded(
+              child: const Text(
+                "Commander",
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                softWrap: false,
+              ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-      content: AspectRatio(
-        aspectRatio: isLandscape ? 2 : 1 / 2,
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: RotatedBox(
-            quarterTurns:
-                (widget.layout.rotated ? 2 : 0) + (MediaQuery.of(context).orientation == Orientation.landscape ? 1 : 0),
-            child: widget.layout.build(
-              context,
-              widget.players,
-              (i, turns) {
-                var player = widget.players[i];
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+        content: AspectRatio(
+          aspectRatio: isLandscape ? 2 : 1 / 2,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: RotatedBox(
+              quarterTurns:
+                  (widget.layout.rotated ? 2 : 0) +
+                  (MediaQuery.of(context).orientation == Orientation.landscape ? 1 : 0),
+              child: widget.layout.build(
+                context,
+                widget.players,
+                (i, turns) {
+                  var player = widget.players[i];
 
-                Widget counter({bool partner = false}) {
-                  var card = partner ? player.cardPartner : player.card;
-                  var cmdid = partner ? "${player.uuid}_partner" : player.uuid;
-                  var dmg = (widget.player.commanderDamage[cmdid] ?? 0);
-                  var changedLife =
-                      widget.player.damageHistory.isNotEmpty &&
-                          widget.player.damageHistory.last.fromCommander == cmdid &&
-                          lastChanged == cmdid &&
-                          DateTime.now().millisecondsSinceEpoch -
-                                  widget.player.damageHistory.last.time.millisecondsSinceEpoch <
-                              5000
-                      ? widget.player.damageHistory.last.change * -1
-                      : 0;
+                  Widget counter({bool partner = false}) {
+                    var card = partner ? player.cardPartner : player.card;
+                    var cmdid = partner ? "${player.uuid}_partner" : player.uuid;
+                    var dmg = (widget.player.commanderDamage[cmdid] ?? 0);
+                    var changedLife =
+                        widget.player.damageHistory.isNotEmpty &&
+                            widget.player.damageHistory.last.fromCommander == cmdid &&
+                            lastChanged == cmdid &&
+                            DateTime.now().millisecondsSinceEpoch -
+                                    widget.player.damageHistory.last.time.millisecondsSinceEpoch <
+                                5000
+                        ? widget.player.damageHistory.last.change * -1
+                        : 0;
 
-                  return RotatedBox(
-                    quarterTurns: Service.settingsService.pref_commanderDamageButtonsFacePlayer
-                        ? widget.layout.getTurnsInPosition(myIndex) + -1 * turns
-                        : 0,
-                    child: Card(
-                      clipBehavior: Clip.antiAlias,
-                      margin: const EdgeInsets.all(1.0),
-                      child: Stack(
-                        children: [
-                          if (card != null)
-                            CardImage(
-                              key: Key(card.uuid),
-                              cardSet: card,
-                            ),
-                          if (!partner && card == null && player.background.hasBackground)
-                            BackgroundWidget(
-                              background: player.background,
-                            ),
-                          Positioned.fill(
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                      child: Text(
-                                        widget.player.uuid == player.uuid && dmg <= 0 ? "me" : dmg.toString(),
-                                        style: TextStyle(
-                                          shadows: card != null || (!partner && player.background.hasBackground)
-                                              ? [
-                                                  const Shadow(
-                                                    offset: Offset(0.5, 0.5),
-                                                    blurRadius: 10.0,
-                                                    color: Colors.black,
-                                                  ),
-                                                ]
-                                              : null,
+                    return RotatedBox(
+                      quarterTurns: Service.settingsService.pref_commanderDamageButtonsFacePlayer
+                          ? widget.layout.getTurnsInPosition(myIndex) + -1 * turns
+                          : 0,
+                      child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        margin: const EdgeInsets.all(1.0),
+                        child: Stack(
+                          children: [
+                            if (card != null)
+                              CardImage(
+                                key: Key(card.uuid),
+                                cardSet: card,
+                              ),
+                            if (!partner && card == null && player.background.hasBackground)
+                              BackgroundWidget(
+                                background: player.background,
+                              ),
+                            Positioned.fill(
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                        child: Text(
+                                          widget.player.uuid == player.uuid && dmg <= 0 ? "me" : dmg.toString(),
+                                          style: TextStyle(
+                                            shadows: card != null || (!partner && player.background.hasBackground)
+                                                ? [
+                                                    const Shadow(
+                                                      offset: Offset(0.5, 0.5),
+                                                      blurRadius: 10.0,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ]
+                                                : null,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          if (changedLife != 0 && Service.settingsService.pref_showChangingLife)
-                            Positioned.fill(
-                              child: FittedBox(
-                                fit: BoxFit.contain,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 64.0, top: 2.0),
-                                  child: AnimatedScaleOnChange(
-                                    value: changedLife,
-                                    duration: Duration(milliseconds: 400),
-                                    alignment: Alignment.center,
-                                    scale: 1.4,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                      child: Text(
-                                        changedLife > 0 ? "+$changedLife" : changedLife.toString(),
-                                        style: TextStyle(
-                                          shadows: card != null || (!partner && player.background.hasBackground)
-                                              ? [
-                                                  const Shadow(
-                                                    offset: Offset(0.5, 0.5),
-                                                    blurRadius: 10.0,
-                                                    color: Colors.black,
-                                                  ),
-                                                ]
-                                              : null,
-                                          fontWeight: FontWeight.bold,
+                            if (changedLife != 0 && Service.settingsService.pref_showChangingLife)
+                              Positioned.fill(
+                                child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 64.0, top: 2.0),
+                                    child: AnimatedScaleOnChange(
+                                      value: changedLife,
+                                      duration: Duration(milliseconds: 400),
+                                      alignment: Alignment.center,
+                                      scale: 1.4,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                        child: Text(
+                                          changedLife > 0 ? "+$changedLife" : changedLife.toString(),
+                                          style: TextStyle(
+                                            shadows: card != null || (!partner && player.background.hasBackground)
+                                                ? [
+                                                    const Shadow(
+                                                      offset: Offset(0.5, 0.5),
+                                                      blurRadius: 10.0,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ]
+                                                : null,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          Positioned.fill(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: TextButton(
-                                    style: ButtonStyle(
-                                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                                        const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                            Positioned.fill(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: TextButton(
+                                      style: ButtonStyle(
+                                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                                          const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                        ),
+                                        foregroundColor: WidgetStateProperty.all<Color>(
+                                          Theme.of(context).colorScheme.onSurface,
+                                        ),
+                                        iconColor: WidgetStateProperty.all<Color>(
+                                          Theme.of(context).colorScheme.onSurface,
+                                        ),
+                                        overlayColor: WidgetStateProperty.all<Color>(
+                                          Theme.of(context).colorScheme.onSurface.withAlpha(30),
+                                        ),
                                       ),
-                                      foregroundColor: WidgetStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onSurface,
-                                      ),
-                                      iconColor: WidgetStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onSurface,
-                                      ),
-                                      overlayColor: WidgetStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onSurface.withAlpha(30),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      changeLife(cmdid, 1);
-                                    },
-                                    onLongPress: () {
-                                      changeLife(cmdid, 10);
-                                    },
-                                    child: SizedBox(
-                                      height: double.infinity,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.remove,
-                                            shadows: onBackgroundShadow,
-                                            size: 28,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: Service.settingsService.pref_asymmetricalCommanderDamageButtons ? 2 : 1,
-                                  child: TextButton(
-                                    style: ButtonStyle(
-                                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                                        const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                                      ),
-                                      foregroundColor: WidgetStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onSurface,
-                                      ),
-                                      iconColor: WidgetStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onSurface,
-                                      ),
-                                      overlayColor: WidgetStateProperty.all<Color>(
-                                        Theme.of(context).colorScheme.onSurface.withAlpha(30),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      changeLife(cmdid, -1);
-                                    },
-                                    onLongPress: () {
-                                      changeLife(cmdid, -10);
-                                    },
-                                    child: SizedBox(
-                                      height: double.infinity,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          Icon(
-                                            Icons.add,
-                                            shadows: onBackgroundShadow,
-                                            size: 28,
-                                          ),
-                                        ],
+                                      onPressed: () {
+                                        changeLife(cmdid, 1);
+                                      },
+                                      onLongPress: () {
+                                        changeLife(cmdid, 10);
+                                      },
+                                      child: SizedBox(
+                                        height: double.infinity,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.remove,
+                                              shadows: onBackgroundShadow,
+                                              size: 28,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Expanded(
+                                    flex: Service.settingsService.pref_asymmetricalCommanderDamageButtons ? 2 : 1,
+                                    child: TextButton(
+                                      style: ButtonStyle(
+                                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                                          const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                        ),
+                                        foregroundColor: WidgetStateProperty.all<Color>(
+                                          Theme.of(context).colorScheme.onSurface,
+                                        ),
+                                        iconColor: WidgetStateProperty.all<Color>(
+                                          Theme.of(context).colorScheme.onSurface,
+                                        ),
+                                        overlayColor: WidgetStateProperty.all<Color>(
+                                          Theme.of(context).colorScheme.onSurface.withAlpha(30),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        changeLife(cmdid, -1);
+                                      },
+                                      onLongPress: () {
+                                        changeLife(cmdid, -10);
+                                      },
+                                      child: SizedBox(
+                                        height: double.infinity,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Icon(
+                                              Icons.add,
+                                              shadows: onBackgroundShadow,
+                                              size: 28,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsets.all(1.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          return widget.player.uuid != player.uuid || showSelf
+                              ? Flex(
+                                  direction: constraints.maxWidth > constraints.maxHeight
+                                      ? Axis.horizontal
+                                      : Axis.vertical,
+                                  children: [
+                                    Expanded(
+                                      child: counter(),
+                                    ),
+                                    if (player.cardPartner != null)
+                                      Expanded(
+                                        child: counter(
+                                          partner: true,
+                                        ),
+                                      ),
+                                  ],
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      showSelf = true;
+                                    });
+                                  },
+                                  child: Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    margin: const EdgeInsets.all(1.0),
+                                    child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                        child: Text(
+                                          "me",
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                        },
                       ),
                     ),
                   );
-                }
-
-                return Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return Flex(
-                          direction: constraints.maxWidth > constraints.maxHeight ? Axis.horizontal : Axis.vertical,
-                          children: [
-                            Expanded(
-                              child: counter(),
-                            ),
-                            if (player.cardPartner != null)
-                              Expanded(
-                                child: counter(
-                                  partner: true,
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
+                },
+              ),
             ),
           ),
         ),
